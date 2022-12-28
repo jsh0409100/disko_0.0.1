@@ -1,4 +1,4 @@
-import 'package:disko_001/start_page.dart';
+import 'start_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

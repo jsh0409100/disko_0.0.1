@@ -1,7 +1,12 @@
+import 'package:disko_001/phone_test.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'start_page.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -18,7 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
 //      home: const Condition(),
-      home: const StartPage(),
+      home: const phonelogin(),
 //      home: const LoginPage(),
     );
   }

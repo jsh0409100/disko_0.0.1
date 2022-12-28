@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "986845963221",
+    "project_id": "disko001",
+    "storage_bucket": "disko001.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:986845963221:android:cfda898a3c28d85517d35c",
+        "android_client_info": {
+          "package_name": "com.example.disko_001"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "986845963221-56j2mqn4pt9db5l1l9c59a6p6q7hqarg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQEa8w3ODXXyWiPj6ChL8n_7VjXuLfoE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "986845963221-56j2mqn4pt9db5l1l9c59a6p6q7hqarg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "986845963221-rgebgmrchk44ok3oldlcjgi74h29247d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.disko001"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

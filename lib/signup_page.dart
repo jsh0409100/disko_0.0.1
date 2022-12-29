@@ -192,7 +192,7 @@ class SignUpPageState extends State<SignUpPage> {
                 ),
               ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.maxFinite, 45),

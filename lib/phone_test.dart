@@ -79,6 +79,7 @@ class _phoneloginState extends State<phonelogin> {
                 codeSent: (String verificationId, int? resendToken) {
                   phonelogin.verify = verificationId;
                 },
+                timeout: const Duration(minutes: 5),
                 codeAutoRetrievalTimeout: (String verificationId) {},
               );
             },

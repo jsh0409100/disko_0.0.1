@@ -1,10 +1,12 @@
+import 'package:disko_001/signup_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class Condition extends StatefulWidget {
-  const Condition({Key? key}) : super(key: key);
+class ConditionPage extends StatefulWidget {
+  const ConditionPage({Key? key}) : super(key: key);
 
   @override
-  State<Condition> createState() => _ConditionState();
+  State<ConditionPage> createState() => _ConditionPageState();
 }
 
 class Step {
@@ -24,7 +26,7 @@ List<Step> getSteps() {
   ];
 }
 
-class _ConditionState extends State<Condition> {
+class _ConditionPageState extends State<ConditionPage> {
   final List<Step> _steps = getSteps();
 
   @override
@@ -35,17 +37,14 @@ class _ConditionState extends State<Condition> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _renderCondition(),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height/2.5,
-            ),
-            buttongenerate('동의하고 시작하기'),
-          ]
-        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          _renderCondition(),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 2.5,
+          ),
+          buttongenerate('동의하고 시작하기'),
+        ]),
       ),
     );
   }
@@ -57,13 +56,13 @@ class _ConditionState extends State<Condition> {
           _steps[index].isExpanded = !isExpanded;
         });
       },
-      children: _steps.map<ExpansionPanel>((Step step){
+      children: _steps.map<ExpansionPanel>((Step step) {
         return ExpansionPanel(
-            headerBuilder: (BuildContext context, bool isExpanded){
-              return ListTile(
-                title: Text(step.title),
-              );
-            },
+          headerBuilder: (BuildContext context, bool isExpanded) {
+            return ListTile(
+              title: Text(step.title),
+            );
+          },
           body: ListTile(
             title: Text(step.body),
           ),
@@ -73,13 +72,13 @@ class _ConditionState extends State<Condition> {
     );
   }
 
-  Widget buttongenerate(String text){
+  Widget buttongenerate(String text) {
     return SizedBox(
       //width: MediaQuery.of(context).size.width/5,
       //height: MediaQuery.of(context).size.height/15,
       child: ElevatedButton(
-        onPressed:(){
-
+        onPressed: () {
+          Get.to(() => const SignUpPage());
         },
         child: Text(text, style: const TextStyle(fontSize: 20)),
       ),

@@ -3,6 +3,7 @@ import 'package:disko_001/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'home.dart';
 
@@ -39,13 +40,13 @@ class SignUpPageState extends State<SignUpPage> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: new Icon(
+        leading: const Icon(
           Icons.close,
           color: Colors.black,
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
@@ -112,7 +113,7 @@ class SignUpPageState extends State<SignUpPage> {
                               ),
                             ),
                           ),
-                          Icon(
+                          const Icon(
                             Icons.arrow_drop_down_outlined,
                             size: 20,
                           ),
@@ -143,12 +144,12 @@ class SignUpPageState extends State<SignUpPage> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.maxFinite, 50),
-                primary: Colors.grey,
+                minimumSize: const Size(double.maxFinite, 50),
+                backgroundColor: Colors.grey,
               ),
               onPressed: () async {
                 await FirebaseAuth.instance.verifyPhoneNumber(
-                  phoneNumber: '${countryCode!.dialCode + phone}',
+                  phoneNumber: countryCode!.dialCode + phone,
                   verificationCompleted: (PhoneAuthCredential credential) {},
                   verificationFailed: (FirebaseAuthException e) {},
                   codeSent: (String verificationId, int? resendToken) {
@@ -176,8 +177,8 @@ class SignUpPageState extends State<SignUpPage> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.maxFinite, 50),
-                primary: Colors.grey,
+                minimumSize: const Size(double.maxFinite, 50),
+                backgroundColor: Colors.grey,
               ),
               onPressed: () async {
                 try {
@@ -188,17 +189,14 @@ class SignUpPageState extends State<SignUpPage> {
                   // Sign the user in (or link) with the credential
                   await auth.signInWithCredential(credential);
 
-                  UserModel new_user = UserModel(
+                  UserModel newUser = UserModel(
                       phoneNum: phone,
                       countryCode: countryCode!.dialCode,
                       name: "guest",
                       uid: auth.currentUser!.uid);
-                  users.add(new_user.toJson());
+                  users.add(newUser.toJson());
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyHome()),
-                  ); // 이건 Get.to로 변경
+                  Get.to(() => const MyHome());
                 } catch (e) {
                   print(e);
                 }

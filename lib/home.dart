@@ -19,7 +19,7 @@ class _MyHomeState extends State<MyHome> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Welcome"),
+          title: const Text("Welcome"),
         ),
         body: Consumer<ApplicationState>(
           builder: (context, appState, _) => Center(

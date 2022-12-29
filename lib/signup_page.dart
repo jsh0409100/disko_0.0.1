@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -155,6 +157,7 @@ class SignUpPageState extends State<SignUpPage> {
                   codeSent: (String verificationId, int? resendToken) {
                     SignUpPage.verify = verificationId;
                   },
+                  timeout: const Duration(minutes: 2),
                   codeAutoRetrievalTimeout:
                       (String verificationId) {}, //세원이가 5분 넣기
                 );

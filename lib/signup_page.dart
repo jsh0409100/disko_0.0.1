@@ -1,15 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+import 'home.dart';
+
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
+
+  static String verify = "";
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class SignUpPageState extends State<SignUpPage> {
   final countryPicker = const FlCountryCodePicker();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  TextEditingController countrycode = TextEditingController();
+  TextEditingController verController = TextEditingController();
+
+  var phone = "";
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
   CountryCode? countryCode;
 
   @override
@@ -69,7 +83,8 @@ class _LoginPageState extends State<LoginPage> {
                   flex: 1,
                   child: GestureDetector(
                     onTap: () async {
-                      final code = await countryPicker.showPicker(context: context);
+                      final code =
+                          await countryPicker.showPicker(context: context);
                       setState(() {
                         countryCode = code;
                       });
@@ -84,7 +99,8 @@ class _LoginPageState extends State<LoginPage> {
                             width: 1,
                             color: Colors.grey,
                           ),
-                          borderRadius: const BorderRadius.all(Radius.circular(5.0))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5.0))),
                       child: Row(
                         children: [
                           Center(
@@ -110,9 +126,11 @@ class _LoginPageState extends State<LoginPage> {
                   flex: 3,
                   child: SizedBox(
                     height: 45,
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
+                    child: TextField(
+                      keyboardType: TextInputType.phone,
+                      onChanged: (value) {
+                        phone = value;
+                      },
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: '휴대폰 번호를 입력해주세요.',
@@ -128,8 +146,64 @@ class _LoginPageState extends State<LoginPage> {
                 minimumSize: Size(double.maxFinite, 50),
                 primary: Colors.grey,
               ),
-              onPressed: () {},
+              onPressed: () async {
+                await FirebaseAuth.instance.verifyPhoneNumber(
+                  phoneNumber: '${countryCode!.dialCode + phone}',
+                  verificationCompleted: (PhoneAuthCredential credential) {},
+                  verificationFailed: (FirebaseAuthException e) {},
+                  codeSent: (String verificationId, int? resendToken) {
+                    SignUpPage.verify = verificationId;
+                  },
+                  codeAutoRetrievalTimeout:
+                      (String verificationId) {}, //세원이가 5분 넣기
+                );
+              },
               child: const Text('인증문자 받기'),
+            ),
+            Expanded(
+              child: SizedBox(
+                height: 45,
+                child: TextField(
+                  keyboardType: TextInputType.phone,
+                  controller: verController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: '인증번호를 입력해 주세요.',
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.maxFinite, 50),
+                primary: Colors.grey,
+              ),
+              onPressed: () async {
+                try {
+                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                      verificationId: SignUpPage.verify,
+                      smsCode: verController.text);
+
+                  // Sign the user in (or link) with the credential
+                  await auth.signInWithCredential(credential);
+
+                  UserModel new_user = UserModel(
+                      phoneNum: phone,
+                      countryCode: countryCode!.dialCode,
+                      name: "guest",
+                      uid: auth.currentUser!.uid);
+                  users.add(new_user.toJson());
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHome()),
+                  ); // 이건 Get.to로 변경
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: const Text('로그인'),
             ),
           ],
         ),
@@ -137,4 +211,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-

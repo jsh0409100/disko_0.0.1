@@ -1,13 +1,19 @@
-import 'package:disko_001/phone_test.dart';
+import 'package:disko_001/app_state.dart';
+import 'package:disko_001/signup_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-import 'start_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() async{
+//import 'start_pagerial.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+        providers: [ChangeNotifierProvider(create: (_) => ApplicationState())],
+        child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,8 +29,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
 //      home: const Condition(),
-      home: const phonelogin(),
-//      home: const LoginPage(),
+//      home: const phonelogin(),
+      home: const SignUpPage(),
     );
   }
 }

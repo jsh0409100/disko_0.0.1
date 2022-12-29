@@ -5,7 +5,6 @@ import 'package:disko_001/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'home.dart';
 
@@ -32,15 +31,17 @@ class SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(
-          "로그인",
+          "회원가입",
           style: TextStyle(
             color: Colors.black,
+            fontSize: 17,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
         elevation: 0,
         leading: const Icon(
           Icons.close,
@@ -58,7 +59,7 @@ class SignUpPageState extends State<SignUpPage> {
                 const Icon(
                   Icons.phonelink_lock,
                   size: 40,
-                  color: Color(0xff9865FC),
+                  color: Color(0xff7150FF),
                 ),
                 SizedBox(width: MediaQuery.of(context).size.height * 0.01),
                 Column(
@@ -94,9 +95,6 @@ class SignUpPageState extends State<SignUpPage> {
                     },
                     child: Container(
                       height: 45,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 4.0),
-                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
                       decoration: BoxDecoration(
                           border: Border.all(
                             width: 1,
@@ -106,6 +104,7 @@ class SignUpPageState extends State<SignUpPage> {
                               const BorderRadius.all(Radius.circular(5.0))),
                       child: Row(
                         children: [
+                          const SizedBox(width: 10),
                           Center(
                             child: Text(
                               countryCode?.dialCode ?? "+1",
@@ -115,10 +114,11 @@ class SignUpPageState extends State<SignUpPage> {
                               ),
                             ),
                           ),
+                          const SizedBox(width: 7),
                           const Icon(
                             Icons.arrow_drop_down_outlined,
                             size: 20,
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -146,12 +146,12 @@ class SignUpPageState extends State<SignUpPage> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.maxFinite, 50),
+                minimumSize: const Size(double.maxFinite, 45),
                 backgroundColor: Colors.grey,
               ),
               onPressed: () async {
                 await FirebaseAuth.instance.verifyPhoneNumber(
-                  phoneNumber: countryCode!.dialCode + phone,
+                  phoneNumber: '${countryCode!.dialCode + phone}',
                   verificationCompleted: (PhoneAuthCredential credential) {},
                   verificationFailed: (FirebaseAuthException e) {},
                   codeSent: (String verificationId, int? resendToken) {
@@ -164,24 +164,42 @@ class SignUpPageState extends State<SignUpPage> {
               },
               child: const Text('인증문자 받기'),
             ),
-            Expanded(
-              child: SizedBox(
-                height: 45,
-                child: TextField(
-                  keyboardType: TextInputType.phone,
-                  controller: verController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: '인증번호를 입력해 주세요.',
-                  ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            SizedBox(
+              height: 45,
+              child: TextField(
+                keyboardType: TextInputType.phone,
+                controller: verController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '인증번호를 입력해 주세요.',
                 ),
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  '이용약관 ',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                Text('및 '),
+                Text(
+                  '이용약관',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.maxFinite, 50),
-                backgroundColor: Colors.grey,
+                minimumSize: const Size(double.maxFinite, 45),
+                backgroundColor: const Color(0xff7150FF),
               ),
               onPressed: () async {
                 try {
@@ -192,19 +210,22 @@ class SignUpPageState extends State<SignUpPage> {
                   // Sign the user in (or link) with the credential
                   await auth.signInWithCredential(credential);
 
-                  UserModel newUser = UserModel(
+                  UserModel new_user = UserModel(
                       phoneNum: phone,
                       countryCode: countryCode!.dialCode,
                       name: "guest",
                       uid: auth.currentUser!.uid);
-                  users.add(newUser.toJson());
+                  users.add(new_user.toJson());
 
-                  Get.to(() => const MyHome());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHome()),
+                  ); // 이건 Get.to로 변경
                 } catch (e) {
                   print(e);
                 }
               },
-              child: const Text('로그인'),
+              child: const Text('디스코 시작하기'),
             ),
           ],
         ),

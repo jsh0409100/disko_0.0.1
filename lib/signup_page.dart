@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'home.dart';
 
@@ -217,10 +216,8 @@ class SignUpPageState extends State<SignUpPage> {
                       uid: auth.currentUser!.uid);
                   users.add(new_user.toJson());
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyHome()),
-                  ); // 이건 Get.to로 변경
+                  Get.to(() => const MyHome());
+                  // 이건 Get.to로 변경
                 } catch (e) {
                   print(e);
                 }

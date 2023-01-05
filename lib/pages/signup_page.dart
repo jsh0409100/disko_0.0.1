@@ -27,6 +27,12 @@ class SignUpPageState extends State<SignUpPage> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CountryCode? countryCode;
 
+  late bool _isButtonDisabled;
+
+  void initState() {
+    _isButtonDisabled = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,44 +41,47 @@ class SignUpPageState extends State<SignUpPage> {
         title: const Text(
           "회원가입",
           style: TextStyle(
-            color: Colors.black,
             fontSize: 17,
+            fontWeight: FontWeight.w700,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.grey[50],
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
         elevation: 0,
         leading: const Icon(
           Icons.close,
-          color: Colors.black,
+          size: 24,
         ),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
-            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.041),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.phonelink_lock,
-                  size: 40,
-                  color: Color(0xff7150FF),
+                const Text(
+                  '🤫',
+                  style: TextStyle(
+                    fontSize: 30,
+                  ),
                 ),
-                SizedBox(width: MediaQuery.of(context).size.height * 0.01),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.004),
                 Column(
                   children: const [
                     Text(
                       '디스코는 휴대폰 번호로만 로그인해요.',
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
                       '인증목적으로만 사용되니 안심하세요!',
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -87,29 +96,29 @@ class SignUpPageState extends State<SignUpPage> {
                   child: GestureDetector(
                     onTap: () async {
                       final code =
-                          await countryPicker.showPicker(context: context);
+                      await countryPicker.showPicker(context: context);
                       setState(() {
                         countryCode = code;
                       });
                     },
                     child: Container(
-                      height: 45,
+                      height: 50,
                       decoration: BoxDecoration(
                           border: Border.all(
                             width: 1,
-                            color: Colors.grey,
+                            color: const Color(0xffC4C4C4),
                           ),
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(5.0))),
+                          const BorderRadius.all(Radius.circular(5.0))),
                       child: Row(
                         children: [
                           const SizedBox(width: 10),
-                          Center(
+                          FittedBox(
                             child: Text(
                               countryCode?.dialCode ?? "+1",
                               style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
@@ -123,18 +132,20 @@ class SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-                SizedBox(width: MediaQuery.of(context).size.height * 0.01),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                 Expanded(
                   flex: 3,
                   child: SizedBox(
-                    height: 45,
+                    height: 50,
                     child: TextField(
                       keyboardType: TextInputType.phone,
                       onChanged: (value) {
                         phone = value;
                       },
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
+                        ),
                         labelText: '휴대폰 번호를 입력해주세요.',
                       ),
                     ),
@@ -142,11 +153,13 @@ class SignUpPageState extends State<SignUpPage> {
                 ),
               ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.maxFinite, 45),
-                backgroundColor: Colors.grey,
+                elevation: 0,
+                minimumSize: const Size(double.maxFinite, 49),
+                backgroundColor: const Color(0xff4E4E4E),
+                foregroundColor: Colors.white,
               ),
               onPressed: () async {
                 await FirebaseAuth.instance.verifyPhoneNumber(
@@ -161,21 +174,29 @@ class SignUpPageState extends State<SignUpPage> {
                       (String verificationId) {}, //세원이가 5분 넣기
                 );
               },
-              child: const Text('인증문자 받기'),
+              child: const Text(
+                '인증문자 받기',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             SizedBox(
-              height: 45,
+              height: 44,
               child: TextField(
                 keyboardType: TextInputType.phone,
                 controller: verController,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
+                  ),
                   labelText: '인증번호를 입력해 주세요.',
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.029),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
@@ -183,22 +204,35 @@ class SignUpPageState extends State<SignUpPage> {
                   '이용약관 ',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
+                    color: Color(0xff797979),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                Text('및 '),
+                Text(
+                  '및 ',
+                  style: TextStyle(
+                    color: Color(0xff797979),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
                 Text(
                   '이용약관',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
+                    color: Color(0xff797979),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.018),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.maxFinite, 45),
-                backgroundColor: const Color(0xff7150FF),
+                minimumSize: const Size(double.maxFinite, 51),
+                backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () async {
                 try {
@@ -206,7 +240,7 @@ class SignUpPageState extends State<SignUpPage> {
                       verificationId: SignUpPage.verify,
                       smsCode: verController.text);
 
-                  // Sign the user in (or link) with the credential
+// Sign the user in (or link) with the credential
                   await auth.signInWithCredential(credential);
 
                   UserModel new_user = UserModel(
@@ -217,12 +251,19 @@ class SignUpPageState extends State<SignUpPage> {
                   users.add(new_user.toJson());
 
                   Get.to(() => const MyHome());
-                  // 이건 Get.to로 변경
+// 이건 Get.to로 변경
                 } catch (e) {
                   print(e);
                 }
               },
-              child: const Text('디스코 시작하기'),
+              child: const Text(
+                '🪩 디스코 시작하기',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 17,
+                ),
+              ),
             ),
           ],
         ),

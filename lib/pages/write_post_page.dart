@@ -38,6 +38,7 @@ class WritePostPage extends StatelessWidget {
           builder: (context, constraints) {
             return Column(children: [
               const TextField(
+                maxLength: 15,
                 decoration: InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10, horizontal: 24),

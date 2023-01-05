@@ -1,6 +1,4 @@
-import 'package:disko_001/pages/signup_page.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ConditionPage extends StatefulWidget {
   const ConditionPage({Key? key}) : super(key: key);
@@ -9,79 +7,186 @@ class ConditionPage extends StatefulWidget {
   State<ConditionPage> createState() => _ConditionPageState();
 }
 
-class Step {
-  Step(this.title, this.body, [this.isExpanded = false]);
-
-  String title;
-  String body;
-  bool isExpanded;
-}
-
-List<Step> getSteps() {
-  return [
-    Step('1. 서비스 이용약관', '서비스 이용약관에 관한 내용'),
-    Step('2. 개인정보 수집 이용목적, 수집하는 개인정보의 항목 및 수집방법',
-        '개인정보 수집 이용목적, 수집하는 개인정보의 항목 및 수집방법에 관한 내용'),
-    Step('3. 개인정보의 보유 및 이용기간', '개인정보의 보유 및 이용기간에 관한 내용'),
-  ];
-}
-
 class _ConditionPageState extends State<ConditionPage> {
-  final List<Step> _steps = getSteps();
+  List<bool> selected = List<bool>.generate(3, (int index) => false);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("이용약관 및 개인정보취급방침"),
+        title: const Text(
+          "이용약관 및 개인정보취급방침",
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          _renderCondition(),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 2.5,
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: DataTable(
+                      dataRowHeight: 63,
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Text(
+                            '전체동의',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                      rows: <DataRow>[
+                        DataRow(
+                          cells: const <DataCell>[
+                            DataCell(ConditionCell(
+                              conditionTitle: '서비스 이용약관',
+                            ))
+                          ],
+                          selected: selected[0],
+                          onSelectChanged: (bool? value) {
+                            setState(() {
+                              selected[0] = value!;
+                            });
+                          },
+                        ),
+                        DataRow(
+                          cells: const <DataCell>[
+                            DataCell(ConditionCell(
+                              conditionTitle:
+                                  '개인정보의 수집 이용목적, 수집하는 개인 정보의 항목 및 수집방법',
+                            ))
+                          ],
+                          selected: selected[1],
+                          onSelectChanged: (bool? value) {
+                            setState(() {
+                              selected[1] = value!;
+                            });
+                          },
+                        ),
+                        DataRow(
+                          cells: const <DataCell>[
+                            DataCell(ConditionCell(
+                              conditionTitle: '개인정보의 보유 및 이용기간',
+                            ))
+                          ],
+                          selected: selected[2],
+                          onSelectChanged: (bool? value) {
+                            setState(() {
+                              selected[2] = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
           ),
-          buttongenerate('동의하고 시작하기'),
-        ]),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.maxFinite, 45),
+                  backgroundColor: const Color(0xff7150FF),
+                ),
+                onPressed: () async {
+                  // Get.to(() => const SignUpPage());
+                },
+                child: const Text('디스코 시작하기'),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 57,
+          )
+        ],
       ),
     );
   }
+}
 
-  Widget _renderCondition() {
-    return ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
-        setState(() {
-          _steps[index].isExpanded = !isExpanded;
-        });
-      },
-      children: _steps.map<ExpansionPanel>((Step step) {
-        return ExpansionPanel(
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return ListTile(
-              title: Text(step.title),
+class ConditionCell extends StatelessWidget {
+  final String conditionTitle;
+
+  const ConditionCell({
+    required this.conditionTitle,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(width: 279, child: Text(conditionTitle)),
+        IconButton(
+          icon: const Icon(Icons.keyboard_arrow_down),
+          onPressed: () {
+            showModalBottomSheet<void>(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              context: context,
+              builder: (BuildContext context) {
+                return SizedBox(
+                  height: 375,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 38, vertical: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          conditionTitle,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          height: 28,
+                        ),
+                        const Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Text(
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                                '서비스 이용약관 내용은 이렇습니당구리구리구리구 니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구'),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary),
+                          child: Text(
+                            '확인',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
-          body: ListTile(
-            title: Text(step.body),
-          ),
-          isExpanded: step.isExpanded,
-        );
-      }).toList(),
-    );
-  }
-
-  Widget buttongenerate(String text) {
-    return SizedBox(
-      //width: MediaQuery.of(context).size.width/5,
-      //height: MediaQuery.of(context).size.height/15,
-      child: ElevatedButton(
-        onPressed: () {
-          Get.to(() => const SignUpPage());
-        },
-        child: Text(text, style: const TextStyle(fontSize: 20)),
-      ),
+        )
+      ],
     );
   }
 }

@@ -1,11 +1,9 @@
 import 'package:disko_001/api/app_state.dart';
+import 'package:disko_001/pages/start_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
-
-import 'Widget/home.dart';
-import 'color_schemes.g.dart';
 
 //import 'start_pagerial.dart';
 
@@ -28,14 +26,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Disko Demo',
       theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: lightColorScheme,
+        primarySwatch: Colors.blue,
       ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: darkColorScheme,
-      ),
-      home: const MyHome(),
+      home: const StartPage(),
     );
   }
 }

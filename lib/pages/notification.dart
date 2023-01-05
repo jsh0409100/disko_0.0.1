@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'Widget/custom_follow_notification.dart';
-import 'Widget/custom_liked_notification.dart';
-import 'Widget/custom_comment_notification.dart';
+
+import '../Widget/custom_comment_notification.dart';
+import '../Widget/custom_follow_notification.dart';
+import '../Widget/custom_liked_notification.dart';
 
 class NotificationTap extends StatefulWidget {
   const NotificationTap({Key? key}) : super(key: key);
@@ -11,15 +12,12 @@ class NotificationTap extends StatefulWidget {
 }
 
 class _NotificationTapState extends State<NotificationTap> {
-
   List New = ["liked", "comment"];
-  List today = ["liked","comment","comment"];
-  List oldest = ["follow","comment","follow","comment","follow"];
+  List today = ["liked", "comment", "comment"];
+  List oldest = ["follow", "comment", "follow", "comment", "follow"];
   List sNew = ["liked", "follow"];
-  List sToday = ["liked","follow","follow"];
-  List sOldest = ["follow","liked","follow","liked","follow"];
-
-
+  List sToday = ["liked", "follow", "follow"];
+  List sOldest = ["follow", "liked", "follow", "liked", "follow"];
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +60,7 @@ class _NotificationTapState extends State<NotificationTap> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: New.length,
-                          itemBuilder: (context, index){
+                          itemBuilder: (context, index) {
                             return New[index] == "comment"
                                 ? const CustomCommentNotification()
                                 : const CustomLikedNotification();
@@ -79,7 +77,7 @@ class _NotificationTapState extends State<NotificationTap> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: today.length,
-                          itemBuilder: (context, index){
+                          itemBuilder: (context, index) {
                             return today[index] == "comment"
                                 ? const CustomCommentNotification()
                                 : CustomLikedNotification();
@@ -96,7 +94,7 @@ class _NotificationTapState extends State<NotificationTap> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: oldest.length,
-                          itemBuilder: (context, index){
+                          itemBuilder: (context, index) {
                             return oldest[index] == "comment"
                                 ? const CustomCommentNotification()
                                 : CustomLikedNotification();
@@ -125,7 +123,7 @@ class _NotificationTapState extends State<NotificationTap> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: sNew.length,
-                          itemBuilder: (context, index){
+                          itemBuilder: (context, index) {
                             return sNew[index] == "follow"
                                 ? CustomFollowNotification()
                                 : CustomLikedNotification();
@@ -142,7 +140,7 @@ class _NotificationTapState extends State<NotificationTap> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: sToday.length,
-                          itemBuilder: (context, index){
+                          itemBuilder: (context, index) {
                             return sToday[index] == "follow"
                                 ? CustomFollowNotification()
                                 : CustomLikedNotification();
@@ -159,7 +157,7 @@ class _NotificationTapState extends State<NotificationTap> {
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: sOldest.length,
-                          itemBuilder: (context, index){
+                          itemBuilder: (context, index) {
                             return sOldest[index] == "follow"
                                 ? CustomFollowNotification()
                                 : CustomLikedNotification();

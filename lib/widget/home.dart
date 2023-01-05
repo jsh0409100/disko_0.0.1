@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'home_feed_page.dart';
+import '../api/app_state.dart';
+import '../pages/home_feed_page.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({Key? key}) : super(key: key);
@@ -53,7 +55,9 @@ class _MyHomeState extends State<MyHome> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: pages[_selectedIndex],
+      body: Consumer<ApplicationState>(
+        builder: (context, appState, _) => pages[_selectedIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         // backgroundColor: ,
         // unselectedItemColor: ,

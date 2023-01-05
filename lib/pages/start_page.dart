@@ -1,4 +1,4 @@
-import 'package:disko_001/condition.dart';
+import 'package:disko_001/pages/condition.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

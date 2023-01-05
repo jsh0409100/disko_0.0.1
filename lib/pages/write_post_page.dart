@@ -1,4 +1,6 @@
+import 'package:disko_001/pages/select_category.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class WritePostPage extends StatelessWidget {
   const WritePostPage({Key? key}) : super(key: key);
@@ -20,7 +22,9 @@ class WritePostPage extends StatelessWidget {
             ),
             actions: [
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => const SelectCategory());
+                  },
                   child: const Text(
                     '다음',
                     style: TextStyle(

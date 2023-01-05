@@ -1,4 +1,4 @@
-import 'package:disko_001/signup_page.dart';
+import 'package:disko_001/pages/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

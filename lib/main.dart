@@ -1,11 +1,9 @@
-import 'package:disko_001/app_state.dart';
-import 'package:disko_001/start_page.dart';
+import 'package:disko_001/api/app_state.dart';
+import 'package:disko_001/pages/home_feed_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
-
-import 'detail_page.dart';
 
 //import 'start_pagerial.dart';
 
@@ -30,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const StartPage(),
+      home: const HomeFeedPage(),
     );
   }
 }

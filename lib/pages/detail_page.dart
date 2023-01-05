@@ -14,6 +14,7 @@ class _DetailPageState extends State<DetailPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.grey[50],
+        automaticallyImplyLeading: true,
         title: const Text(
           '유학생활',
           style: TextStyle(

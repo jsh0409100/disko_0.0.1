@@ -56,7 +56,7 @@ class PostCard extends StatelessWidget {
                 ),
                 IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
               ]),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -80,6 +80,7 @@ class PostCard extends StatelessWidget {
                     onPressed: () {},
                     icon: const Icon(Icons.favorite_border),
                   ),
+                  const Text('5'),
                   const SizedBox(width: 8),
                   IconButton(
                     onPressed: () {},
@@ -88,6 +89,7 @@ class PostCard extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
+                  const Text('20'),
                   const SizedBox(width: 8),
                   IconButton(
                     onPressed: () {},

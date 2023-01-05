@@ -15,10 +15,10 @@ class CustomCommentNotification extends StatelessWidget {
               backgroundImage: AssetImage("assets/user.png"),
             ),
             Positioned(
-              left: 30,
+              left: 35,
               child: Padding(
                 padding: EdgeInsets.only(top: 35),
-                child: Icon(Icons.chat_bubble, size: 15),
+                child: Icon(Icons.chat_bubble, size: 15,color: Theme.of(context).colorScheme.primary,),
               ),
             )
           ]),

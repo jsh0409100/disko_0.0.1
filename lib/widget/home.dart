@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/pages/notification.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../api/app_state.dart';
 import '../pages/home_feed_page.dart';
+import '../pages/search.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({Key? key}) : super(key: key);
@@ -38,14 +42,18 @@ class _MyHomeState extends State<MyHome> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: (){
+              Get.to(() => const search());
+            },
             icon: const Icon(
               Icons.search_outlined,
               color: Colors.black,
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.to(() => const NotificationTap());
+            },
             icon: const Icon(
               Icons.notifications_none_outlined,
               color: Colors.black,

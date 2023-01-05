@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+class Tech{
+  String label;
+  bool isSelected;
+  Tech(this.label, this.isSelected);
+}
+
 class search extends StatefulWidget {
   const search({Key? key}) : super(key: key);
 
@@ -9,21 +15,60 @@ class search extends StatefulWidget {
 
 class _searchState extends State<search> {
 
+  bool selected = false;
+  List<Tech> _chipsList = [
+    Tech('유학생활', false),
+    Tech('현지생활', false),
+    Tech('중고거래', false),
+    Tech('요리', false),
+    Tech('직장생활', false),
+    Tech('고민상담', false),
+    Tech('교통 / 날씨', false),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       appBar: AppBar(
         centerTitle: true,
-        title: Text("이스라엘"),
+        title: Container(
+          height: MediaQuery.of(context).size.height/20,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Color(0xFFF1F1F1),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(15, 0, 0, 4),
+            child: TextField(
+              keyboardType: TextInputType.text,
+              onChanged: (text){
+                //_streamSearch.add(text);
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ),
         actions: [
           IconButton(
               onPressed: (){
+                /*
                 showSearch(
                     context: context,
                     delegate: MysearchDelegate(),
                 );
+                 */
               },
-              icon: const Icon(Icons.search),
+              icon: Text(
+                "취소",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
           ),
         ],
       ),
@@ -31,14 +76,22 @@ class _searchState extends State<search> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: rowChips(),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Wrap(
+                spacing: 8,
+                direction: Axis.horizontal,
+                children: techChips(),
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.fromLTRB(40,18,18,10),
               child: Text(
-                "바로가기"
+                "바로가기",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20
+                ),
               ),
             ),
             Padding(
@@ -48,139 +101,15 @@ class _searchState extends State<search> {
                   spacing: 20,
                   runSpacing: 20,
                   children: [
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    boxbox("🔥", "현지생활"),
+                    boxbox("🛍️", "중고거래"),
+                    boxbox("👩🏻‍💻", "구인구직"),
+                    boxbox("✈️", "여행패키지"),
+                    boxbox("🏠", "한인숙박"),
+                    boxbox("🍳", "요리"),
+                    boxbox("😀", "고민상담"),
+                    boxbox("🚖 🌤️", "교통 / 날씨"),
+                    boxbox("🎓", "유학생활"),
                   ],
                 )
               ),
@@ -191,44 +120,73 @@ class _searchState extends State<search> {
     );
   }
 
-  rowChips() {
-    return Row(
-      children: <Widget>[
-        chip('이스라엘'),
-        chip('유학생활'),
-        chip('요리'),
-        chip('중고거래'),
-        chip('한인숙박'),
-        chip('한인숙박'),
-        chip('한인숙박'),
-        chip('한인숙박'),
-        chip('한인숙박'),
-      ],
-    );
-  }
 
-  Widget chip(String label) {
-    return Padding(
-      padding: const EdgeInsets.all(3),
-      child: Chip(
-        shape: const StadiumBorder(
-          side: BorderSide(
-            color: Colors.black,
-            width: 0.5
-          ),
-        ),
-        labelPadding: EdgeInsets.all(5),
-        backgroundColor: Colors.white54,
-        padding: EdgeInsets.all(6),
-        label: Text(
-          label,
-          style: TextStyle(
-            color: Colors.black,
+
+  Widget boxbox(String label, text) {
+    return SizedBox(
+      width: 100,
+      height: 100,
+      child: Card(
+        color: Theme.of(context).colorScheme.onPrimary,
+        elevation: 2,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                 Text(
+                     label,
+                   style: TextStyle(
+                     fontSize: 25,
+                   ),
+                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                    text,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+
+
+  List<Widget> techChips() {
+    List<Widget> chips = [];
+    for(int i =0; i < _chipsList.length; i++){
+      Widget item = Padding(
+        padding: EdgeInsets.only(left: 10, right: 5),
+        child: FilterChip(
+          shape: StadiumBorder(
+            side: BorderSide(
+              width: 0.5
+            )
+          ),
+          label: Text(_chipsList[i].label),
+          labelStyle: TextStyle(color: Colors.black),
+          backgroundColor: Theme.of(context).colorScheme.background,
+          selectedColor: Theme.of(context).colorScheme.primary,
+          selected: _chipsList[i].isSelected,
+          onSelected: (bool value){
+            setState(() {
+              _chipsList[i].isSelected = value;
+            });
+          },
+        ),
+      );
+      chips.add(item);
+    }
+    return chips;
+  }
+
 }
 
 class MysearchDelegate extends SearchDelegate{
@@ -295,7 +253,4 @@ class MysearchDelegate extends SearchDelegate{
         },
     );
   }
-  
-  
-  
 }

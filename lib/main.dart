@@ -1,8 +1,4 @@
 import 'package:disko_001/app_state.dart';
-import 'package:disko_001/notification.dart';
-import 'package:disko_001/search.dart';
-import 'package:disko_001/select_category.dart';
-import 'package:disko_001/signup_page.dart';
 import 'package:disko_001/start_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,16 +25,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Disko Demo',
-
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-//      home: const Condition(),
-//      home: const phonelogin(),
-      //home: const StartPage(),
-      home: const NotificationTap(),
-      //home: const search(),
-      //home: const SelectCategory(),
+      home: const StartPage(),
     );
   }
 }

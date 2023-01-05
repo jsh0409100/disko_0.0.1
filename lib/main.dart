@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
+import 'color_schemes.g.dart';
+
 //import 'start_pagerial.dart';
 
 void main() async {
@@ -26,8 +28,10 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Disko Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          useMaterial3: true,
+          colorScheme: lightColorScheme,
+          fontFamily: 'Pretendard'),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       home: const StartPage(),
     );
   }

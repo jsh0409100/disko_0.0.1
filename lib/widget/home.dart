@@ -67,6 +67,7 @@ class _MyHomeState extends State<MyHome> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home_rounded),
             label: '홈',
           ),
           BottomNavigationBarItem(

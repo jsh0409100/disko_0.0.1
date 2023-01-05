@@ -1,7 +1,6 @@
 import 'package:disko_001/pages/condition.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({Key? key}) : super(key: key);
@@ -22,44 +21,49 @@ class StartPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Image.asset('assets/disko_icon.png'),
-                    Text('D I S K O',
-                        style: GoogleFonts.montserrat(
-                          textStyle: const TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.purple,
-                          ),
-                        )),
+                    Text(
+                      'DISKO',
+                      style: TextStyle(
+                        fontSize: 46,
+                        fontWeight: FontWeight.w800,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   ],
                 ),
               ),
               Column(
                 children: [
+                  SizedBox(
+                    width: 224,
+                    height: 55,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      ),
+                      onPressed: () {
+                        Get.to(() => const ConditionPage());
+                      },
+                      child: Text(
+                        '🥳  회원가입  →',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 22),
+                      ),
+                    ),
+                  ),
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.purple,
-                      minimumSize: const Size.fromHeight(50),
+                      minimumSize: const Size.fromHeight(51),
                     ),
                     onPressed: () {},
-                    child: const Text(
+                    child: Text(
                       '로그인',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.purple[200],
-                      minimumSize: const Size.fromHeight(50),
-                    ),
-                    onPressed: () {
-                      Get.to(() => const ConditionPage());
-                    },
-                    child: const Text(
-                      '회원가입',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17),
                     ),
                   ),
                 ],

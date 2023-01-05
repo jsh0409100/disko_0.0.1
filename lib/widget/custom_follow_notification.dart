@@ -20,7 +20,7 @@ class _CustomFollowNotificationState extends State<CustomFollowNotification> {
               backgroundImage: AssetImage("assets/user.png"),
             ),
             Positioned(
-              left: 30,
+              left: 35,
               child: Padding(
                 padding: EdgeInsets.only(top: 35),
                 child: Icon(Icons.folder, size: 15),

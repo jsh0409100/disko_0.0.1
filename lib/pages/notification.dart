@@ -27,15 +27,26 @@ class _NotificationTapState extends State<NotificationTap> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: Text("알림"),
+            title: Text(
+                "알림",
+              style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
+            ),
             centerTitle: true,
             bottom: const TabBar(
+              labelColor: Colors.black,
+              indicatorColor: Color(0xFF5E38EB),
               tabs: <Widget>[
                 Tab(
-                  icon: Text("활동 알림"),
+                  icon: Text(
+                      "활동 알림",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Tab(
-                  icon: Text("중고거래 알림"),
+                  icon: Text(
+                      "중고거래 알림",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),

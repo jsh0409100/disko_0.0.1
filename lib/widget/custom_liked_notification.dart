@@ -15,10 +15,10 @@ class CustomLikedNotification extends StatelessWidget {
               backgroundImage: AssetImage("assets/user.png"),
             ),
             Positioned(
-              left: 30,
+              left: 35,
               child: Padding(
                 padding: EdgeInsets.only(top: 35),
-                child: Icon(Icons.favorite, size: 15),
+                child: Icon(Icons.favorite, size: 15,color: Color(0xFFDB5D46),),
               ),
             )
           ]),

@@ -1,3 +1,4 @@
+import 'package:disko_001/Widget/home.dart';
 import 'package:disko_001/api/app_state.dart';
 import 'package:disko_001/pages/start_page.dart';
 import 'package:firebase_core/firebase_core.dart';

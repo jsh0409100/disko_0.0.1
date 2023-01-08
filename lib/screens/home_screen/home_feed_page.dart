@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/models/post_card_model.dart';
-import 'package:disko_001/pages/write_post_page.dart';
+import 'package:disko_001/screens/write_post_screen/write_post_page.dart';
 import 'package:disko_001/widget/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +24,7 @@ class HomeFeedPage extends StatelessWidget {
             if (snapshot.hasData) {
               return ListView.separated(
                 scrollDirection: Axis.vertical,
-                itemCount: 1,
+                itemCount: 3,
                 // TOOO item count 자동 해놓기
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),

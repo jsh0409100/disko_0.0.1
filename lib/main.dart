@@ -1,6 +1,5 @@
-import 'package:disko_001/Widget/home.dart';
-import 'package:disko_001/api/app_state.dart';
-import 'package:disko_001/pages/condition.dart';
+import 'package:disko_001/screens/home_screen/home.dart';
+import 'package:disko_001/services/app_state.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';

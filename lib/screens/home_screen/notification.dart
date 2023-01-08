@@ -1,8 +1,7 @@
+import 'package:disko_001/widget/custom_comment_notification.dart';
+import 'package:disko_001/widget/custom_follow_notification.dart';
+import 'package:disko_001/widget/custom_liked_notification.dart';
 import 'package:flutter/material.dart';
-
-import '../Widget/custom_comment_notification.dart';
-import '../Widget/custom_follow_notification.dart';
-import '../Widget/custom_liked_notification.dart';
 
 class NotificationTap extends StatefulWidget {
   const NotificationTap({Key? key}) : super(key: key);
@@ -28,8 +27,11 @@ class _NotificationTapState extends State<NotificationTap> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-                "알림",
-              style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
+              "알림",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             centerTitle: true,
             bottom: const TabBar(
@@ -38,13 +40,13 @@ class _NotificationTapState extends State<NotificationTap> {
               tabs: <Widget>[
                 Tab(
                   icon: Text(
-                      "활동 알림",
+                    "활동 알림",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Tab(
                   icon: Text(
-                      "중고거래 알림",
+                    "중고거래 알림",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),

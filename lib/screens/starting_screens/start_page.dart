@@ -1,6 +1,8 @@
-import 'package:disko_001/pages/condition.dart';
+import 'package:disko_001/screens/starting_screens/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'login_page.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({Key? key}) : super(key: key);
@@ -41,7 +43,7 @@ class StartPage extends StatelessWidget {
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
-                    Get.to(() => const ConditionPage());
+                    Get.to(() => const SignUpPage());
                   },
                   child: Text(
                     '🥳  회원가입  →',
@@ -56,7 +58,9 @@ class StartPage extends StatelessWidget {
                 style: TextButton.styleFrom(
                   minimumSize: const Size.fromHeight(51),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => const LoginPage());
+                },
                 child: Text(
                   '로그인',
                   style: TextStyle(

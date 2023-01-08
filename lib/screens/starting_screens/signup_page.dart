@@ -5,7 +5,7 @@ import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../Widget/home.dart';
+import '../home_screen/home.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -96,7 +96,7 @@ class SignUpPageState extends State<SignUpPage> {
                   child: GestureDetector(
                     onTap: () async {
                       final code =
-                      await countryPicker.showPicker(context: context);
+                          await countryPicker.showPicker(context: context);
                       setState(() {
                         countryCode = code;
                       });
@@ -109,7 +109,7 @@ class SignUpPageState extends State<SignUpPage> {
                             color: const Color(0xffC4C4C4),
                           ),
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(5.0))),
+                              const BorderRadius.all(Radius.circular(5.0))),
                       child: Row(
                         children: [
                           const SizedBox(width: 10),
@@ -144,7 +144,9 @@ class SignUpPageState extends State<SignUpPage> {
                       },
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
+                          borderSide: BorderSide(
+                              width: 1,
+                              color: Color(0xffC4C4C4)), //<-- SEE HERE
                         ),
                         labelText: '휴대폰 번호를 입력해주세요.',
                       ),
@@ -190,7 +192,8 @@ class SignUpPageState extends State<SignUpPage> {
                 controller: verController,
                 decoration: const InputDecoration(
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
+                    borderSide: BorderSide(
+                        width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
                   ),
                   labelText: '인증번호를 입력해 주세요.',
                 ),

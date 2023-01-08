@@ -4,18 +4,18 @@ import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../Widget/home.dart';
+import '../home_screen/home.dart';
 
-class LogInPage extends StatefulWidget {
-  const LogInPage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   static String verify = "";
 
   @override
-  State<LogInPage> createState() => LogInPageState();
+  State<LoginPage> createState() => LoginPageState();
 }
 
-class LogInPageState extends State<LogInPage> {
+class LoginPageState extends State<LoginPage> {
   final countryPicker = const FlCountryCodePicker();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -153,7 +153,7 @@ class LogInPageState extends State<LogInPage> {
                   verificationCompleted: (PhoneAuthCredential credential) {},
                   verificationFailed: (FirebaseAuthException e) {},
                   codeSent: (String verificationId, int? resendToken) {
-                    LogInPage.verify = verificationId;
+                    LoginPage.verify = verificationId;
                   },
                   timeout: const Duration(minutes: 2),
                   codeAutoRetrievalTimeout:
@@ -202,7 +202,7 @@ class LogInPageState extends State<LogInPage> {
               onPressed: () async {
                 try {
                   PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                      verificationId: LogInPage.verify,
+                      verificationId: LoginPage.verify,
                       smsCode: verController.text);
 
                   // Sign the user in (or link) with the credential

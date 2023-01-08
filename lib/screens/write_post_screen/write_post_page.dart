@@ -115,22 +115,9 @@ class _WritePostPageState extends State<WritePostPage> {
         return Center(
           child: Container(
             child: AlertDialog(
-              contentPadding: EdgeInsets.all(6.0),
+              contentPadding: const EdgeInsets.all(6.0),
               title: const Text('카테고리 선택'),
-              content: Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                children: const [
-                  CategoryCard(categoryIcon: "🔥", categoryName: "현지생활"),
-                  CategoryCard(categoryIcon: "🛍️", categoryName: "중고거래"),
-                  CategoryCard(categoryIcon: "👩🏻‍💻", categoryName: "구인구직"),
-                  CategoryCard(categoryIcon: "✈️", categoryName: "여행"),
-                  CategoryCard(categoryIcon: "🏠", categoryName: "한인숙박"),
-                  CategoryCard(categoryIcon: "🍳", categoryName: "요리"),
-                  CategoryCard(categoryIcon: "😀", categoryName: "고민상당"),
-                  CategoryCard(categoryIcon: "🚖 🌤️", categoryName: "교통/날씨"),
-                  CategoryCard(categoryIcon: "🎓", categoryName: "유학생활"),
-                ],
-              ),
+              content: const CategoryCards(),
               actions: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(
@@ -148,7 +135,8 @@ class _WritePostPageState extends State<WritePostPage> {
                   child: const Text('게시'),
                   onPressed: () {
                     PostCardModel newPost = PostCardModel(
-                        userName: FirebaseAuth.instance.currentUser!.uid,
+                        userName:
+                            FirebaseAuth.instance.currentUser!.displayName!,
                         postTitle: postTitleController.text,
                         postCategory: "요리",
                         postText: postTextController.text);

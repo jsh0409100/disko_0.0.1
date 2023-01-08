@@ -50,43 +50,96 @@ import 'package:flutter/material.dart';
 //   }
 // }
 
-class CategoryCard extends StatelessWidget {
-  final String categoryIcon, categoryName;
-  const CategoryCard({
+class CategoryCards extends StatefulWidget {
+  const CategoryCards({
     Key? key,
-    required this.categoryIcon,
-    required this.categoryName,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<CategoryCards> createState() => _CategoryCardsState();
+}
+
+class _CategoryCardsState extends State<CategoryCards> {
+  int _selected = 0;
+
+  Widget CategoryCardRadioButton(
+      {required String categoryIcon,
+      required String categoryName,
+      required int index}) {
     return SizedBox(
       width: 90,
       height: 90,
-      child: Card(
-        elevation: 1,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  categoryIcon,
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  categoryName,
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                ),
-              ],
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selected = index;
+          });
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: (_selected == index)
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.white, //<-- SEE HERE
+            ),
+            borderRadius: BorderRadius.circular(13.0),
+          ),
+          elevation: 1,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    categoryIcon,
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    categoryName,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: (_selected == index)
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget build(BuildContext context) {
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      children: [
+        CategoryCardRadioButton(
+            categoryIcon: "🔥", categoryName: "현지생활", index: 1),
+        CategoryCardRadioButton(
+            categoryIcon: "🛍️", categoryName: "중고거래", index: 2),
+        CategoryCardRadioButton(
+            categoryIcon: "👩🏻‍💻", categoryName: "구인구직", index: 3),
+        CategoryCardRadioButton(
+            categoryIcon: "✈️", categoryName: "여행", index: 4),
+        CategoryCardRadioButton(
+            categoryIcon: "🏠", categoryName: "한인숙박", index: 5),
+        CategoryCardRadioButton(
+            categoryIcon: "🍳", categoryName: "요리", index: 6),
+        CategoryCardRadioButton(
+            categoryIcon: "😀", categoryName: "고민상당", index: 7),
+        CategoryCardRadioButton(
+            categoryIcon: "🚖 🌤️", categoryName: "교통/날씨", index: 8),
+        CategoryCardRadioButton(
+            categoryIcon: "🎓", categoryName: "유학생활", index: 9),
+      ],
     );
   }
 }

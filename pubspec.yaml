@@ -47,6 +47,7 @@ dependencies:
   get: ^4.6.5
   flutter_launcher_icons: ^0.11.0
   flutter_native_splash: ^2.2.16
+  smooth_page_indicator: ^1.0.0+2
 
 
 dev_dependencies:
@@ -83,6 +84,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/disko_icon.png
+    - assets/disco-ball-shiny.gif
+    - assets/dancing.gif
     - assets/user.png
 
   # To add assets to your application, add an assets section, like this:

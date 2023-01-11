@@ -149,7 +149,7 @@ class LoginPageState extends State<LoginPage> {
               ),
               onPressed: () async {
                 await FirebaseAuth.instance.verifyPhoneNumber(
-                  phoneNumber: '${countryCode!.dialCode + phone}',
+                  phoneNumber: countryCode!.dialCode + phone,
                   verificationCompleted: (PhoneAuthCredential credential) {},
                   verificationFailed: (FirebaseAuthException e) {},
                   codeSent: (String verificationId, int? resendToken) {

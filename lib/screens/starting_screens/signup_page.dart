@@ -246,12 +246,12 @@ class SignUpPageState extends State<SignUpPage> {
 // Sign the user in (or link) with the credential
                   await auth.signInWithCredential(credential);
 
-                  UserModel new_user = UserModel(
+                  UserModel newUser = UserModel(
                       phoneNum: phone,
                       countryCode: countryCode!.dialCode,
                       name: "guest",
                       uid: auth.currentUser!.uid);
-                  users.add(new_user.toJson());
+                  users.add(newUser.toJson());
 
                   Get.to(() => const MyHome());
 // 이건 Get.to로 변경

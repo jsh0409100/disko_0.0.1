@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -8,6 +9,8 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  var _PostCard = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,11 +18,10 @@ class _DetailPageState extends State<DetailPage> {
         elevation: 0,
         backgroundColor: Colors.grey[50],
         automaticallyImplyLeading: true,
-        title: const Text(
-          '유학생활',
-          style: TextStyle(
-            color: Colors.black
-          ),
+        title: Text(
+          _PostCard.postCategory,
+          style: const TextStyle(
+              color: Colors.black, fontWeight: FontWeight.w700, fontSize: 17),
         ),
         centerTitle: true,
       ),
@@ -37,138 +39,149 @@ class Square extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _PostCard = Get.arguments;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(19, 17, 0, 18),
-            width: 345,
-            height: 63,
-            decoration: BoxDecoration(
-                color: const Color(0xffD9D9D9),
-                borderRadius: BorderRadius.circular(12)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8.0),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(
+              children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: const Image(
+                      image: NetworkImage(
+                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                      height: 43,
+                      width: 43,
+                      fit: BoxFit.scaleDown,
+                    )),
+                const SizedBox(
+                  width: 12,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _PostCard.userName,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    Text(_PostCard.postCategory,
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w800)),
+                  ],
+                )
+              ],
             ),
-            child: const Text(
-              '제목',
-              style: TextStyle(
-                fontSize: 26,
+            const SizedBox(
+              height: 23,
+            ),
+            FittedBox(
+              fit: BoxFit.contain,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _PostCard.postTitle,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
               ),
             ),
-          ),
-        ),
-        const SizedBox(height: 13),
-        Row(
-          children: [
-            const SizedBox(width: 15),
-            Column(
-              children: const [
-                Text('본문내용 본문내용 본문내용 본문내용',
-                  style: TextStyle(
-                    fontSize: 14,
+            const SizedBox(height: 13),
+            Row(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.89,
+                      child: Text(
+                        _PostCard.postText,
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 166,
+                  height: 148,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.circular(12),
+                    image: const DecorationImage(
+                        image: NetworkImage(
+                            'https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60')),
                   ),
                 ),
-                Text('본문내용 본문내용 본문내용 본문내용',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                Text('본문내용 본문내용 본문내용 본문내용',
-                  style: TextStyle(
-                    fontSize: 14,
+                const SizedBox(width: 13),
+                Container(
+                  width: 166,
+                  height: 148,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.circular(12),
+                    image: const DecorationImage(
+                        image: NetworkImage(
+                            'https://images.unsplash.com/photo-1481349518771-20055b2a7b24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60')),
                   ),
                 ),
               ],
             ),
-          ],
-        ),
-        const SizedBox(height: 14),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 166,
-              height: 148,
-              decoration: BoxDecoration(
-                color: const Color(0xffD9D9D9),
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(image: NetworkImage('https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60')),
+            const SizedBox(height: 19),
+            Center(
+              child: Container(
+                width: 345,
+                height: 278,
+                decoration: BoxDecoration(
+                  color: const Color(0xffD9D9D9),
+                  borderRadius: BorderRadius.circular(12),
+                  image: const DecorationImage(
+                      image: NetworkImage(
+                          'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cmFuZG9tfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60')),
+                ),
               ),
             ),
-            const SizedBox(width: 13),
-            Container(
-              width: 166,
-              height: 148,
-              decoration: BoxDecoration(
-                color: const Color(0xffD9D9D9),
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(image: NetworkImage('https://images.unsplash.com/photo-1481349518771-20055b2a7b24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60')),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 19),
-        Row(
-          children: [
-            const SizedBox(width: 15),
-            Column(
-              children: const [
-                Text('본문내용 본문내용 본문내용 본문내용',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                Text('본문내용 본문내용 본문내용 본문내용',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                Text('본문내용 본문내용 본문내용 본문내용',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Center(
-          child: Container(
-            width: 345,
-            height: 278,
-            decoration: BoxDecoration(
-              color: const Color(0xffD9D9D9),
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(image: NetworkImage('https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cmFuZG9tfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60')),
-            ),
-          ),
+          ]),
         ),
         const SizedBox(height: 42),
-        const SizedBox(width: 376,
-          child: Divider(color: Color(0xffD9D9D9), thickness: 1),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: const Divider(color: Color(0xffD9D9D9), thickness: 1),
         ),
         const SizedBox(height: 9),
         Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(width: 14),
             IconButton(
-              onPressed: () {  },
-              icon: const Icon(Icons.favorite_border_outlined),
-              iconSize: 24,
+              onPressed: () {},
+              icon: const Icon(Icons.favorite_border),
             ),
-            const SizedBox(width: 24),
+            const Text('5'),
+            const SizedBox(width: 8),
             IconButton(
-              onPressed: () {  },
-              icon: const Icon(Icons.chat_outlined),
-              iconSize: 24,
+              onPressed: () {},
+              icon: const Icon(
+                Icons.chat_outlined,
+                color: Colors.black,
+              ),
             ),
-            const SizedBox(width: 24),
+            const Text('20'),
+            const SizedBox(width: 8),
             IconButton(
-              onPressed: () {  },
-              icon: const Icon(Icons.bookmark_border_outlined),
-              iconSize: 24,
+              onPressed: () {},
+              icon: const Icon(
+                Icons.bookmark_border,
+                color: Colors.black,
+              ),
             ),
+            const SizedBox(width: 8),
           ],
         ),
         const SizedBox(height: 41),
@@ -179,16 +192,15 @@ class Square extends StatelessWidget {
               height: 36,
               width: 36,
               decoration: const BoxDecoration(
-                  color: Color(0xffD9D9D9),
-                  shape: BoxShape.circle
-              ),
+                  color: Color(0xffD9D9D9), shape: BoxShape.circle),
             ),
             const SizedBox(width: 14),
             Column(
               children: [
                 Row(
                   children: const [
-                    Text('닉네임',
+                    Text(
+                      '닉네임',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -196,7 +208,8 @@ class Square extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Text('시간',
+                    Text(
+                      '시간',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -205,7 +218,8 @@ class Square extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text('wow 예뻐요!',
+                const Text(
+                  'wow 예뻐요!',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -219,7 +233,7 @@ class Square extends StatelessWidget {
                 Column(
                   children: [
                     IconButton(
-                      onPressed: () {  },
+                      onPressed: () {},
                       icon: const Icon(Icons.chat_bubble_outline),
                       iconSize: 24,
                     ),
@@ -230,7 +244,7 @@ class Square extends StatelessWidget {
                 Column(
                   children: [
                     IconButton(
-                      onPressed: () {  },
+                      onPressed: () {},
                       icon: const Icon(Icons.favorite_border_outlined),
                       iconSize: 24,
                     ),
@@ -249,16 +263,15 @@ class Square extends StatelessWidget {
               height: 36,
               width: 36,
               decoration: const BoxDecoration(
-                  color: Color(0xffD9D9D9),
-                  shape: BoxShape.circle
-              ),
+                  color: Color(0xffD9D9D9), shape: BoxShape.circle),
             ),
             const SizedBox(width: 14),
             Column(
               children: [
                 Row(
                   children: const [
-                    Text('닉네임2',
+                    Text(
+                      '닉네임2',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -266,7 +279,8 @@ class Square extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Text('시간',
+                    Text(
+                      '시간',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -275,7 +289,8 @@ class Square extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text('당신도 예뻐요!',
+                const Text(
+                  '당신도 예뻐요!',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -293,16 +308,15 @@ class Square extends StatelessWidget {
               height: 36,
               width: 36,
               decoration: const BoxDecoration(
-                  color: Color(0xffD9D9D9),
-                  shape: BoxShape.circle
-              ),
+                  color: Color(0xffD9D9D9), shape: BoxShape.circle),
             ),
             const SizedBox(width: 14),
             Column(
               children: [
                 Row(
                   children: const [
-                    Text('닉네임3',
+                    Text(
+                      '닉네임3',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -310,7 +324,8 @@ class Square extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Text('시간',
+                    Text(
+                      '시간',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -319,7 +334,8 @@ class Square extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text('우와아아아!',
+                const Text(
+                  '우와아아아!',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -330,7 +346,8 @@ class Square extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 29),
-        const SizedBox(width: 376,
+        const SizedBox(
+          width: 376,
           child: Divider(color: Color(0xffD9D9D9), thickness: 1),
         ),
         const SizedBox(height: 8),
@@ -341,9 +358,7 @@ class Square extends StatelessWidget {
               height: 36,
               width: 36,
               decoration: const BoxDecoration(
-                  color: Color(0xffD9D9D9),
-                  shape: BoxShape.circle
-              ),
+                  color: Color(0xffD9D9D9), shape: BoxShape.circle),
             ),
             const SizedBox(width: 5),
             Expanded(

@@ -23,7 +23,14 @@ class PostCard extends StatelessWidget {
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.92),
         child: GestureDetector(
           onTap: () {
-            Get.to(() => const DetailPage());
+            Get.to(
+              const DetailPage(),
+              arguments: PostCard(
+                  userName: userName,
+                  postCategory: postCategory,
+                  postTitle: postTitle,
+                  postText: postText),
+            );
           },
           child: Card(
             elevation: 1,

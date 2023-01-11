@@ -153,7 +153,8 @@ class Square extends StatelessWidget {
         const SizedBox(height: 42),
         SizedBox(
           width: MediaQuery.of(context).size.width,
-          child: const Divider(color: Color(0xffD9D9D9), thickness: 1),
+          child: Divider(
+              color: Theme.of(context).colorScheme.outline, thickness: 1),
         ),
         const SizedBox(height: 9),
         Row(

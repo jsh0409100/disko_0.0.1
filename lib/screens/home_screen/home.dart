@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/app_state.dart';
+import '../chat_screen/chat_list_page.dart';
 import 'home_feed_page.dart';
 import 'notification.dart';
 
@@ -21,7 +22,7 @@ class _MyHomeState extends State<MyHome> {
   int _selectedIndex = 0;
   final pages = [
     const HomeFeedPage(),
-    // const SecondPage(),
+    const ChatListPage(),
     // const ThirdPage(),
   ];
 

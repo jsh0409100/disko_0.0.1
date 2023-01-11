@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../models/category_list.dart';
+
 // class SelectCategory extends StatelessWidget {
 //   const SelectCategory({Key? key}) : super(key: key);
 //
@@ -51,7 +53,9 @@ import 'package:flutter/material.dart';
 // }
 
 class CategoryCards extends StatefulWidget {
-  const CategoryCards({
+  late int selected;
+  CategoryCards({
+    required this.selected,
     Key? key,
   }) : super(key: key);
 
@@ -60,25 +64,23 @@ class CategoryCards extends StatefulWidget {
 }
 
 class _CategoryCardsState extends State<CategoryCards> {
-  int _selected = 0;
-
   Widget CategoryCardRadioButton(
       {required String categoryIcon,
       required String categoryName,
       required int index}) {
     return SizedBox(
-      width: 90,
-      height: 90,
+      width: MediaQuery.of(context).size.width * 0.25,
+      height: MediaQuery.of(context).size.width * 0.25,
       child: GestureDetector(
         onTap: () {
           setState(() {
-            _selected = index;
+            widget.selected = index;
           });
         },
         child: Card(
           shape: RoundedRectangleBorder(
             side: BorderSide(
-              color: (_selected == index)
+              color: (widget.selected == index)
                   ? Theme.of(context).colorScheme.primary
                   : Colors.white, //<-- SEE HERE
             ),
@@ -93,7 +95,8 @@ class _CategoryCardsState extends State<CategoryCards> {
                 children: [
                   Text(
                     categoryIcon,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 17),
                   ),
                   const SizedBox(
                     height: 10,
@@ -103,7 +106,7 @@ class _CategoryCardsState extends State<CategoryCards> {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
-                      color: (_selected == index)
+                      color: (widget.selected == index)
                           ? Theme.of(context).colorScheme.primary
                           : Colors.black,
                     ),
@@ -117,28 +120,60 @@ class _CategoryCardsState extends State<CategoryCards> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
-    return Wrap(
-      alignment: WrapAlignment.spaceBetween,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CategoryCardRadioButton(
-            categoryIcon: "🔥", categoryName: "현지생활", index: 1),
-        CategoryCardRadioButton(
-            categoryIcon: "🛍️", categoryName: "중고거래", index: 2),
-        CategoryCardRadioButton(
-            categoryIcon: "👩🏻‍💻", categoryName: "구인구직", index: 3),
-        CategoryCardRadioButton(
-            categoryIcon: "✈️", categoryName: "여행", index: 4),
-        CategoryCardRadioButton(
-            categoryIcon: "🏠", categoryName: "한인숙박", index: 5),
-        CategoryCardRadioButton(
-            categoryIcon: "🍳", categoryName: "요리", index: 6),
-        CategoryCardRadioButton(
-            categoryIcon: "😀", categoryName: "고민상당", index: 7),
-        CategoryCardRadioButton(
-            categoryIcon: "🚖 🌤️", categoryName: "교통/날씨", index: 8),
-        CategoryCardRadioButton(
-            categoryIcon: "🎓", categoryName: "유학생활", index: 9),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          CategoryCardRadioButton(
+              categoryIcon: "🔥",
+              categoryName: CategoryList.categories[1],
+              index: 1),
+          CategoryCardRadioButton(
+              categoryIcon: "🛍️",
+              categoryName: CategoryList.categories[2],
+              index: 2),
+          CategoryCardRadioButton(
+              categoryIcon: "👩🏻‍💻",
+              categoryName: CategoryList.categories[3],
+              index: 3),
+        ]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CategoryCardRadioButton(
+                categoryIcon: "✈️",
+                categoryName: CategoryList.categories[4],
+                index: 4),
+            CategoryCardRadioButton(
+                categoryIcon: "🏠",
+                categoryName: CategoryList.categories[5],
+                index: 5),
+            CategoryCardRadioButton(
+                categoryIcon: "🍳",
+                categoryName: CategoryList.categories[6],
+                index: 6),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CategoryCardRadioButton(
+                categoryIcon: "😀",
+                categoryName: CategoryList.categories[7],
+                index: 7),
+            CategoryCardRadioButton(
+                categoryIcon: "🚖 🌤️",
+                categoryName: CategoryList.categories[8],
+                index: 8),
+            CategoryCardRadioButton(
+                categoryIcon: "🎓",
+                categoryName: CategoryList.categories[9],
+                index: 9),
+          ],
+        ),
       ],
     );
   }

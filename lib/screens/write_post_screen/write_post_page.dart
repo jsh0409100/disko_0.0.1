@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../models/category_list.dart';
 import '../../models/post_card_model.dart';
 import '../home_screen/home.dart';
 
@@ -109,15 +110,16 @@ class _WritePostPageState extends State<WritePostPage> {
   }
 
   Future<void> categoryDialogBuilder(BuildContext context) {
+    var _CategoryCards = CategoryCards(selected: 0);
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return Center(
           child: Container(
             child: AlertDialog(
-              contentPadding: const EdgeInsets.all(6.0),
+              contentPadding: const EdgeInsets.all(0.0),
               title: const Text('카테고리 선택'),
-              content: const CategoryCards(),
+              content: _CategoryCards,
               actions: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(
@@ -138,7 +140,8 @@ class _WritePostPageState extends State<WritePostPage> {
                         userName:
                             FirebaseAuth.instance.currentUser!.displayName!,
                         postTitle: postTitleController.text,
-                        postCategory: "요리",
+                        postCategory:
+                            CategoryList.categories[_CategoryCards.selected],
                         postText: postTextController.text);
                     posts.add(newPost.toJson());
                     postTextController.clear();

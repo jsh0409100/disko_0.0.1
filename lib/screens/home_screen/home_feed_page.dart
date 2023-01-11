@@ -24,7 +24,7 @@ class HomeFeedPage extends StatelessWidget {
             if (snapshot.hasData) {
               return ListView.separated(
                 scrollDirection: Axis.vertical,
-                itemCount: 3,
+                itemCount: 9,
                 // TOOO item count 자동 해놓기
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),

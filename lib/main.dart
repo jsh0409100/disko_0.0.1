@@ -1,4 +1,3 @@
-import 'package:disko_001/screens/home_screen/home.dart';
 import 'package:disko_001/screens/starting_screens/start_page.dart';
 import 'package:disko_001/services/app_state.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
           colorScheme: lightColorScheme,
           fontFamily: 'Pretendard'),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: const MyHome(),
+      home: const StartPage(),
     );
   }
 }

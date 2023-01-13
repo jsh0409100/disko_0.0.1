@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:disko_001/screens/home_screen/profile_page.dart';
 import 'package:disko_001/screens/home_screen/search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +22,7 @@ class _MyHomeState extends State<MyHome> {
   final pages = [
     const HomeFeedPage(),
     // const SecondPage(),
-    const ProfilePage(),
+    // const ThirdPage(),
   ];
 
   void _onItemTapped(int index) {

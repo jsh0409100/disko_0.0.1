@@ -1,4 +1,5 @@
 import 'package:disko_001/screens/home_screen/home.dart';
+import 'package:disko_001/screens/starting_screens/start_page.dart';
 import 'package:disko_001/services/app_state.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

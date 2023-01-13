@@ -22,15 +22,55 @@ class SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController countrycode = TextEditingController();
   TextEditingController verController = TextEditingController();
+  TextEditingController phonenumController = TextEditingController();
 
   var phone = "";
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CountryCode? countryCode;
 
-  late bool _isButtonDisabled;
+  receiveAuthentication() async {
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: '${countryCode!.dialCode + phone}',
+      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationFailed: (FirebaseAuthException e) {},
+      codeSent: (String verificationId, int? resendToken) {
+        SignUpPage.verify = verificationId;
+      },
+      timeout: const Duration(minutes: 2),
+      codeAutoRetrievalTimeout:
+          (String verificationId) {}, //세원이가 5분 넣기
+    );
+  }
 
-  void initState() {
-    _isButtonDisabled = false;
+  AuthnumInput() async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: SignUpPage.verify,
+          smsCode: verController.text);
+
+// Sign the user in (or link) with the credential
+      await auth.signInWithCredential(credential);
+
+      UserModel new_user = UserModel(
+          phoneNum: phone,
+          countryCode: countryCode!.dialCode,
+          name: "guest",
+          uid: auth.currentUser!.uid);
+      users.add(new_user.toJson());
+
+      Get.to(() => const MyHome());
+// 이건 Get.to로 변경
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  bool _isVisible = false;
+
+  void visibility() {
+    setState(() {
+      _isVisible = true;
+    });
   }
 
   @override
@@ -137,7 +177,8 @@ class SignUpPageState extends State<SignUpPage> {
                   flex: 3,
                   child: SizedBox(
                     height: 50,
-                    child: TextField(
+                    child: TextFormField(
+                      controller: phonenumController,
                       keyboardType: TextInputType.phone,
                       onChanged: (value) {
                         phone = value;
@@ -162,20 +203,10 @@ class SignUpPageState extends State<SignUpPage> {
                 minimumSize: const Size(double.maxFinite, 49),
                 backgroundColor: const Color(0xff4E4E4E),
                 foregroundColor: Colors.white,
+                disabledBackgroundColor: const Color(0xff4E4E4E4D),
+                disabledForegroundColor: Colors.white,
               ),
-              onPressed: () async {
-                await FirebaseAuth.instance.verifyPhoneNumber(
-                  phoneNumber: '${countryCode!.dialCode + phone}',
-                  verificationCompleted: (PhoneAuthCredential credential) {},
-                  verificationFailed: (FirebaseAuthException e) {},
-                  codeSent: (String verificationId, int? resendToken) {
-                    SignUpPage.verify = verificationId;
-                  },
-                  timeout: const Duration(minutes: 2),
-                  codeAutoRetrievalTimeout:
-                      (String verificationId) {}, //세원이가 5분 넣기
-                );
-              },
+              onPressed: phonenumController.text != "" ? () => {receiveAuthentication(), visibility()} : null,
               child: const Text(
                 '인증문자 받기',
                 style: TextStyle(
@@ -185,86 +216,75 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            SizedBox(
-              height: 44,
-              child: TextField(
-                keyboardType: TextInputType.phone,
-                controller: verController,
-                decoration: const InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
+            Visibility(
+              visible: _isVisible,
+              child: SizedBox(
+                height: 44,
+                child: TextFormField(
+                  keyboardType: TextInputType.phone,
+                  controller: verController,
+                  decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
+                    ),
+                    labelText: '인증번호를 입력해 주세요.',
                   ),
-                  labelText: '인증번호를 입력해 주세요.',
                 ),
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  '이용약관 ',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Color(0xff797979),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+            Visibility(
+              visible: _isVisible,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    '이용약관 ',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Color(0xff797979),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                Text(
-                  '및 ',
-                  style: TextStyle(
-                    color: Color(0xff797979),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  Text(
+                    '및 ',
+                    style: TextStyle(
+                      color: Color(0xff797979),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                Text(
-                  '이용약관',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Color(0xff797979),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  Text(
+                    '이용약관',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Color(0xff797979),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.018),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.maxFinite, 51),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-              onPressed: () async {
-                try {
-                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                      verificationId: SignUpPage.verify,
-                      smsCode: verController.text);
-
-// Sign the user in (or link) with the credential
-                  await auth.signInWithCredential(credential);
-
-                  UserModel new_user = UserModel(
-                      phoneNum: phone,
-                      countryCode: countryCode!.dialCode,
-                      name: "guest",
-                      uid: auth.currentUser!.uid);
-                  users.add(new_user.toJson());
-
-                  Get.to(() => const MyHome());
-// 이건 Get.to로 변경
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: const Text(
-                '🪩 디스코 시작하기',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 17,
+            Visibility(
+              visible: _isVisible,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.maxFinite, 51),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  disabledBackgroundColor: Theme.of(context).colorScheme.primary.withAlpha(90),
+                ),
+                onPressed: verController.text != "" ? () => AuthnumInput() : null,
+                child: const Text(
+                  '디스코 시작하기',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 17,
+                  ),
                 ),
               ),
             ),

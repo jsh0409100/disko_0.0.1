@@ -47,6 +47,7 @@ dependencies:
   get: ^4.6.5
   flutter_launcher_icons: ^0.11.0
   flutter_native_splash: ^2.2.16
+  image_picker: ^0.8.6
 
 
 dev_dependencies:
@@ -84,6 +85,7 @@ flutter:
   assets:
     - assets/disko_icon.png
     - assets/user.png
+    - assets/mirrorball.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

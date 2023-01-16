@@ -43,7 +43,7 @@ class StartPage extends StatelessWidget {
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
-                    Get.to(() => const SignUpPage());
+                    Get.to(() => SignUpPage());
                   },
                   child: Text(
                     '🥳  회원가입  →',

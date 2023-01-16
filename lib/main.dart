@@ -1,10 +1,11 @@
+import 'package:disko_001/services/auth_check.dart';
 import 'package:disko_001/screens/home_screen/home.dart';
 import 'package:disko_001/screens/starting_screens/start_page.dart';
 import 'package:disko_001/services/app_state.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:provider/provider.dart';
 
 import 'color_schemes.g.dart';
 
@@ -13,11 +14,13 @@ import 'color_schemes.g.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(
-    MultiProvider(
-        providers: [ChangeNotifierProvider(create: (_) => ApplicationState())],
-        child: const MyApp()),
-  );
+  runApp(ProviderScope(
+    child: MyApp(),
+  )
+      // MultiProvider(
+      //     providers: [ChangeNotifierProvider(create: (_) => ApplicationState())],
+      //     child: const MyApp()),
+      );
 }
 
 class MyApp extends StatelessWidget {
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
           colorScheme: lightColorScheme,
           fontFamily: 'Pretendard'),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: const MyHome(),
+      home: const AuthChecker(),
     );
   }
 }

@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../models/post_card_model.dart';
 import '../screens/home_screen/detail_page.dart';
 
 class PostCard extends StatelessWidget {
@@ -128,5 +130,30 @@ class PostCard extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+class PostsDatabase {
+  Future<List<PostCardModel>> fetchPosts(PostCardModel? post) async {
+    final postsCollectionRef = FirebaseFirestore.instance.collection('posts');
+
+    if (post == null) {
+      final documentSnapshot = await postsCollectionRef
+          .orderBy('postTimeStamp', descending: true)
+          .limit(5)
+          .get();
+      return documentSnapshot.docs
+          .map((doc) => PostCardModel.fromJson(doc.data()))
+          .toList();
+    } else {
+      final documentSnapshot = await postsCollectionRef
+          .orderBy('postTimeStamp', descending: true)
+          .startAfter([post.postTimeStamp])
+          .limit(5)
+          .get();
+      return documentSnapshot.docs
+          .map((doc) => PostCardModel.fromJson(doc.data()))
+          .toList();
+    }
   }
 }

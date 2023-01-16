@@ -1,7 +1,8 @@
 class PostCardModel {
-  final String userName, postCategory, postTitle, postText;
+  final String userName, postCategory, postTitle, postText, postTimeStamp;
 
   PostCardModel({
+    required this.postTimeStamp,
     required this.userName,
     required this.postCategory,
     required this.postTitle,
@@ -12,12 +13,14 @@ class PostCardModel {
       : userName = json['userName'],
         postTitle = json['postTitle'],
         postCategory = json['category'],
-        postText = json['postText'];
+        postText = json['postText'],
+        postTimeStamp = json['postTimeStamp'];
 
   Map<String, dynamic> toJson() => {
         'userName': userName,
         'postTitle': postTitle,
         'category': postCategory,
         'postText': postText,
+        'postTimeStamp': postTimeStamp,
       };
 }

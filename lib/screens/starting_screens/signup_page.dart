@@ -8,7 +8,10 @@ import 'package:get/get.dart';
 import '../home_screen/home.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  Stream<User?> get authStateChange => auth.authStateChanges();
+
+  SignUpPage({Key? key}) : super(key: key);
 
   static String verify = "";
 
@@ -19,7 +22,7 @@ class SignUpPage extends StatefulWidget {
 class SignUpPageState extends State<SignUpPage> {
   final countryPicker = const FlCountryCodePicker();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
+
   TextEditingController countrycode = TextEditingController();
   TextEditingController verController = TextEditingController();
   TextEditingController phonenumController = TextEditingController();
@@ -30,36 +33,33 @@ class SignUpPageState extends State<SignUpPage> {
 
   receiveAuthentication() async {
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '${countryCode!.dialCode + phone}',
+      phoneNumber: countryCode!.dialCode + phone,
       verificationCompleted: (PhoneAuthCredential credential) {},
       verificationFailed: (FirebaseAuthException e) {},
       codeSent: (String verificationId, int? resendToken) {
         SignUpPage.verify = verificationId;
       },
       timeout: const Duration(minutes: 2),
-      codeAutoRetrievalTimeout:
-          (String verificationId) {}, //세원이가 5분 넣기
+      codeAutoRetrievalTimeout: (String verificationId) {}, //세원이가 5분 넣기
     );
   }
 
   AuthnumInput() async {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: SignUpPage.verify,
-          smsCode: verController.text);
+          verificationId: SignUpPage.verify, smsCode: verController.text);
 
 // Sign the user in (or link) with the credential
-      await auth.signInWithCredential(credential);
+      await widget.auth.signInWithCredential(credential);
 
-      UserModel new_user = UserModel(
+      UserModel newUser = UserModel(
           phoneNum: phone,
           countryCode: countryCode!.dialCode,
           name: "guest",
-          uid: auth.currentUser!.uid);
-      users.add(new_user.toJson());
+          uid: widget.auth.currentUser!.uid);
+      users.add(newUser.toJson());
 
       Get.to(() => const MyHome());
-// 이건 Get.to로 변경
     } catch (e) {
       print(e);
     }
@@ -206,7 +206,9 @@ class SignUpPageState extends State<SignUpPage> {
                 disabledBackgroundColor: const Color(0xff4E4E4E4D),
                 disabledForegroundColor: Colors.white,
               ),
-              onPressed: phonenumController.text != "" ? () => {receiveAuthentication(), visibility()} : null,
+              onPressed: phonenumController.text != ""
+                  ? () => {receiveAuthentication(), visibility()}
+                  : null,
               child: const Text(
                 '인증문자 받기',
                 style: TextStyle(
@@ -275,9 +277,11 @@ class SignUpPageState extends State<SignUpPage> {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.maxFinite, 51),
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  disabledBackgroundColor: Theme.of(context).colorScheme.primary.withAlpha(90),
+                  disabledBackgroundColor:
+                      Theme.of(context).colorScheme.primary.withAlpha(90),
                 ),
-                onPressed: verController.text != "" ? () => AuthnumInput() : null,
+                onPressed:
+                    verController.text != "" ? () => AuthnumInput() : null,
                 child: const Text(
                   '디스코 시작하기',
                   style: TextStyle(

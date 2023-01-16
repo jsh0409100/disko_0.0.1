@@ -8,76 +8,47 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String test = 'test';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(20),
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    child: Stack(children: const [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundImage: NetworkImage('https://i.guim.co.uk/img/media/a72cabc3e4889bd471dec02579514f462cecf920/0_11_2189_1313/master/2189.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=a3fd231d883d268abe7b7e0b6a2b762b'),
-                        ),
-                      ),
-                      Positioned(
-                        left: 100,
-                        top: 115,
-                        child: CircleAvatar(
-                          backgroundColor: Color(0xffEFEFEF),
-                          radius: 15,
-                          child: Icon(
-                            Icons.edit_outlined,
-                            size: 20,
-                            color: Colors.black,
-                          ),
-                        ),
-                      )
-                    ]),
-                    onTap: () {},
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width*0.2),
-                  ButtonBar(
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {},
-                        child: const Icon(
-                          Icons.chat_outlined,
+              Container(
+                height: 130,
+                child: GestureDetector(
+                  child: Stack(children: const [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: NetworkImage('https://i.guim.co.uk/img/media/a72cabc3e4889bd471dec02579514f462cecf920/0_11_2189_1313/master/2189.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=a3fd231d883d268abe7b7e0b6a2b762b'),
+                    ),
+                    Positioned(
+                      left: 80,
+                      top: 95,
+                      child: CircleAvatar(
+                        backgroundColor: Color(0xffEFEFEF),
+                        radius: 15,
+                        child: Icon(
+                          Icons.edit_outlined,
+                          size: 20,
                           color: Colors.black,
                         ),
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          fixedSize: const Size(48, 28),
-                        ),
-                        onPressed: () {},
-                        child: const Text(
-                          '구독',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.normal,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+                    )
+                  ]),
+                  onTap: () {},
+                ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height*0.02),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
                         '올리비아 핫세',
@@ -148,122 +119,153 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height*0.03),
-              Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        child: Column(
-                          children: const [
-                            Text(
-                              '미러볼',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
+              Card(
+                elevation: 5,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  padding: const EdgeInsets.only(top: 15),
+                  width: double.infinity,
+                  height: 82,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            test = 'mirror ball';
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 60,
+                          child: Column(
+                            children: const [
+                              Text(
+                                '미러볼',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Lv.2',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
+                              Text(
+                                'Lv.2',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width*0.1),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        child: Column(
-                          children: const [
-                            Text(
-                              '게시물',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
+                      SizedBox(width: MediaQuery.of(context).size.width*0.1),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            test = 'My Post';
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 60,
+                          child: Column(
+                            children: const [
+                              Text(
+                                '게시물',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '5',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
+                              Text(
+                                '5',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width*0.1),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        child: Column(
-                          children: const [
-                            Text(
-                              '질문답변',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
+                      SizedBox(width: MediaQuery.of(context).size.width*0.1),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            test = 'Q and A';
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 60,
+                          child: Column(
+                            children: const [
+                              Text(
+                                '질문답변',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '30',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
+                              Text(
+                                '30',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width*0.1),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        child: Column(
-                          children: const [
-                            Text(
-                              '팔로잉',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
+                      SizedBox(width: MediaQuery.of(context).size.width*0.1),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            test = 'Followings';
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 60,
+                          child: Column(
+                            children: const [
+                              Text(
+                                '팔로잉',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '15',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
+                              Text(
+                                '15',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height*0.03),
-              Image.asset(
-                'assets/mirrorball.png',
+              Container(
+                child: Text('$test'),
               ),
             ],
           ),
@@ -271,4 +273,29 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
+  Widget mirrorballbuilder() {
+    return Container(
+      child: Text('mirrorball'),
+    );
+  }
+
+  Widget Mypost() {
+    return Container(
+      child: Text('My post'),
+    );
+  }
+
+  Widget QandA() {
+    return Container(
+      child: Text('Q and A'),
+    );
+  }
+
+  Widget Followings() {
+    return Container(
+      child: Text('Followings'),
+    );
+  }
+
 }

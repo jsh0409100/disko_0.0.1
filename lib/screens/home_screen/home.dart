@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:disko_001/screens/home_screen/search.dart';
+import 'package:disko_001/screens/home_screen/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/app_state.dart';
+import '../chat_screen/chat_list_page.dart';
+import '../search_screen/search.dart';
 import 'home_feed_page.dart';
 import 'notification.dart';
 
@@ -21,8 +23,8 @@ class _MyHomeState extends State<MyHome> {
   int _selectedIndex = 0;
   final pages = [
     const HomeFeedPage(),
-    // const SecondPage(),
-    // const ThirdPage(),
+    const ChatListPage(),
+    const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {

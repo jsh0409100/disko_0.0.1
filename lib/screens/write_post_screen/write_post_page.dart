@@ -142,7 +142,8 @@ class _WritePostPageState extends State<WritePostPage> {
                         postTitle: postTitleController.text,
                         postCategory:
                             CategoryList.categories[_CategoryCards.selected],
-                        postText: postTextController.text);
+                        postText: postTextController.text,
+                        postTimeStamp: DateTime.now().toString());
                     posts.add(newPost.toJson());
                     postTextController.clear();
                     postTitleController.clear();

@@ -1,28 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:disko_001/screens/home_screen/search.dart';
+import 'package:disko_001/screens/chat_screen/chat_list_page.dart';
+import 'package:disko_001/screens/home_screen/profile_page.dart';
+import 'package:disko_001/screens/search_screen/search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:provider/provider.dart';
 
-import '../../services/app_state.dart';
 import 'home_feed_page.dart';
 import 'notification.dart';
 
-class MyHome extends StatefulWidget {
+class MyHome extends ConsumerStatefulWidget {
   const MyHome({Key? key}) : super(key: key);
 
   @override
-  State<MyHome> createState() => _MyHomeState();
+  MyHomeState createState() => MyHomeState();
 }
 
-class _MyHomeState extends State<MyHome> {
+class MyHomeState extends ConsumerState<MyHome> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int _selectedIndex = 0;
   final pages = [
-    const HomeFeedPage(),
-    // const SecondPage(),
-    // const ThirdPage(),
+    HomeFeedPage(),
+    const ChatListPage(),
+    const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -33,6 +34,7 @@ class _MyHomeState extends State<MyHome> {
 
   @override
   Widget build(BuildContext context) {
+    // final _authState = ref.watch(authStateProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -63,15 +65,8 @@ class _MyHomeState extends State<MyHome> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Consumer<ApplicationState>(
-        builder: (context, appState, _) => pages[_selectedIndex],
-      ),
+      body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        // backgroundColor: ,
-        // unselectedItemColor: ,
-        // selectedFontSize: ,
-        // iconSize: ,
-        // showSelectedLabels: ,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),

@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/screens/chat_screen/chat_list_page.dart';
 import 'package:disko_001/screens/home_screen/profile_page.dart';
 import 'package:disko_001/screens/search_screen/search.dart';
+import 'package:disko_001/screens/home_screen/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
+import '../../services/app_state.dart';
+import '../chat_screen/chat_list_page.dart';
+import '../search_screen/search.dart';
 import 'home_feed_page.dart';
 import 'notification.dart';
 

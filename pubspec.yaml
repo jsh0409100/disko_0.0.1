@@ -86,8 +86,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/disko_icon.png
-    - assets/disco-ball-shiny.gif
-    - assets/dancing.gif
     - assets/user.png
 
   # To add assets to your application, add an assets section, like this:

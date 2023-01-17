@@ -21,9 +21,8 @@ class _SendMessageState extends State<SendMessage> {
         .collection(widget.collectionPath)
         .add(ChatMessageModel(
           time: Timestamp.now(),
-          fromId: user!.uid,
+          senderId: user!.uid,
           message: _userEnterMessage,
-          toId: '',
         ).toJson());
     controller.clear();
   }

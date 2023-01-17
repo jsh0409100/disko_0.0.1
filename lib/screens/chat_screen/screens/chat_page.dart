@@ -13,7 +13,7 @@ class ChatPage extends ConsumerStatefulWidget {
 
 class _ChatPageState extends ConsumerState<ChatPage> {
   final String collectionPath =
-      "messages/lW7UMru6UQU2HaBj6Mg67Cl3Fu63-tsaNdyJcfFY6HhUtr1ypXTC8pzB2/lW7UMru6UQU2HaBj6Mg67Cl3Fu63-tsaNdyJcfFY6HhUtr1ypXTC8pzB2";
+      "messages/qZOxnQvPDoSHEJiAZvGoitToLhT2-dWxS3RX1muM99UqwnineIZK6hxC2/qZOxnQvPDoSHEJiAZvGoitToLhT2-dWxS3RX1muM99UqwnineIZK6hxC2";
   @override
   Widget build(BuildContext context) {
     return Scaffold(

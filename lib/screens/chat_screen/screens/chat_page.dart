@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 import '../widgets/chat_message.dart';
 import '../widgets/send_message.dart';
@@ -12,10 +14,13 @@ class ChatPage extends ConsumerStatefulWidget {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
-  final String collectionPath =
-      "messages/qZOxnQvPDoSHEJiAZvGoitToLhT2-dWxS3RX1muM99UqwnineIZK6hxC2/qZOxnQvPDoSHEJiAZvGoitToLhT2-dWxS3RX1muM99UqwnineIZK6hxC2";
+  var peerUid = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
+    final String chatName =
+        peerUid + '-' + FirebaseAuth.instance.currentUser!.uid;
+    final String collectionPath = 'messages/' + chatName + '/' + chatName;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,

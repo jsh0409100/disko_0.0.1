@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/screens/write_post_screen/widgets/select_category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../models/category_list.dart';
 import '../../models/post_card_model.dart';
@@ -16,6 +20,13 @@ class WritePostPage extends StatefulWidget {
 }
 
 class _WritePostPageState extends State<WritePostPage> {
+
+  final ImagePicker _picker = ImagePicker();
+  List<XFile>? _imageFileList = [];
+  final FirebaseStorage _storageRef = FirebaseStorage.instance;
+
+
+
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController postTitleController = TextEditingController();
   TextEditingController postTextController = TextEditingController();
@@ -26,7 +37,8 @@ class _WritePostPageState extends State<WritePostPage> {
     return Scaffold(
         appBar: AppBar(
             shape: const Border(
-                bottom: BorderSide(color: Colors.black, width: 0.5)),
+                bottom: BorderSide(color: Colors.black, width: 0.5)
+            ),
             centerTitle: true,
             title: const Text(
               '글쓰기',
@@ -48,8 +60,10 @@ class _WritePostPageState extends State<WritePostPage> {
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
                     ),
-                  )),
-            ]),
+                  )
+              ),
+            ]
+        ),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Column(children: [
@@ -74,7 +88,8 @@ class _WritePostPageState extends State<WritePostPage> {
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(
-                        top: 10, left: 24, right: 24, bottom: 0),
+                        top: 10, left: 24, right: 24, bottom: 0
+                    ),
                     hintText: '글작성',
                   ),
                   style: const TextStyle(fontSize: 16),
@@ -98,7 +113,9 @@ class _WritePostPageState extends State<WritePostPage> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.photo_camera_outlined),
-                            onPressed: () {},
+                            onPressed: () {
+                              selectImage();
+                            },
                           ),
                         ],
                       ),
@@ -147,7 +164,9 @@ class _WritePostPageState extends State<WritePostPage> {
                         postCategory:
                             CategoryList.categories[_CategoryCards.selected],
                         postText: postTextController.text,
-                        postTimeStamp: DateTime.now().toString());
+                        postTimeStamp: DateTime.now().toString(),
+                        //postImage:
+                    );
                     posts.add(newPost.toJson());
                     postTextController.clear();
                     postTitleController.clear();
@@ -160,5 +179,22 @@ class _WritePostPageState extends State<WritePostPage> {
         );
       },
     );
+  }
+  Future<void> selectImage()async{
+    if(_imageFileList!=null){
+      _imageFileList?.clear();
+    }
+    try{
+      final List<XFile> images = await _picker.pickMultiImage();
+      if(images!.isNotEmpty){
+        _imageFileList?.addAll(images);
+      }
+      print("List of selected images : " + images.length.toString());
+    } catch (e){
+      print("Something Wrong." + e.toString());
+    }
+    setState(() {
+
+    });
   }
 }

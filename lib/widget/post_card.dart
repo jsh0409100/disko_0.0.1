@@ -16,6 +16,7 @@ class PostCard extends StatelessWidget {
     required this.postCategory,
     required this.postTitle,
     required this.postText,
+    //required this.postImage,
   }) : super(key: key);
 
   @override
@@ -31,7 +32,9 @@ class PostCard extends StatelessWidget {
                   userName: userName,
                   postCategory: postCategory,
                   postTitle: postTitle,
-                  postText: postText),
+                  postText: postText,
+                  //postImage: postImage,
+              ),
             );
           },
           child: Card(

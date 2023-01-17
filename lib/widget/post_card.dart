@@ -68,8 +68,7 @@ class _PostCardState extends State<PostCard> {
                             ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
                                 child: const Image(
-                                  image: NetworkImage(
-                                      'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                                  image: AssetImage('assets/user.png'),
                                   height: 43,
                                   width: 43,
                                   fit: BoxFit.scaleDown,
@@ -173,7 +172,7 @@ class PostsDatabase {
 
     if (message == null) {
       final documentSnapshot = await postsCollectionRef
-          .orderBy('postTimeStamp', descending: true)
+          .orderBy('time', descending: true)
           .limit(5)
           .get();
       return documentSnapshot.docs
@@ -181,7 +180,7 @@ class PostsDatabase {
           .toList();
     } else {
       final documentSnapshot = await postsCollectionRef
-          .orderBy('postTimeStamp', descending: true)
+          .orderBy('time', descending: true)
           .startAfter([message.time])
           .limit(5)
           .get();

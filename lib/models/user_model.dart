@@ -1,21 +1,21 @@
 class UserModel {
-  final String name;
+  final String displayName;
   final String phoneNum;
   final String countryCode;
 
   UserModel({
-    required this.name,
+    required this.displayName,
     required this.phoneNum,
     required this.countryCode,
   });
 
   UserModel.fromJson(Map<String, dynamic> json)
       : phoneNum = json['phoneNumber'],
-        name = json['name'],
+        displayName = json['displayName'],
         countryCode = json['countryCode'];
 
   Map<String, dynamic> toJson() => {
-        'name': name,
+        'displayName': displayName,
         'phoneNumber': phoneNum,
         'countryCode': countryCode,
       };

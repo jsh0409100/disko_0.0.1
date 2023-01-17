@@ -53,7 +53,9 @@ class SignUpPageState extends State<SignUpPage> {
       await widget.auth.signInWithCredential(credential);
 
       UserModel newUser = UserModel(
-          phoneNum: phone, countryCode: countryCode!.dialCode, name: "guest");
+          phoneNum: phone,
+          countryCode: countryCode!.dialCode,
+          displayName: "guest");
       users.doc(widget.auth.currentUser!.uid).set(newUser.toJson());
 
       Get.to(() => const MyHome());

@@ -129,6 +129,7 @@ class PostsListBuilder extends StatelessWidget {
             postTitle: posts[index].postTitle,
             postCategory: posts[index].postCategory,
             postText: posts[index].postText,
+            uid: posts[index].uid,
             //postimage: posts[index].postimage,
           );
         },

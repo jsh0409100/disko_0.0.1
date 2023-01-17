@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/screens/write_post_screen/widgets/select_category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,12 +18,9 @@ class WritePostPage extends StatefulWidget {
 }
 
 class _WritePostPageState extends State<WritePostPage> {
-
   final ImagePicker _picker = ImagePicker();
   List<XFile>? _imageFileList = [];
   final FirebaseStorage _storageRef = FirebaseStorage.instance;
-
-
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController postTitleController = TextEditingController();
@@ -37,8 +32,7 @@ class _WritePostPageState extends State<WritePostPage> {
     return Scaffold(
         appBar: AppBar(
             shape: const Border(
-                bottom: BorderSide(color: Colors.black, width: 0.5)
-            ),
+                bottom: BorderSide(color: Colors.black, width: 0.5)),
             centerTitle: true,
             title: const Text(
               '글쓰기',
@@ -60,10 +54,8 @@ class _WritePostPageState extends State<WritePostPage> {
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
                     ),
-                  )
-              ),
-            ]
-        ),
+                  )),
+            ]),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Column(children: [
@@ -88,8 +80,7 @@ class _WritePostPageState extends State<WritePostPage> {
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(
-                        top: 10, left: 24, right: 24, bottom: 0
-                    ),
+                        top: 10, left: 24, right: 24, bottom: 0),
                     hintText: '글작성',
                   ),
                   style: const TextStyle(fontSize: 16),
@@ -159,13 +150,14 @@ class _WritePostPageState extends State<WritePostPage> {
                   child: const Text('게시'),
                   onPressed: () {
                     PostCardModel newPost = PostCardModel(
-                        userName: userData.data()!['name'],
-                        postTitle: postTitleController.text,
-                        postCategory:
-                            CategoryList.categories[_CategoryCards.selected],
-                        postText: postTextController.text,
-                        postTimeStamp: DateTime.now().toString(),
-                        //postImage:
+                      userName: userData.data()!['displayName'],
+                      postTitle: postTitleController.text,
+                      postCategory:
+                          CategoryList.categories[_CategoryCards.selected],
+                      postText: postTextController.text,
+                      time: Timestamp.now(),
+                      uid: currentUser.uid,
+                      //postImage:
                     );
                     posts.add(newPost.toJson());
                     postTextController.clear();
@@ -180,21 +172,20 @@ class _WritePostPageState extends State<WritePostPage> {
       },
     );
   }
-  Future<void> selectImage()async{
-    if(_imageFileList!=null){
+
+  Future<void> selectImage() async {
+    if (_imageFileList != null) {
       _imageFileList?.clear();
     }
-    try{
+    try {
       final List<XFile> images = await _picker.pickMultiImage();
-      if(images!.isNotEmpty){
+      if (images!.isNotEmpty) {
         _imageFileList?.addAll(images);
       }
       print("List of selected images : " + images.length.toString());
-    } catch (e){
+    } catch (e) {
       print("Something Wrong." + e.toString());
     }
-    setState(() {
-
-    });
+    setState(() {});
   }
 }

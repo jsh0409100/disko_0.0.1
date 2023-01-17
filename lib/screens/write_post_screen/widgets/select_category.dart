@@ -2,56 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../models/category_list.dart';
 
-// class SelectCategory extends StatelessWidget {
-//   const SelectCategory({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         centerTitle: true,
-//         title: const Text("카테고리 선택"),
-//         actions: <Widget>[
-//           IconButton(
-//             onPressed: () {},
-//             icon: const Text("완료"),
-//           ),
-//         ],
-//       ),
-//       body: SafeArea(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Padding(
-//               padding: const EdgeInsets.all(12.0),
-//               child: Center(
-//                   child: Container(
-//                 padding: const EdgeInsets.only(top: 100),
-//                 child: Wrap(
-//                   spacing: 20,
-//                   runSpacing: 20,
-//                   children: const [
-//                     CategoryCard(categoryIcon: "🔥", categoryName: "현지생활"),
-//                     CategoryCard(categoryIcon: "🛍️", categoryName: "중고거래"),
-//                     CategoryCard(categoryIcon: "👩🏻‍💻", categoryName: "구인구직"),
-//                     CategoryCard(categoryIcon: "✈️", categoryName: "여행패키지"),
-//                     CategoryCard(categoryIcon: "🏠", categoryName: "한인숙박"),
-//                     CategoryCard(categoryIcon: "🍳", categoryName: "요리"),
-//                     CategoryCard(categoryIcon: "😀", categoryName: "고민상당"),
-//                     CategoryCard(
-//                         categoryIcon: "🚖 🌤️", categoryName: "교통 / 날씨"),
-//                     CategoryCard(categoryIcon: "🎓", categoryName: "유학생활"),
-//                   ],
-//                 ),
-//               )),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class CategoryCards extends StatefulWidget {
   late int selected;
   CategoryCards({

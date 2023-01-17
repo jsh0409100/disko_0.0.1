@@ -109,7 +109,12 @@ class _WritePostPageState extends State<WritePostPage> {
         ));
   }
 
-  Future<void> categoryDialogBuilder(BuildContext context) {
+  Future<void> categoryDialogBuilder(BuildContext context) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser!.uid)
+        .get();
     var _CategoryCards = CategoryCards(selected: 0);
     return showDialog<void>(
       context: context,
@@ -137,8 +142,7 @@ class _WritePostPageState extends State<WritePostPage> {
                   child: const Text('게시'),
                   onPressed: () {
                     PostCardModel newPost = PostCardModel(
-                        userName:
-                            FirebaseAuth.instance.currentUser!.displayName!,
+                        userName: userData.data()!['name'],
                         postTitle: postTitleController.text,
                         postCategory:
                             CategoryList.categories[_CategoryCards.selected],

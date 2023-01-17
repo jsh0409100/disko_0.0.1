@@ -10,7 +10,7 @@ import '../src/tools.dart';
 
 class Post extends StatefulWidget {
   final String userName, postCategory, postTitle, postText, uid;
-  final List<String> likes;
+  final List<String> likes, imagesUrl;
 
   const Post({
     Key? key,
@@ -21,6 +21,7 @@ class Post extends StatefulWidget {
     required this.postText,
     required this.uid,
     required this.likes,
+    required this.imagesUrl
   }) : super(key: key);
 
   @override
@@ -49,7 +50,9 @@ class _PostState extends State<Post> {
                         postTitle: widget.postTitle,
                         postText: widget.postText,
                         uid: widget.uid,
-                        likes: widget.likes),
+                        likes: widget.likes,
+                        imagesUrl : widget.imagesUrl,
+                    ),
                   );
                 },
                 child: PostCard(
@@ -58,7 +61,9 @@ class _PostState extends State<Post> {
                     postTitle: widget.postTitle,
                     postText: widget.postText,
                     uid: widget.uid,
-                    likes: widget.likes),
+                    likes: widget.likes,
+                    imagesUrl : widget.imagesUrl,
+                ),
               ));
         });
   }

@@ -25,7 +25,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Stack(children: const [
                     CircleAvatar(
                       radius: 60,
-                      backgroundImage: NetworkImage('https://i.guim.co.uk/img/media/a72cabc3e4889bd471dec02579514f462cecf920/0_11_2189_1313/master/2189.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=a3fd231d883d268abe7b7e0b6a2b762b'),
+                      backgroundImage: NetworkImage(
+                          'https://i.guim.co.uk/img/media/a72cabc3e4889bd471dec02579514f462cecf920/0_11_2189_1313/master/2189.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=a3fd231d883d268abe7b7e0b6a2b762b'),
                     ),
                     Positioned(
                       left: 80,
@@ -44,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onTap: () {},
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.02),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               Row(
                 children: [
                   Column(
@@ -58,7 +59,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontSize: 17,
                         ),
                       ),
-                      Text('이스라엘',
+                      Text(
+                        '이스라엘',
                         style: TextStyle(
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w500,
@@ -69,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.01),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               Row(
                 children: [
                   Chip(
@@ -83,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width*0.03),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   Chip(
                     label: const Text('🍳 요리'),
                     backgroundColor: Colors.white,
@@ -95,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width*0.03),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   Chip(
                     label: const Text('📸 사진찍기'),
                     backgroundColor: Colors.white,
@@ -109,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.01),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               const Text(
                 '안녕하세요! 이스라엘에서 3년째 거주하고 있는 유학생입니다 :D 이스라엘에서 공부하고 있는 유학생분들 소통해요! 제 엠비티아이는 엥뿌삐',
                 style: TextStyle(
@@ -118,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   fontSize: 12,
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.03),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Card(
                 elevation: 5,
                 child: Container(
@@ -163,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-                      SizedBox(width: MediaQuery.of(context).size.width*0.1),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -195,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-                      SizedBox(width: MediaQuery.of(context).size.width*0.1),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -227,7 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-                      SizedBox(width: MediaQuery.of(context).size.width*0.1),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -263,7 +265,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.03),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Container(
                 child: Text('$test'),
               ),
@@ -276,26 +278,23 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget mirrorballbuilder() {
     return Container(
-      child: Text('mirrorball'),
+      child: const Text('mirrorball'),
     );
   }
 
   Widget Mypost() {
     return Container(
-      child: Text('My post'),
+      child: const Text('My post'),
     );
   }
 
   Widget QandA() {
     return Container(
-      child: Text('Q and A'),
+      child: const Text('Q and A'),
     );
   }
 
   Widget Followings() {
-    return Container(
-      child: Text('Followings'),
-    );
+    return const Text('Followings');
   }
-
 }

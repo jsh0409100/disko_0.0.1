@@ -2,14 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/screens/chat_screen/chat_list_page.dart';
 import 'package:disko_001/screens/home_screen/profile_page.dart';
 import 'package:disko_001/screens/search_screen/search.dart';
-import 'package:disko_001/screens/home_screen/profile_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import '../../services/app_state.dart';
-import '../chat_screen/chat_list_page.dart';
-import '../search_screen/search.dart';
+
 import 'home_feed_page.dart';
 import 'notification.dart';
 
@@ -22,6 +20,7 @@ class MyHome extends ConsumerStatefulWidget {
 
 class MyHomeState extends ConsumerState<MyHome> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
   int _selectedIndex = 0;
   final pages = [
     HomeFeedPage(),
@@ -61,6 +60,17 @@ class MyHomeState extends ConsumerState<MyHome> {
             },
             icon: const Icon(
               Icons.notifications_none_outlined,
+              color: Colors.black,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              Future<void> signOut() async {
+                await auth.signOut();
+              }
+            },
+            icon: const Icon(
+              Icons.logout,
               color: Colors.black,
             ),
           ),

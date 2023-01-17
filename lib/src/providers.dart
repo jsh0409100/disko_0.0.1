@@ -14,10 +14,12 @@ final postsProvider = StateNotifierProvider<PaginationNotifier<PostCardModel>,
     fetchNextItems: (
       post,
     ) {
-      return ref.read(databaseProvider).fetchPosts(post);
+      return ref.read(PostDatabaseProvider).fetchPosts(post);
     },
   )..init();
 });
+
+final PostDatabaseProvider = Provider<PostsDatabase>((ref) => PostsDatabase());
 
 final authenticationProvider = Provider<SignUpPage>((ref) {
   return SignUpPage();
@@ -26,5 +28,3 @@ final authenticationProvider = Provider<SignUpPage>((ref) {
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.read(authenticationProvider).authStateChange;
 });
-
-final databaseProvider = Provider<PostsDatabase>((ref) => PostsDatabase());

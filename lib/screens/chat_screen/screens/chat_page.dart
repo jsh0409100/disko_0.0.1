@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ChatPage extends StatefulWidget {
+import '../widgets/chat_message.dart';
+import '../widgets/send_message.dart';
+
+class ChatPage extends ConsumerStatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  _ChatPageState createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends ConsumerState<ChatPage> {
+  final String collectionPath =
+      "messages/lW7UMru6UQU2HaBj6Mg67Cl3Fu63-tsaNdyJcfFY6HhUtr1ypXTC8pzB2/lW7UMru6UQU2HaBj6Mg67Cl3Fu63-tsaNdyJcfFY6HhUtr1ypXTC8pzB2";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,39 +47,17 @@ class _ChatPageState extends State<ChatPage> {
           backgroundColor: Colors.white,
           elevation: 0,
         ),
-        body: Column(children: [
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {},
-                  ),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.emoji_emotions_outlined),
-                        ),
-                        border: OutlineInputBorder(),
-                        hintText: "메세지 보내기",
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.send,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
+        body: Container(
+            child: Column(
+          children: [
+            Expanded(
+                child: ChatMessage(
+              collectionPath: collectionPath,
+            )),
+            SendMessage(
+              collectionPath: collectionPath,
             ),
-          )
-        ]));
+          ],
+        )));
   }
 }

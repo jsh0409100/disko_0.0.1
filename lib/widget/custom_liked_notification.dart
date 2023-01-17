@@ -9,7 +9,7 @@ class CustomLikedNotification extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Stack(children: [
+          Stack(children: const [
             CircleAvatar(
               radius: 25,
               backgroundImage: AssetImage("assets/user.png"),
@@ -18,7 +18,11 @@ class CustomLikedNotification extends StatelessWidget {
               left: 35,
               child: Padding(
                 padding: EdgeInsets.only(top: 35),
-                child: Icon(Icons.favorite, size: 15,color: Color(0xFFDB5D46),),
+                child: Icon(
+                  Icons.favorite,
+                  size: 15,
+                  color: Color(0xFFDB5D46),
+                ),
               ),
             )
           ]),
@@ -26,7 +30,7 @@ class CustomLikedNotification extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: const [
               Text("---가 공감을 눌럿어요!"),
               SizedBox(
                 height: 10,

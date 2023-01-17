@@ -99,3 +99,28 @@ class _ChatListPageState extends State<ChatListPage> {
     ));
   }
 }
+//
+// class PostsDatabase {
+//   Future<List<PostCardModel>> fetchPosts(PostCardModel? message) async {
+//     final postsCollectionRef = FirebaseFirestore.instance.collection('posts');
+//
+//     if (message == null) {
+//       final documentSnapshot = await postsCollectionRef
+//           .orderBy('postTimeStamp', descending: true)
+//           .limit(5)
+//           .get();
+//       return documentSnapshot.docs
+//           .map((doc) => PostCardModel.fromJson(doc.data()))
+//           .toList();
+//     } else {
+//       final documentSnapshot = await postsCollectionRef
+//           .orderBy('postTimeStamp', descending: true)
+//           .startAfter([message.postTimeStamp])
+//           .limit(5)
+//           .get();
+//       return documentSnapshot.docs
+//           .map((doc) => PostCardModel.fromJson(doc.data()))
+//           .toList();
+//     }
+//   }
+// }

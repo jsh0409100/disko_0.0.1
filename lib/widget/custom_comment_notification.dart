@@ -10,15 +10,19 @@ class CustomCommentNotification extends StatelessWidget {
       child: Row(
         children: [
           Stack(children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 25,
               backgroundImage: AssetImage("assets/user.png"),
             ),
             Positioned(
               left: 35,
               child: Padding(
-                padding: EdgeInsets.only(top: 35),
-                child: Icon(Icons.chat_bubble, size: 15,color: Theme.of(context).colorScheme.primary,),
+                padding: const EdgeInsets.only(top: 35),
+                child: Icon(
+                  Icons.chat_bubble,
+                  size: 15,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             )
           ]),
@@ -27,11 +31,11 @@ class CustomCommentNotification extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("---가 ----에 댓글을 남겼어요!"),
-              SizedBox(
+              const Text("---가 ----에 댓글을 남겼어요!"),
+              const SizedBox(
                 height: 10,
               ),
-              Text(
+              const Text(
                 "---분 전",
                 style: TextStyle(color: Colors.grey, fontSize: 8),
               ),

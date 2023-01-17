@@ -4,7 +4,8 @@ class CustomFollowNotification extends StatefulWidget {
   const CustomFollowNotification({Key? key}) : super(key: key);
 
   @override
-  State<CustomFollowNotification> createState() => _CustomFollowNotificationState();
+  State<CustomFollowNotification> createState() =>
+      _CustomFollowNotificationState();
 }
 
 class _CustomFollowNotificationState extends State<CustomFollowNotification> {
@@ -14,7 +15,7 @@ class _CustomFollowNotificationState extends State<CustomFollowNotification> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Stack(children: [
+          Stack(children: const [
             CircleAvatar(
               radius: 25,
               backgroundImage: AssetImage("assets/user.png"),
@@ -31,7 +32,7 @@ class _CustomFollowNotificationState extends State<CustomFollowNotification> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: const [
               Text("---가 팔로우했어요!"),
               SizedBox(
                 height: 10,

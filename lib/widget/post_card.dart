@@ -134,10 +134,10 @@ class PostCard extends StatelessWidget {
 }
 
 class PostsDatabase {
-  Future<List<PostCardModel>> fetchPosts(PostCardModel? post) async {
+  Future<List<PostCardModel>> fetchPosts(PostCardModel? message) async {
     final postsCollectionRef = FirebaseFirestore.instance.collection('posts');
 
-    if (post == null) {
+    if (message == null) {
       final documentSnapshot = await postsCollectionRef
           .orderBy('postTimeStamp', descending: true)
           .limit(5)
@@ -148,7 +148,7 @@ class PostsDatabase {
     } else {
       final documentSnapshot = await postsCollectionRef
           .orderBy('postTimeStamp', descending: true)
-          .startAfter([post.postTimeStamp])
+          .startAfter([message.postTimeStamp])
           .limit(5)
           .get();
       return documentSnapshot.docs

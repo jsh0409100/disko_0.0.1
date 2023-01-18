@@ -30,7 +30,10 @@ class _PostCardState extends State<PostCard> {
     void handleClick(String value) {
       switch (value) {
         case '메세지 보내기':
-          Get.to(() => const ChatPage(), arguments: widget.uid);
+          Get.to(() => const ChatPage(), arguments: {
+            'peerUid': widget.uid,
+            'peerDisplayName': widget.userName
+          });
           break;
         case '신고하기':
           break;

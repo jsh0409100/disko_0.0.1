@@ -24,6 +24,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Disko Demo',
+      // localizationsDelegates: const [
+      //   GlobalMaterialLocalizations.delegate,
+      //   GlobalWidgetsLocalizations.delegate,
+      //   GlobalCupertinoLocalizations.delegate,
+      // ],
+      // supportedLocales: const [
+      //   Locale('ko'),
+      // ],
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: lightColorScheme,

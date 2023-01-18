@@ -27,8 +27,11 @@ class ChatMessage extends StatelessWidget {
             reverse: true,
             itemCount: chatDocs.length,
             itemBuilder: (context, index) {
-              return ChatBubble(chatDocs[index]['message'],
-                  chatDocs[index]['senderId'].toString() == user!.uid);
+              return (chatDocs[index]['senderId'].toString() == user!.uid)
+                  ? MyChatBubble(
+                      chatDocs[index]['message'], chatDocs[index]['time'])
+                  : PeerChatBubble(
+                      chatDocs[index]['message'], chatDocs[index]['time']);
             });
       },
     );

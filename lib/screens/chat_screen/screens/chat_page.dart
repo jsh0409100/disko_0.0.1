@@ -14,12 +14,16 @@ class ChatPage extends ConsumerStatefulWidget {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
-  var peerUid = Get.arguments;
+  var arguments = Get.arguments;
+  var currentUserUid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
-    final String chatName =
-        peerUid + '-' + FirebaseAuth.instance.currentUser!.uid;
+    String peerUid = arguments['peerUid'];
+    String peerDisplayName = arguments['peerDisplayName'];
+    final String chatName = (peerUid.compareTo(currentUserUid) > 0)
+        ? peerUid + '-' + currentUserUid
+        : currentUserUid + '-' + peerUid;
     final String collectionPath = 'messages/' + chatName + '/' + chatName;
     return Scaffold(
         appBar: AppBar(
@@ -34,8 +38,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               const SizedBox(
                 width: 6,
               ),
-              const Text(
-                "나는야 아창 똑순이",
+              Text(
+                peerDisplayName,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
               ),
             ],

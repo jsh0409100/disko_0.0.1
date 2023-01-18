@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../models/post_card_model.dart';
 import '../screens/home_screen/detail_page.dart';
+import '../src/tools.dart';
 
 class PostCard extends StatefulWidget {
   final String userName, postCategory, postTitle, postText, uid;
@@ -40,132 +41,144 @@ class _PostCardState extends State<PostCard> {
       }
     }
 
-    return Container(
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.92),
-        child: GestureDetector(
-          onTap: () {
-            Get.to(
-              const DetailPage(),
-              arguments: PostCard(
-                  userName: widget.userName,
-                  postCategory: widget.postCategory,
-                  postTitle: widget.postTitle,
-                  postText: widget.postText,
-                  uid: widget.uid),
-            );
-          },
-          child: Card(
-            elevation: 1,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 11),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: const Image(
-                                  image: AssetImage('assets/user.png'),
-                                  height: 43,
-                                  width: 43,
-                                  fit: BoxFit.scaleDown,
-                                )),
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.userName,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                Text(widget.postCategory,
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w800)),
-                              ],
-                            )
-                          ],
-                        ),
-                        PopupMenuButton<String>(
-                          onSelected: handleClick,
-                          itemBuilder: (BuildContext context) {
-                            return {'메세지 보내기', '신고하기'}.map((String choice) {
-                              return PopupMenuItem<String>(
-                                value: choice,
-                                child: choice == '신고하기'
-                                    ? Text(
-                                        choice,
-                                        style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .error),
-                                      )
-                                    : Text(choice),
-                              );
-                            }).toList();
-                          },
-                        ),
-                      ]),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Column(
+    return FutureBuilder(
+        future: getPeerDisplayName(widget.uid),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData == false) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.92),
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(
+                    const DetailPage(),
+                    arguments: PostCard(
+                        userName: snapshot.data.toString(),
+                        postCategory: widget.postCategory,
+                        postTitle: widget.postTitle,
+                        postText: widget.postText,
+                        uid: widget.uid),
+                  );
+                },
+                child: Card(
+                  elevation: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 11),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.postTitle,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        ),
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: const Image(
+                                        image: AssetImage('assets/user.png'),
+                                        height: 43,
+                                        width: 43,
+                                        fit: BoxFit.scaleDown,
+                                      )),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        snapshot.data.toString(),
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      Text(widget.postCategory,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w800)),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              PopupMenuButton<String>(
+                                onSelected: handleClick,
+                                itemBuilder: (BuildContext context) {
+                                  return {'메세지 보내기', '신고하기'}
+                                      .map((String choice) {
+                                    return PopupMenuItem<String>(
+                                      value: choice,
+                                      child: choice == '신고하기'
+                                          ? Text(
+                                              choice,
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .error),
+                                            )
+                                          : Text(choice),
+                                    );
+                                  }).toList();
+                                },
+                              ),
+                            ]),
                         const SizedBox(
                           height: 10,
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.92 - 29,
-                          child: Text(widget.postText),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.postTitle,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                width:
+                                    MediaQuery.of(context).size.width * 0.92 -
+                                        29,
+                                child: Text(widget.postText),
+                              ),
+                            ]),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.favorite_border),
+                            ),
+                            const Text('5'),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.chat_outlined,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const Text('20'),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.bookmark_border,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
                         ),
-                      ]),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.favorite_border),
-                      ),
-                      const Text('5'),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.chat_outlined,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const Text('20'),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.bookmark_border,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                    ],
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ));
+                ),
+              ));
+        });
   }
 }
 

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:disko_001/screens/chat_screen/chat_list_page.dart';
+import 'package:disko_001/screens/chat_list_screen/chat_list_page.dart';
 import 'package:disko_001/screens/home_screen/profile_page.dart';
 import 'package:disko_001/screens/search_screen/search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,17 +60,6 @@ class MyHomeState extends ConsumerState<MyHome> {
             },
             icon: const Icon(
               Icons.notifications_none_outlined,
-              color: Colors.black,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              Future<void> signOut() async {
-                await auth.signOut();
-              }
-            },
-            icon: const Icon(
-              Icons.logout,
               color: Colors.black,
             ),
           ),

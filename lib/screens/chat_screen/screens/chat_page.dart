@@ -65,6 +65,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             )),
             SendMessage(
               collectionPath: collectionPath,
+              chatName: chatName,
+              receiverUid: peerUid,
             ),
           ],
         )));

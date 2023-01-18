@@ -4,8 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SendMessage extends StatefulWidget {
-  const SendMessage({Key? key, required this.collectionPath}) : super(key: key);
-  final String collectionPath;
+  const SendMessage(
+      {Key? key,
+      required this.collectionPath,
+      required this.chatName,
+      required this.receiverUid})
+      : super(key: key);
+  final String collectionPath, chatName, receiverUid;
 
   @override
   State<SendMessage> createState() => _SendMessageState();
@@ -14,16 +19,27 @@ class SendMessage extends StatefulWidget {
 class _SendMessageState extends State<SendMessage> {
   final controller = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
+
   var _userEnterMessage = '';
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
+    final messageData = ChatMessageModel(
+      time: Timestamp.now(),
+      senderId: user!.uid,
+      receiverUid: widget.receiverUid,
+      message: _userEnterMessage,
+    ).toJson();
     FocusScope.of(context).unfocus();
     FirebaseFirestore.instance
         .collection(widget.collectionPath)
-        .add(ChatMessageModel(
-          time: Timestamp.now(),
-          senderId: user!.uid,
-          message: _userEnterMessage,
-        ).toJson());
+        .add(messageData);
+
+    final currentMessage =
+        FirebaseFirestore.instance.collection('messages').doc(widget.chatName);
+
+    currentMessage.update(messageData);
+    await currentMessage
+        .update({"unreadMessageCount": FieldValue.increment(1)});
+
     controller.clear();
   }
 

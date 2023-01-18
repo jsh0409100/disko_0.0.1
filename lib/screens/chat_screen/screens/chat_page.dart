@@ -1,3 +1,4 @@
+import 'package:disko_001/src/tools.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,50 +26,56 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         ? peerUid + '-' + currentUserUid
         : currentUserUid + '-' + peerUid;
     final String collectionPath = 'messages/' + chatName + '/' + chatName;
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/user.png',
-                width: 28,
+
+    return FutureBuilder(
+        future: resetUnreadMessageCount(chatName),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/user.png',
+                      width: 28,
+                    ),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Text(
+                      peerDisplayName,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.more_vert,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+                backgroundColor: Colors.white,
+                elevation: 0,
               ),
-              const SizedBox(
-                width: 6,
-              ),
-              Text(
-                peerDisplayName,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.more_vert,
-                color: Colors.black,
-              ),
-            ),
-          ],
-          backgroundColor: Colors.white,
-          elevation: 0,
-        ),
-        body: Container(
-            child: Column(
-          children: [
-            Expanded(
-                child: ChatMessage(
-              collectionPath: collectionPath,
-            )),
-            SendMessage(
-              collectionPath: collectionPath,
-              chatName: chatName,
-              receiverUid: peerUid,
-            ),
-          ],
-        )));
+              body: Container(
+                  child: Column(
+                children: [
+                  Expanded(
+                      child: ChatMessage(
+                    collectionPath: collectionPath,
+                  )),
+                  SendMessage(
+                    collectionPath: collectionPath,
+                    chatName: chatName,
+                    receiverUid: peerUid,
+                  ),
+                ],
+              )));
+        });
   }
 }

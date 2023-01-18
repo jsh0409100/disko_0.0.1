@@ -28,32 +28,25 @@ class _ChatListState extends State<ChatList> {
         return ListView.builder(
             itemCount: chatDocs.length,
             itemBuilder: (context, index) {
+              bool currentIsSender = (chatDocs[index]['senderId'] ==
+                  FirebaseAuth.instance.currentUser!.uid);
+              String peerUid = (currentIsSender) ? 'receiverUid' : 'senderId';
               return FutureBuilder(
-                  future: getPeerDisplayName(chatDocs[index]['receiverUid']),
+                  future: getPeerDisplayName(chatDocs[index][peerUid]),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData == false) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
-                    bool currentIsSender = (chatDocs[index]['senderId'] ==
-                        FirebaseAuth.instance.currentUser!.uid);
                     return ChatItem(
                       name: snapshot.data.toString(),
                       messageText: chatDocs[index]['message'],
-                      peerUid: (currentIsSender)
-                          ? chatDocs[index]['receiverUid']
-                          : chatDocs[index]['senderUid'],
+                      peerUid: chatDocs[index][peerUid],
                       time: chatDocs[index]['time'],
                       unreadMessageCount: (currentIsSender)
                           ? 0
                           : chatDocs[index]['unreadMessageCount'],
                     );
                   });
-              // unreadMessageCount: chatDocs[index]
-              // (chatDocs[index]['senderId'].toString() == user!.uid)
-              //   ? MyChatBubble(
-              //   chatDocs[index]['message'], chatDocs[index]['time'])
-              //   : PeerChatBubble(
-              //   chatDocs[index]['message'], chatDocs[index]['time']);
             });
       },
     );

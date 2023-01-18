@@ -34,14 +34,13 @@ class _SendMessageState extends State<SendMessage> {
         .collection(widget.collectionPath)
         .add(messageData);
 
-    final currentMessage =
+    final currentChat =
         FirebaseFirestore.instance.collection('messages').doc(widget.chatName);
-    final doc = await currentMessage.get();
+    final doc = await currentChat.get();
     (doc.exists)
-        ? currentMessage.update(messageData)
-        : currentMessage.set(messageData);
-    await currentMessage
-        .update({"unreadMessageCount": FieldValue.increment(1)});
+        ? currentChat.update(messageData)
+        : currentChat.set(messageData);
+    await currentChat.update({"unreadMessageCount": FieldValue.increment(1)});
   }
 
   @override

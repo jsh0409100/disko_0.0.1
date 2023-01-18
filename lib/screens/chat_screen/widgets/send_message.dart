@@ -22,6 +22,7 @@ class _SendMessageState extends State<SendMessage> {
 
   var _userEnterMessage = '';
   Future<void> _sendMessage() async {
+    controller.clear();
     final messageData = ChatMessageModel(
       time: Timestamp.now(),
       senderId: user!.uid,
@@ -35,12 +36,12 @@ class _SendMessageState extends State<SendMessage> {
 
     final currentMessage =
         FirebaseFirestore.instance.collection('messages').doc(widget.chatName);
-
-    currentMessage.update(messageData);
+    final doc = await currentMessage.get();
+    (doc.exists)
+        ? currentMessage.update(messageData)
+        : currentMessage.set(messageData);
     await currentMessage
         .update({"unreadMessageCount": FieldValue.increment(1)});
-
-    controller.clear();
   }
 
   @override

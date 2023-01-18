@@ -22,14 +22,17 @@ class HomeFeedPage extends ConsumerWidget {
       }
     });
     return Scaffold(
-      body: CustomScrollView(
-        controller: scrollController,
-        restorationId: "posts List",
-        slivers: const [
-          PostsList(),
-          NoMorePosts(),
-          OnGoingBottomWidget(),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 11.0),
+        child: CustomScrollView(
+          controller: scrollController,
+          restorationId: "posts List",
+          slivers: const [
+            PostsList(),
+            NoMorePosts(),
+            OnGoingBottomWidget(),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

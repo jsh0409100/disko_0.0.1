@@ -63,6 +63,7 @@ class _PostCardState extends State<PostCard> {
                   );
                 },
                 child: Card(
+                  color: Theme.of(context).colorScheme.onPrimary,
                   elevation: 1,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(

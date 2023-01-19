@@ -5,7 +5,7 @@ import 'package:disko_001/src/pagination_state/pagination_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod/riverpod.dart';
 
-import '../widget/post_card.dart';
+import '../widget/post.dart';
 
 final postsProvider = StateNotifierProvider<PaginationNotifier<PostCardModel>,
     PaginationState<PostCardModel>>((ref) {

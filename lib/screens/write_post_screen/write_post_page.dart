@@ -245,7 +245,7 @@ class _WritePostPageState extends State<WritePostPage> {
     }
     try {
       final List<XFile> images = await _picker.pickMultiImage();
-      if (images!.isNotEmpty) {
+      if (images.isNotEmpty) {
         _imageFileList?.addAll(images);
       }
       print("List of selected images : " + images.length.toString());

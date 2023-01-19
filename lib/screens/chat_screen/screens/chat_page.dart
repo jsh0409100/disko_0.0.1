@@ -30,52 +30,55 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     return FutureBuilder(
         future: resetUnreadMessageCount(chatName),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/user.png',
-                      width: 28,
-                    ),
-                    const SizedBox(
-                      width: 6,
-                    ),
-                    Text(
-                      peerDisplayName,
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/user.png',
+                        width: 28,
+                      ),
+                      const SizedBox(
+                        width: 6,
+                      ),
+                      Text(
+                        peerDisplayName,
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.more_vert,
+                        color: Colors.black,
+                      ),
                     ),
                   ],
+                  backgroundColor: Colors.white,
+                  elevation: 0,
                 ),
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.more_vert,
-                      color: Colors.black,
+                body: Container(
+                    child: Column(
+                  children: [
+                    Expanded(
+                        child: ChatMessage(
+                      collectionPath: collectionPath,
+                    )),
+                    SendMessage(
+                      collectionPath: collectionPath,
+                      chatName: chatName,
+                      receiverUid: peerUid,
                     ),
-                  ),
-                ],
-                backgroundColor: Colors.white,
-                elevation: 0,
-              ),
-              body: Container(
-                  child: Column(
-                children: [
-                  Expanded(
-                      child: ChatMessage(
-                    collectionPath: collectionPath,
-                  )),
-                  SendMessage(
-                    collectionPath: collectionPath,
-                    chatName: chatName,
-                    receiverUid: peerUid,
-                  ),
-                ],
-              )));
+                  ],
+                ))),
+          );
         });
   }
 }

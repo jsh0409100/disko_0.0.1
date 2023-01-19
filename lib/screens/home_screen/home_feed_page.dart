@@ -62,26 +62,25 @@ class PostsList extends StatelessWidget {
         data: (posts) {
           return posts.isEmpty
               ? SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          ref.read(postsProvider.notifier).fetchFirstBatch();
-                        },
-                        icon: const Icon(Icons.replay),
-                      ),
-                      const Chip(
-                        label: Text("No posts Found!"),
-                      ),
-                    ],
-                  ),
-                )
+            child: Column(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    ref.read(postsProvider.notifier).fetchFirstBatch();
+                  },
+                  icon: const Icon(Icons.replay),
+                ),
+                const Chip(
+                  label: Text("No posts Found!"),
+                ),
+              ],
+            ),
+          )
               : PostsListBuilder(
-                  posts: posts,
-                );
+            posts: posts,
+          );
         },
-        loading: () => const SliverToBoxAdapter(
-            child: Center(child: CircularProgressIndicator())),
+        loading: () => SliverToBoxAdapter(child: Center(child: Container())),
         error: (e, stk) {
           return SliverToBoxAdapter(
             child: Center(
@@ -92,7 +91,7 @@ class PostsList extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Something Went Wrong! ?!? !??! ",
+                    "게시물을 불러오는 도중 에러가 발생하였습니다",
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -178,7 +177,7 @@ class OnGoingBottomWidget extends StatelessWidget {
           return state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
             onGoingLoading: (posts) =>
-                const Center(child: CircularProgressIndicator()),
+            const Center(child: CircularProgressIndicator()),
             onGoingError: (posts, e, stk) => Center(
               child: Column(
                 children: const [
@@ -218,7 +217,7 @@ class NoMorePosts extends ConsumerWidget {
                 ? const Padding(
                     padding: EdgeInsets.only(bottom: 0),
                     child: Text(
-                      "No More Posts Found!",
+                      "더이상 게시글이 없습니다",
                       textAlign: TextAlign.center,
                     ),
                   )

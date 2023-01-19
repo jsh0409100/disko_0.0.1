@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -131,6 +132,29 @@ class _PostCardState extends State<PostCard> {
                 width: MediaQuery.of(context).size.width * 0.92 - 29,
                 child: Text(widget.postText),
               ),
+              imagesUrl.isEmpty
+              ? Container()
+              : Padding(
+                padding: EdgeInsets.all(3),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.92 -29,
+                  height: MediaQuery.of(context).size.height / 10 ,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: imagesUrl.length,
+                    dragStartBehavior: DragStartBehavior.start,
+                    itemBuilder: (BuildContext context, int index){
+                      return Padding(
+                        padding: EdgeInsets.all(2),
+                        child: Image.network(
+                          imagesUrl[index],
+                          fit: BoxFit.cover
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              )
             ]),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,

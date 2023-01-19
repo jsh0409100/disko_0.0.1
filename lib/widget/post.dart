@@ -12,17 +12,17 @@ class Post extends StatefulWidget {
   final String userName, postCategory, postTitle, postText, uid;
   final List<String> likes, imagesUrl;
 
-  const Post({
-    Key? key,
-    // required this.uid,
-    required this.userName,
-    required this.postCategory,
-    required this.postTitle,
-    required this.postText,
-    required this.uid,
-    required this.likes,
-    required this.imagesUrl
-  }) : super(key: key);
+  const Post(
+      {Key? key,
+      // required this.uid,
+      required this.userName,
+      required this.postCategory,
+      required this.postTitle,
+      required this.postText,
+      required this.uid,
+      required this.likes,
+      required this.imagesUrl})
+      : super(key: key);
 
   @override
   State<Post> createState() => _PostState();
@@ -35,34 +35,45 @@ class _PostState extends State<Post> {
         future: getDisplayNameByUid(widget.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
-            return const Center(child: CircularProgressIndicator());
+            return Card(
+              color: Colors.grey.shade300,
+              child: Column(children: [
+                SizedBox(
+                  height: 180,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                ),
+                const SizedBox(
+                  height: 11,
+                )
+              ]),
+            );
           }
           return Container(
-              constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.92),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.92),
               child: GestureDetector(
                 onTap: () {
                   Get.to(
                     const DetailPage(),
                     arguments: PostCard(
-                        userName: widget.userName,
-                        postCategory: widget.postCategory,
-                        postTitle: widget.postTitle,
-                        postText: widget.postText,
-                        uid: widget.uid,
-                        likes: widget.likes,
-                        imagesUrl: widget.imagesUrl,
+                      userName: widget.userName,
+                      postCategory: widget.postCategory,
+                      postTitle: widget.postTitle,
+                      postText: widget.postText,
+                      uid: widget.uid,
+                      likes: widget.likes,
+                      imagesUrl: widget.imagesUrl,
                     ),
                   );
                 },
                 child: PostCard(
-                    userName: widget.userName,
-                    postCategory: widget.postCategory,
-                    postTitle: widget.postTitle,
-                    postText: widget.postText,
-                    uid: widget.uid,
-                    likes: widget.likes,
-                    imagesUrl: widget.imagesUrl,
+                  userName: widget.userName,
+                  postCategory: widget.postCategory,
+                  postTitle: widget.postTitle,
+                  postText: widget.postText,
+                  uid: widget.uid,
+                  likes: widget.likes,
+                  imagesUrl: widget.imagesUrl,
                 ),
               ));
         });

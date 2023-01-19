@@ -4,20 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../screens/chat_screen/screens/chat_page.dart';
+import '../screens/profile_screen/other_user_profile_page.dart';
 
 class PostCard extends StatefulWidget {
   final String uid, userName, postCategory, postTitle, postText;
-  final List<String> likes;
+  final List<String> likes, imagesUrl;
   const PostCard(
       {Key? key,
-        required this.uid,
-        required this.userName,
-        required this.postCategory,
-        required this.postTitle,
-        required this.postText,
-        required this.likes})
+      required this.uid,
+      required this.userName,
+      required this.postCategory,
+      required this.postTitle,
+      required this.postText,
+      required this.likes,
+        required this. imagesUrl,
+      })
       : super(key: key);
-
+      
   @override
   State<PostCard> createState() => _PostCardState();
 }
@@ -62,32 +65,37 @@ class _PostCardState extends State<PostCard> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Row(
-                children: [
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: const Image(
-                        image: AssetImage('assets/user.png'),
-                        height: 43,
-                        width: 43,
-                        fit: BoxFit.scaleDown,
-                      )),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.userName,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      Text(widget.postCategory,
-                          style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w800)),
-                    ],
-                  )
-                ],
+              GestureDetector(
+                child: Row(
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: const Image(
+                          image: AssetImage('assets/user.png'),
+                          height: 43,
+                          width: 43,
+                          fit: BoxFit.scaleDown,
+                        )),
+                    const SizedBox(
+                      width: 12,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          userName,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        Text(postCategory,
+                            style: const TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w800)),
+                      ],
+                    )
+                  ],
+                ),
+                onTap: () {
+                  Get.to(() => OtherUserProfilePage(), arguments: uid);
+                },
               ),
               PopupMenuButton<String>(
                 onSelected: handleClick,

@@ -1,5 +1,4 @@
 import 'package:disko_001/screens/chat_list_screen/chat_list_page.dart';
-import 'package:disko_001/screens/home_screen/profile_page.dart';
 import 'package:disko_001/screens/search_screen/search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../profile_screen/my_profile_page.dart';
 import 'home_feed_page.dart';
 import 'notification.dart';
 
@@ -23,7 +23,7 @@ class MyHomeState extends ConsumerState<MyHome> {
   final pages = [
     HomeFeedPage(),
     const ChatListPage(),
-    const ProfilePage(),
+    const MyProfilePage(),
   ];
 
   void _onItemTapped(int index) {

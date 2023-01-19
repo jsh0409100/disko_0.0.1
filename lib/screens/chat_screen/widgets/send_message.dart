@@ -29,7 +29,6 @@ class _SendMessageState extends State<SendMessage> {
       receiverUid: widget.receiverUid,
       message: _userEnterMessage,
     ).toJson();
-    FocusScope.of(context).unfocus();
     FirebaseFirestore.instance
         .collection(widget.collectionPath)
         .add(messageData);
@@ -53,22 +52,28 @@ class _SendMessageState extends State<SendMessage> {
         ),
         Expanded(
           child: TextField(
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             controller: controller,
             maxLines: null,
-            decoration: InputDecoration(
-              suffixIcon: Container(
-                padding: const EdgeInsets.all(0.0),
-                width: 24,
-                child: IconButton(
-                  constraints: const BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.emoji_emotions_outlined,
-                  ),
-                ),
+            decoration: const InputDecoration(
+              isDense: true,
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              // suffixIcon: Container(
+              //   padding: const EdgeInsets.all(0.0),
+              //   width: 24,
+              //   child: IconButton(
+              //     constraints: const BoxConstraints(),
+              //     padding: EdgeInsets.zero,
+              //     onPressed: () {},
+              //     icon: const Icon(
+              //       Icons.emoji_emotions_outlined,
+              //     ),
+              //   ),
+              // ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
               ),
-              border: const OutlineInputBorder(),
               hintText: "메세지 보내기",
             ),
             onChanged: (value) {

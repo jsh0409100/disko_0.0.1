@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../models/post_card_model.dart';
 import '../../src/providers.dart';
+import '../../src/tools.dart';
 import '../../widget/post.dart';
 
 class HomeFeedPage extends ConsumerWidget {
@@ -79,10 +80,8 @@ class PostsList extends StatelessWidget {
             posts: posts,
           );
         },
-        loading: () => const SliverToBoxAdapter(
-            child: Center(child: CircularProgressIndicator())),
+        loading: () => SliverToBoxAdapter(child: Center(child: Container())),
         error: (e, stk) {
-          print('$e' + '\n\n\n\n\n\n\n\n');
           return SliverToBoxAdapter(
             child: Center(
               child: Column(
@@ -92,7 +91,7 @@ class PostsList extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Something Went Wrong! ?!? !??! ",
+                    "게시물을 불러오는 도중 에러가 발생하였습니다",
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -129,16 +128,35 @@ class PostsListBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-            (context, index) {
-          return Post(
-            userName: posts[index].userName,
-            postTitle: posts[index].postTitle,
-            postCategory: posts[index].postCategory,
-            postText: posts[index].postText,
-            uid: posts[index].uid,
-            likes: posts[index].likes,
-            //postimage: posts[index].postimage,
-          );
+        (context, index) {
+          return FutureBuilder(
+              future: getDisplayNameByUid(posts[index].uid),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData == false) {
+                  return Card(
+                    color: Colors.grey.shade300,
+                    child: Column(children: [
+                      SizedBox(
+                        height: 180,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                      ),
+                      const SizedBox(
+                        height: 11,
+                      )
+                    ]),
+                  );
+                } else {
+                  return Post(
+                    userName: snapshot.data.toString(),
+                    postTitle: posts[index].postTitle,
+                    postCategory: posts[index].postCategory,
+                    postText: posts[index].postText,
+                    uid: posts[index].uid,
+                    likes: posts[index].likes,
+                    imagesUrl: posts[index].imagesUrl,
+                  );
+                }
+              });
         },
         childCount: posts.length,
       ),
@@ -197,12 +215,12 @@ class NoMorePosts extends ConsumerWidget {
             final nomorePosts = ref.read(postsProvider.notifier).noMoreItems;
             return nomorePosts
                 ? const Padding(
-              padding: EdgeInsets.only(bottom: 0),
-              child: Text(
-                "No More Posts Found!",
-                textAlign: TextAlign.center,
-              ),
-            )
+                    padding: EdgeInsets.only(bottom: 0),
+                    child: Text(
+                      "더이상 게시글이 없습니다",
+                      textAlign: TextAlign.center,
+                    ),
+                  )
                 : const SizedBox.shrink();
           }),
     );

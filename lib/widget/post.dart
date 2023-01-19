@@ -10,7 +10,7 @@ import '../src/tools.dart';
 
 class Post extends StatefulWidget {
   final String userName, postCategory, postTitle, postText, uid;
-  final List<String> likes;
+  final List<String> likes, imagesUrl;
 
   const Post({
     Key? key,
@@ -21,6 +21,7 @@ class Post extends StatefulWidget {
     required this.postText,
     required this.uid,
     required this.likes,
+    required this.imagesUrl
   }) : super(key: key);
 
   @override
@@ -37,28 +38,32 @@ class _PostState extends State<Post> {
             return const Center(child: CircularProgressIndicator());
           }
           return Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.92),
+              constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.92),
               child: GestureDetector(
                 onTap: () {
                   Get.to(
                     const DetailPage(),
                     arguments: PostCard(
-                        userName: snapshot.data.toString(),
+                        userName: widget.userName,
                         postCategory: widget.postCategory,
                         postTitle: widget.postTitle,
                         postText: widget.postText,
                         uid: widget.uid,
-                        likes: widget.likes),
+                        likes: widget.likes,
+                        imagesUrl: widget.imagesUrl,
+                    ),
                   );
                 },
                 child: PostCard(
-                    userName: snapshot.data.toString(),
+                    userName: widget.userName,
                     postCategory: widget.postCategory,
                     postTitle: widget.postTitle,
                     postText: widget.postText,
                     uid: widget.uid,
-                    likes: widget.likes),
+                    likes: widget.likes,
+                    imagesUrl: widget.imagesUrl,
+                ),
               ));
         });
   }

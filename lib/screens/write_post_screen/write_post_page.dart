@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/screens/write_post_screen/widgets/select_category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,11 +22,15 @@ class WritePostPage extends StatefulWidget {
 class _WritePostPageState extends State<WritePostPage> {
   final ImagePicker _picker = ImagePicker();
   List<XFile>? _imageFileList = [];
+  List<String> _arrImageUrls = [];
+  final FirebaseStorage _storageRef = FirebaseStorage.instance;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController postTitleController = TextEditingController();
   TextEditingController postTextController = TextEditingController();
   CollectionReference posts = FirebaseFirestore.instance.collection('posts');
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,61 +63,87 @@ class _WritePostPageState extends State<WritePostPage> {
             ]),
         body: LayoutBuilder(
           builder: (context, constraints) {
-            return Column(children: [
-              TextField(
-                controller: postTitleController,
-                maxLength: 15,
-                decoration: const InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10, horizontal: 24),
-                  hintText: '제목',
-                ),
-                style:
-                    const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
-              ),
-              Expanded(
-                flex: 10,
-                //TODO 오버플로우 해결 방법 찾기
-                child: TextField(
-                  controller: postTextController,
-                  expands: true,
-                  maxLines: null,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(
-                        top: 10, left: 24, right: 24, bottom: 0),
-                    hintText: '글작성',
-                  ),
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
-              Expanded(
-                child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              top: BorderSide(
-                        color: Colors.black,
-                        width: 0.5,
-                      ))),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.add_reaction_outlined),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.photo_camera_outlined),
-                            onPressed: () {
-                              selectImage();
-                            },
-                          ),
-                        ],
+            return _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Column(children: [
+                    TextField(
+                      controller: postTitleController,
+                      maxLength: 15,
+                      decoration: const InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+                        hintText: '제목',
                       ),
-                    )),
-              )
-            ]);
+                      style: const TextStyle(
+                          fontSize: 17, fontWeight: FontWeight.w700),
+                    ),
+                    Expanded(
+                      flex: 75,
+                      //TODO 오버플로우 해결 방법 찾기
+                      child: TextField(
+                        controller: postTextController,
+                        expands: true,
+                        maxLines: null,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(
+                              top: 10, left: 24, right: 24, bottom: 0),
+                          hintText: '글작성',
+                        ),
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    _imageFileList == 0
+                        ? Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text("No Images Selected"),
+                          )
+                        : Expanded(
+                            flex: 15,
+                            child: GridView.builder(
+                              itemCount: _imageFileList?.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 4),
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(2),
+                                  child: Image.file(
+                                    File(_imageFileList![index].path),
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                    Expanded(
+                      flex: 10,
+                      child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    top: BorderSide(
+                              color: Colors.black,
+                              width: 0.5,
+                            ))),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.add_reaction_outlined),
+                                  onPressed: () {},
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.photo_camera_outlined),
+                                  onPressed: () {
+                                    selectImage();
+                                  },
+                                ),
+                              ],
+                            ),
+                          )),
+                    )
+                  ]);
           },
         ));
   }
@@ -146,7 +179,9 @@ class _WritePostPageState extends State<WritePostPage> {
                     textStyle: Theme.of(context).textTheme.labelLarge,
                   ),
                   child: const Text('게시'),
-                  onPressed: () {
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await uploadFunction(_imageFileList!);
                     PostCardModel newPost = PostCardModel(
                       userName: userData.data()!['displayName'],
                       postTitle: postTitleController.text,
@@ -156,6 +191,7 @@ class _WritePostPageState extends State<WritePostPage> {
                       time: Timestamp.now(),
                       uid: currentUser.uid,
                       likes: [],
+                      imagesUrl: _arrImageUrls,
                       //postImage:
                     );
                     posts.add(newPost.toJson());
@@ -170,6 +206,37 @@ class _WritePostPageState extends State<WritePostPage> {
         );
       },
     );
+  }
+
+  Future<void> uploadFunction(List<XFile> _images) async {
+    setState(() {
+      _isLoading = true;
+    });
+    for (int i = 0; i < _images.length; i++) {
+      var imageUrl = await uploadFile(_images[i]);
+      _arrImageUrls.add(imageUrl.toString());
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<String> uploadFile(XFile _image) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser!.uid)
+        .get();
+    Reference reference = _storageRef
+        .ref()
+        .child(userData.data()!['displayName'])
+        .child(_image.name);
+    UploadTask uploadTask = reference.putFile(File(_image.path));
+    await uploadTask.whenComplete(() {
+      print(reference.getDownloadURL());
+    });
+
+    return await reference.getDownloadURL();
   }
 
   Future<void> selectImage() async {

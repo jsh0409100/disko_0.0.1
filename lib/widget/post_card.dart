@@ -26,8 +26,21 @@ class _PostCardState extends State<PostCard> {
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
   bool _isLiked = false;
+  Color likeColor = Colors.black;
+  Icon likeIcon = const Icon(Icons.favorite_border);
+
   @override
   Widget build(BuildContext context) {
+
+    if (widget.likes.contains(user!.uid)){
+      likeColor = Theme.of(context).colorScheme.primary;
+      likeIcon = const Icon(Icons.favorite);
+    }
+    else {
+      likeColor = Colors.black;
+      likeIcon = const Icon(Icons.favorite_border);
+    }
+
     void handleClick(String value) {
       switch (value) {
         case '메세지 보내기':
@@ -118,15 +131,22 @@ class _PostCardState extends State<PostCard> {
                   onPressed: () async {
                     if (widget.likes.contains(user!.uid)){
                       widget.likes.remove(user!.uid);
+                      setState(() {
+                        _isLiked = false;
+                      });
                     }
                     else {
                       widget.likes.add(user!.uid);
+                      setState(() {
+                        _isLiked = true;
+                      });
                     }
                     await postsCollection.doc('sTnT0stHrJV5595ebfDm').update({
                       'likes': widget.likes,
                     });
                   },
-                  icon: const Icon(Icons.favorite_border),
+                  icon: likeIcon,
+                  color: likeColor,
                 ),
                 Text(widget.likes.length.toString()),
                 const SizedBox(width: 8),

@@ -61,23 +61,23 @@ class PostsList extends StatelessWidget {
         data: (posts) {
           return posts.isEmpty
               ? SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          ref.read(postsProvider.notifier).fetchFirstBatch();
-                        },
-                        icon: const Icon(Icons.replay),
-                      ),
-                      const Chip(
-                        label: Text("No posts Found!"),
-                      ),
-                    ],
-                  ),
-                )
+            child: Column(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    ref.read(postsProvider.notifier).fetchFirstBatch();
+                  },
+                  icon: const Icon(Icons.replay),
+                ),
+                const Chip(
+                  label: Text("No posts Found!"),
+                ),
+              ],
+            ),
+          )
               : PostsListBuilder(
-                  posts: posts,
-                );
+            posts: posts,
+          );
         },
         loading: () => const SliverToBoxAdapter(
             child: Center(child: CircularProgressIndicator())),
@@ -129,7 +129,7 @@ class PostsListBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (context, index) {
+            (context, index) {
           return Post(
             userName: posts[index].userName,
             postTitle: posts[index].postTitle,
@@ -159,7 +159,7 @@ class OnGoingBottomWidget extends StatelessWidget {
           return state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
             onGoingLoading: (posts) =>
-                const Center(child: CircularProgressIndicator()),
+            const Center(child: CircularProgressIndicator()),
             onGoingError: (posts, e, stk) => Center(
               child: Column(
                 children: const [
@@ -197,12 +197,12 @@ class NoMorePosts extends ConsumerWidget {
             final nomorePosts = ref.read(postsProvider.notifier).noMoreItems;
             return nomorePosts
                 ? const Padding(
-                    padding: EdgeInsets.only(bottom: 0),
-                    child: Text(
-                      "No More Posts Found!",
-                      textAlign: TextAlign.center,
-                    ),
-                  )
+              padding: EdgeInsets.only(bottom: 0),
+              child: Text(
+                "No More Posts Found!",
+                textAlign: TextAlign.center,
+              ),
+            )
                 : const SizedBox.shrink();
           }),
     );

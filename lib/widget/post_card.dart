@@ -1,28 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../screens/chat_screen/screens/chat_page.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final String uid, userName, postCategory, postTitle, postText;
   final List<String> likes;
   const PostCard(
       {Key? key,
-      required this.uid,
-      required this.userName,
-      required this.postCategory,
-      required this.postTitle,
-      required this.postText,
-      required this.likes})
+        required this.uid,
+        required this.userName,
+        required this.postCategory,
+        required this.postTitle,
+        required this.postText,
+        required this.likes})
       : super(key: key);
 
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  final user = FirebaseAuth.instance.currentUser;
+  CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
+  bool _isLiked = false;
   @override
   Widget build(BuildContext context) {
     void handleClick(String value) {
       switch (value) {
         case '메세지 보내기':
           Get.to(() => const ChatPage(),
-              arguments: {'peerUid': uid, 'peerDisplayName': userName});
+              arguments: {'peerUid': widget.uid, 'peerDisplayName': widget.userName});
           break;
         case '신고하기':
           break;
@@ -56,10 +66,10 @@ class PostCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        userName,
+                        widget.userName,
                         style: const TextStyle(fontSize: 16),
                       ),
-                      Text(postCategory,
+                      Text(widget.postCategory,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w800)),
                     ],
@@ -74,10 +84,10 @@ class PostCard extends StatelessWidget {
                       value: choice,
                       child: choice == '신고하기'
                           ? Text(
-                              choice,
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error),
-                            )
+                        choice,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
+                      )
                           : Text(choice),
                     );
                   }).toList();
@@ -89,26 +99,36 @@ class PostCard extends StatelessWidget {
             ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                postTitle,
+                widget.postTitle,
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               const SizedBox(
                 height: 10,
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.92 - 29,
-                child: Text(postText),
+                child: Text(widget.postText),
               ),
             ]),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (widget.likes.contains(user!.uid)){
+                      widget.likes.remove(user!.uid);
+                    }
+                    else {
+                      widget.likes.add(user!.uid);
+                    }
+                    await postsCollection.doc('sTnT0stHrJV5595ebfDm').update({
+                      'likes': widget.likes,
+                    });
+                  },
                   icon: const Icon(Icons.favorite_border),
                 ),
-                const Text('5'),
+                Text(widget.likes.length.toString()),
                 const SizedBox(width: 8),
                 IconButton(
                   onPressed: () {},

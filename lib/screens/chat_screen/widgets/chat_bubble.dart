@@ -11,6 +11,7 @@ class MyChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime date = time.toDate();
+    Intl.defaultLocale = 'ko';
     final timeFormat = DateFormat.jm();
     final showTime = timeFormat.format(date);
     return Row(
@@ -47,7 +48,7 @@ class PeerChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime date = time.toDate();
-    final timeFormat = DateFormat.jm();
+    final timeFormat = DateFormat('aa hh:mm', 'ko');
     final showTime = timeFormat.format(date);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,

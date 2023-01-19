@@ -42,7 +42,7 @@ class _ChatListState extends State<ChatList> {
                             height: 50,
                             width: MediaQuery.of(context).size.width * 0.9,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 11,
                           )
                         ]),

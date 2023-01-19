@@ -84,10 +84,10 @@ class _PostCardState extends State<PostCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userName,
+                          widget.userName,
                           style: const TextStyle(fontSize: 16),
                         ),
-                        Text(postCategory,
+                        Text(widget.postCategory,
                             style: const TextStyle(
                                 fontSize: 12, fontWeight: FontWeight.w800)),
                       ],
@@ -95,7 +95,7 @@ class _PostCardState extends State<PostCard> {
                   ],
                 ),
                 onTap: () {
-                  Get.to(() => OtherUserProfilePage(), arguments: uid);
+                  Get.to(() => OtherUserProfilePage(), arguments: widget.uid);
                 },
               ),
               PopupMenuButton<String>(
@@ -132,7 +132,7 @@ class _PostCardState extends State<PostCard> {
                 width: MediaQuery.of(context).size.width * 0.92 - 29,
                 child: Text(widget.postText),
               ),
-              imagesUrl.isEmpty
+              widget.imagesUrl.isEmpty
               ? Container()
               : Padding(
                 padding: EdgeInsets.all(3),
@@ -141,13 +141,13 @@ class _PostCardState extends State<PostCard> {
                   height: MediaQuery.of(context).size.height / 10 ,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: imagesUrl.length,
+                    itemCount: widget.imagesUrl.length,
                     dragStartBehavior: DragStartBehavior.start,
                     itemBuilder: (BuildContext context, int index){
                       return Padding(
                         padding: EdgeInsets.all(2),
                         child: Image.network(
-                          imagesUrl[index],
+                          widget.imagesUrl[index],
                           fit: BoxFit.cover
                         ),
                       );
@@ -161,6 +161,7 @@ class _PostCardState extends State<PostCard> {
               children: [
                 IconButton(
                   onPressed: () async {
+                    FirebaseFirestore.instance.collection('posts').doc('sTnT0stHrJV5595ebfDm').get();
                     if (widget.likes.contains(user!.uid)){
                       widget.likes.remove(user!.uid);
                       setState(() {

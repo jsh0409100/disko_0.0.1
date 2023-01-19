@@ -130,6 +130,15 @@ class PostsListBuilder extends StatelessWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
+          return Post(
+            userName: posts[index].userName,
+            postTitle: posts[index].postTitle,
+            postCategory: posts[index].postCategory,
+            postText: posts[index].postText,
+            uid: posts[index].uid,
+            likes: posts[index].likes,
+            imagesUrl : posts[index].imagesUrl,
+          );
           return FutureBuilder(
               future: getDisplayNameByUid(posts[index].uid),
               builder: (BuildContext context, AsyncSnapshot snapshot) {

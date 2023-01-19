@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostCardModel {
   final String userName, postCategory, postTitle, postText, uid;
-  final List<String> likes;
+  final List<String> likes, imagesUrl;
   final Timestamp time;
 
   PostCardModel({
@@ -13,12 +13,15 @@ class PostCardModel {
     required this.postText,
     required this.uid,
     required this.likes,
-    //required this.postImage
+    required this.imagesUrl,
   });
 
   factory PostCardModel.fromJson(Map<String, dynamic> json) {
     var likesFromJson = json['likes'];
+    var iUrlFromJson = json['imagesUrl'];
+
     List<String> parsedLikes = likesFromJson.cast<String>();
+    List<String> parsedUrl = iUrlFromJson.cast<String>();
 
     return PostCardModel(
         time: json['time'],
@@ -27,10 +30,11 @@ class PostCardModel {
         postTitle: json['postTitle'],
         postText: json['postText'],
         uid: json['uid'],
-        likes: parsedLikes);
+        likes: parsedLikes,
+        imagesUrl: parsedUrl
+    );
   }
 
-  //postImage = json['postImage'];
 
   Map<String, dynamic> toJson() => {
         'userName': userName,
@@ -40,6 +44,6 @@ class PostCardModel {
         'time': time,
         'uid': uid,
         'likes': likes,
-        //'postImage' : postImage
+        'imagesUrl' : imagesUrl
       };
 }

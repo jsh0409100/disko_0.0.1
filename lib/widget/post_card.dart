@@ -6,7 +6,7 @@ import '../screens/profile_screen/other_user_profile_page.dart';
 
 class PostCard extends StatelessWidget {
   final String uid, userName, postCategory, postTitle, postText;
-  final List<String> likes;
+  final List<String> likes, imagesUrl;
   const PostCard(
       {Key? key,
       required this.uid,
@@ -14,7 +14,9 @@ class PostCard extends StatelessWidget {
       required this.postCategory,
       required this.postTitle,
       required this.postText,
-      required this.likes})
+      required this.likes,
+        required this. imagesUrl,
+      })
       : super(key: key);
 
   @override

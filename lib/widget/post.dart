@@ -9,7 +9,7 @@ import '../screens/home_screen/detail_page.dart';
 
 class Post extends StatefulWidget {
   final String userName, postCategory, postTitle, postText, uid;
-  final List<String> likes;
+  final List<String> likes, imagesUrl;
 
   const Post({
     Key? key,
@@ -20,6 +20,7 @@ class Post extends StatefulWidget {
     required this.postText,
     required this.uid,
     required this.likes,
+    required this.imagesUrl
   }) : super(key: key);
 
   @override
@@ -29,6 +30,41 @@ class Post extends StatefulWidget {
 class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: getDisplayNameByUid(widget.uid),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData == false) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.92),
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(
+                    const DetailPage(),
+                    arguments: PostCard(
+                        userName: snapshot.data.toString(),
+                        postCategory: widget.postCategory,
+                        postTitle: widget.postTitle,
+                        postText: widget.postText,
+                        uid: widget.uid,
+                        likes: widget.likes,
+                        imagesUrl : widget.imagesUrl,
+                    ),
+                  );
+                },
+                child: PostCard(
+                    userName: snapshot.data.toString(),
+                    postCategory: widget.postCategory,
+                    postTitle: widget.postTitle,
+                    postText: widget.postText,
+                    uid: widget.uid,
+                    likes: widget.likes,
+                    imagesUrl : widget.imagesUrl,
+                ),
+              ));
+        });
     return Container(
         constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.92),

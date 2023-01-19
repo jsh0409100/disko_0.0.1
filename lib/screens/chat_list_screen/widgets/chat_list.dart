@@ -35,7 +35,18 @@ class _ChatListState extends State<ChatList> {
                   future: getDisplayNameByUid(chatDocs[index][peerUid]),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData == false) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Card(
+                        color: Colors.grey.shade300,
+                        child: Column(children: [
+                          SizedBox(
+                            height: 50,
+                            width: MediaQuery.of(context).size.width * 0.9,
+                          ),
+                          SizedBox(
+                            height: 11,
+                          )
+                        ]),
+                      );
                     }
                     return ChatItem(
                       name: snapshot.data.toString(),

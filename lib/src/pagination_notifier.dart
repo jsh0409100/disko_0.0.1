@@ -15,7 +15,7 @@ class PaginationNotifier<T> extends StateNotifier<PaginationState<T>> {
 
   final List<T> _items = [];
 
-  Timer _timer = Timer(const Duration(milliseconds: 1000), () {});
+  Timer _timer = Timer(const Duration(milliseconds: 0), () {});
 
   bool noMoreItems = false;
 

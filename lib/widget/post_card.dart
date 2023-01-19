@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../screens/chat_screen/screens/chat_page.dart';
 import '../screens/profile_screen/other_user_profile_page.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final String uid, userName, postCategory, postTitle, postText;
   final List<String> likes, imagesUrl;
   const PostCard(
@@ -18,14 +20,35 @@ class PostCard extends StatelessWidget {
         required this. imagesUrl,
       })
       : super(key: key);
+      
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  final user = FirebaseAuth.instance.currentUser;
+  CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
+  bool _isLiked = false;
+  Color likeColor = Colors.black;
+  Icon likeIcon = const Icon(Icons.favorite_border);
 
   @override
   Widget build(BuildContext context) {
+
+    if (widget.likes.contains(user!.uid)){
+      likeColor = Theme.of(context).colorScheme.primary;
+      likeIcon = const Icon(Icons.favorite);
+    }
+    else {
+      likeColor = Colors.black;
+      likeIcon = const Icon(Icons.favorite_border);
+    }
+
     void handleClick(String value) {
       switch (value) {
         case '메세지 보내기':
           Get.to(() => const ChatPage(),
-              arguments: {'peerUid': uid, 'peerDisplayName': userName});
+              arguments: {'peerUid': widget.uid, 'peerDisplayName': widget.userName});
           break;
         case '신고하기':
           break;
@@ -82,10 +105,10 @@ class PostCard extends StatelessWidget {
                       value: choice,
                       child: choice == '신고하기'
                           ? Text(
-                              choice,
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error),
-                            )
+                        choice,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
+                      )
                           : Text(choice),
                     );
                   }).toList();
@@ -97,26 +120,43 @@ class PostCard extends StatelessWidget {
             ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                postTitle,
+                widget.postTitle,
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               const SizedBox(
                 height: 10,
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.92 - 29,
-                child: Text(postText),
+                child: Text(widget.postText),
               ),
             ]),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite_border),
+                  onPressed: () async {
+                    if (widget.likes.contains(user!.uid)){
+                      widget.likes.remove(user!.uid);
+                      setState(() {
+                        _isLiked = false;
+                      });
+                    }
+                    else {
+                      widget.likes.add(user!.uid);
+                      setState(() {
+                        _isLiked = true;
+                      });
+                    }
+                    await postsCollection.doc('sTnT0stHrJV5595ebfDm').update({
+                      'likes': widget.likes,
+                    });
+                  },
+                  icon: likeIcon,
+                  color: likeColor,
                 ),
-                const Text('5'),
+                Text(widget.likes.length.toString()),
                 const SizedBox(width: 8),
                 IconButton(
                   onPressed: () {},

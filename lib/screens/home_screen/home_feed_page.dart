@@ -62,23 +62,23 @@ class PostsList extends StatelessWidget {
         data: (posts) {
           return posts.isEmpty
               ? SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          ref.read(postsProvider.notifier).fetchFirstBatch();
-                        },
-                        icon: const Icon(Icons.replay),
-                      ),
-                      const Chip(
-                        label: Text("No posts Found!"),
-                      ),
-                    ],
-                  ),
-                )
+            child: Column(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    ref.read(postsProvider.notifier).fetchFirstBatch();
+                  },
+                  icon: const Icon(Icons.replay),
+                ),
+                const Chip(
+                  label: Text("No posts Found!"),
+                ),
+              ],
+            ),
+          )
               : PostsListBuilder(
-                  posts: posts,
-                );
+            posts: posts,
+          );
         },
         loading: () => SliverToBoxAdapter(child: Center(child: Container())),
         error: (e, stk) {
@@ -177,7 +177,7 @@ class OnGoingBottomWidget extends StatelessWidget {
           return state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
             onGoingLoading: (posts) =>
-                const Center(child: CircularProgressIndicator()),
+            const Center(child: CircularProgressIndicator()),
             onGoingError: (posts, e, stk) => Center(
               child: Column(
                 children: const [

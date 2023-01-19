@@ -80,8 +80,7 @@ class PostsList extends StatelessWidget {
                   posts: posts,
                 );
         },
-        loading: () => const SliverToBoxAdapter(
-            child: Center(child: CircularProgressIndicator())),
+        loading: () => SliverToBoxAdapter(child: Center(child: Container())),
         error: (e, stk) {
           return SliverToBoxAdapter(
             child: Center(
@@ -92,7 +91,7 @@ class PostsList extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Something Went Wrong! ?!? !??! ",
+                    "게시물을 불러오는 도중 에러가 발생하였습니다",
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -218,7 +217,7 @@ class NoMorePosts extends ConsumerWidget {
                 ? const Padding(
                     padding: EdgeInsets.only(bottom: 0),
                     child: Text(
-                      "No More Posts Found!",
+                      "더이상 게시글이 없습니다",
                       textAlign: TextAlign.center,
                     ),
                   )

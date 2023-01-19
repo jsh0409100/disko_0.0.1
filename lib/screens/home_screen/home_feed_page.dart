@@ -82,7 +82,6 @@ class PostsList extends StatelessWidget {
         loading: () => const SliverToBoxAdapter(
             child: Center(child: CircularProgressIndicator())),
         error: (e, stk) {
-          print('$e' + '\n\n\n\n\n\n\n\n');
           return SliverToBoxAdapter(
             child: Center(
               child: Column(

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -108,6 +109,29 @@ class PostCard extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.92 - 29,
                 child: Text(postText),
               ),
+              imagesUrl.isEmpty
+              ? Container()
+              : Padding(
+                padding: EdgeInsets.all(3),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.92 -29,
+                  height: MediaQuery.of(context).size.height / 10 ,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: imagesUrl.length,
+                    dragStartBehavior: DragStartBehavior.start,
+                    itemBuilder: (BuildContext context, int index){
+                      return Padding(
+                        padding: EdgeInsets.all(2),
+                        child: Image.network(
+                          imagesUrl[index],
+                          fit: BoxFit.cover
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              )
             ]),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,

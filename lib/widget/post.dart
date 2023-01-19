@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../models/post_card_model.dart';
 import '../screens/home_screen/detail_page.dart';
+import '../src/tools.dart';
 
 class Post extends StatefulWidget {
   final String userName, postCategory, postTitle, postText, uid;
@@ -37,58 +38,34 @@ class _PostState extends State<Post> {
             return const Center(child: CircularProgressIndicator());
           }
           return Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.92),
+              constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.92),
               child: GestureDetector(
                 onTap: () {
                   Get.to(
                     const DetailPage(),
                     arguments: PostCard(
-                        userName: snapshot.data.toString(),
+                        userName: widget.userName,
                         postCategory: widget.postCategory,
                         postTitle: widget.postTitle,
                         postText: widget.postText,
                         uid: widget.uid,
                         likes: widget.likes,
-                        imagesUrl : widget.imagesUrl,
+                        imagesUrl: widget.imagesUrl,
                     ),
                   );
                 },
                 child: PostCard(
-                    userName: snapshot.data.toString(),
+                    userName: widget.userName,
                     postCategory: widget.postCategory,
                     postTitle: widget.postTitle,
                     postText: widget.postText,
                     uid: widget.uid,
                     likes: widget.likes,
-                    imagesUrl : widget.imagesUrl,
+                    imagesUrl: widget.imagesUrl,
                 ),
               ));
         });
-    return Container(
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.92),
-        child: GestureDetector(
-          onTap: () {
-            Get.to(
-              const DetailPage(),
-              arguments: PostCard(
-                  userName: widget.userName,
-                  postCategory: widget.postCategory,
-                  postTitle: widget.postTitle,
-                  postText: widget.postText,
-                  uid: widget.uid,
-                  likes: widget.likes),
-            );
-          },
-          child: PostCard(
-              userName: widget.userName,
-              postCategory: widget.postCategory,
-              postTitle: widget.postTitle,
-              postText: widget.postText,
-              uid: widget.uid,
-              likes: widget.likes),
-        ));
   }
 }
 

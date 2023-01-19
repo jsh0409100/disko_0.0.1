@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../models/post_card_model.dart';
 import '../../src/providers.dart';
+import '../../src/tools.dart';
 import '../../widget/post.dart';
 
 class HomeFeedPage extends ConsumerWidget {
@@ -129,15 +130,34 @@ class PostsListBuilder extends StatelessWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          return Post(
-            userName: posts[index].userName,
-            postTitle: posts[index].postTitle,
-            postCategory: posts[index].postCategory,
-            postText: posts[index].postText,
-            uid: posts[index].uid,
-            likes: posts[index].likes,
-            //postimage: posts[index].postimage,
-          );
+          return FutureBuilder(
+              future: getDisplayNameByUid(posts[index].uid),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData == false) {
+                  return Card(
+                    color: Colors.grey.shade300,
+                    child: Column(children: [
+                      SizedBox(
+                        height: 180,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                      ),
+                      const SizedBox(
+                        height: 11,
+                      )
+                    ]),
+                  );
+                } else {
+                  return Post(
+                    userName: snapshot.data.toString(),
+                    postTitle: posts[index].postTitle,
+                    postCategory: posts[index].postCategory,
+                    postText: posts[index].postText,
+                    uid: posts[index].uid,
+                    likes: posts[index].likes,
+                    //postimage: posts[index].postimage,
+                  );
+                }
+              });
         },
         childCount: posts.length,
       ),

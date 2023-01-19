@@ -32,7 +32,7 @@ class _ChatListState extends State<ChatList> {
                   FirebaseAuth.instance.currentUser!.uid);
               String peerUid = (currentIsSender) ? 'receiverUid' : 'senderId';
               return FutureBuilder(
-                  future: getPeerDisplayName(chatDocs[index][peerUid]),
+                  future: getDisplayNameByUid(chatDocs[index][peerUid]),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData == false) {
                       return const Center(child: CircularProgressIndicator());

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import '../../models/post_card_model.dart';
 import '../../src/providers.dart';
-import '../../widget/post_card.dart';
+import '../../widget/post.dart';
 
 class HomeFeedPage extends ConsumerWidget {
   HomeFeedPage({Key? key}) : super(key: key);
@@ -81,24 +81,27 @@ class PostsList extends StatelessWidget {
         },
         loading: () => const SliverToBoxAdapter(
             child: Center(child: CircularProgressIndicator())),
-        error: (e, stk) => SliverToBoxAdapter(
-          child: Center(
-            child: Column(
-              children: const [
-                Icon(Icons.info),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "Something Went Wrong!",
-                  style: TextStyle(
-                    color: Colors.black,
+        error: (e, stk) {
+          print('$e' + '\n\n\n\n\n\n\n\n');
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Column(
+                children: const [
+                  Icon(Icons.info),
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-              ],
+                  Text(
+                    "Something Went Wrong! ?!? !??! ",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
         onGoingLoading: (posts) {
           return PostsListBuilder(
             posts: posts,
@@ -127,12 +130,13 @@ class PostsListBuilder extends StatelessWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          return PostCard(
+          return Post(
             userName: posts[index].userName,
             postTitle: posts[index].postTitle,
             postCategory: posts[index].postCategory,
             postText: posts[index].postText,
             uid: posts[index].uid,
+            likes: posts[index].likes,
             //postimage: posts[index].postimage,
           );
         },

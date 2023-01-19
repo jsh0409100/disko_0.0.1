@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/screens/write_post_screen/widgets/select_category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,7 +19,6 @@ class WritePostPage extends StatefulWidget {
 class _WritePostPageState extends State<WritePostPage> {
   final ImagePicker _picker = ImagePicker();
   List<XFile>? _imageFileList = [];
-  final FirebaseStorage _storageRef = FirebaseStorage.instance;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController postTitleController = TextEditingController();
@@ -157,6 +155,7 @@ class _WritePostPageState extends State<WritePostPage> {
                       postText: postTextController.text,
                       time: Timestamp.now(),
                       uid: currentUser.uid,
+                      likes: [],
                       //postImage:
                     );
                     posts.add(newPost.toJson());

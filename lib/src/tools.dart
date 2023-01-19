@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<String> getPeerDisplayName(String peerUid) async {
-  var peerDoc =
-      await FirebaseFirestore.instance.collection('users').doc(peerUid).get();
-  return peerDoc.data()!['displayName'];
+Future<String> getDisplayNameByUid(String Uid) async {
+  var UserDoc =
+      await FirebaseFirestore.instance.collection('users').doc(Uid).get();
+  return UserDoc.data()!['displayName'];
 }
 
 Future<void> resetUnreadMessageCount(String chatName) async {

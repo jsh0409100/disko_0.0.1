@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/screens/chat_list_screen/chat_list_page.dart';
 import 'package:disko_001/screens/home_screen/profile_page.dart';
 import 'package:disko_001/screens/search_screen/search.dart';
@@ -19,7 +18,6 @@ class MyHome extends ConsumerStatefulWidget {
 }
 
 class MyHomeState extends ConsumerState<MyHome> {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
   int _selectedIndex = 0;
   final pages = [

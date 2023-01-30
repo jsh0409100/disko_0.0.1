@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/enums/message_enum.dart';
 import '../../../models/chat_message_model.dart';
 import '../../../models/last_message_model.dart';
 import '../../auth/controller/auth_controller.dart';
@@ -45,58 +48,51 @@ class ChatController {
         );
   }
 
-  // void sendFileMessage(
-  //   BuildContext context,
-  //   File file,
-  //   String recieverUserId,
-  //   MessageEnum messageEnum,
-  //   bool isGroupChat,
-  // ) {
-  //   ref.read(userDataAuthProvider).whenData(
-  //         (value) => chatRepository.sendFileMessage(
-  //           context: context,
-  //           file: file,
-  //           recieverUserId: recieverUserId,
-  //           senderUserData: value!,
-  //           messageEnum: messageEnum,
-  //           ref: ref,
-  //           isGroupChat: isGroupChat,
-  //         ),
-  //       );
-  // }
+  void sendFileMessage(
+    BuildContext context,
+    File file,
+    String receiverUid,
+    MessageEnum messageEnum,
+  ) {
+    ref.read(userDataAuthProvider).whenData(
+          (value) => chatRepository.sendFileMessage(
+            context: context,
+            file: file,
+            receiverUid: receiverUid,
+            senderUser: value!,
+            messageEnum: messageEnum,
+            ref: ref,
+          ),
+        );
+  }
 
-  // void sendGIFMessage(
-  //   BuildContext context,
-  //   String gifUrl,
-  //   String recieverUserId,
-  //   bool isGroupChat,
-  // ) {
-  //   final messageReply = ref.read(messageReplyProvider);
-  //   int gifUrlPartIndex = gifUrl.lastIndexOf('-') + 1;
-  //   String gifUrlPart = gifUrl.substring(gifUrlPartIndex);
-  //   String newgifUrl = 'https://i.giphy.com/media/$gifUrlPart/200.gif';
-  //
-  //   ref.read(userDataAuthProvider).whenData(
-  //         (value) => chatRepository.sendGIFMessage(
-  //           context: context,
-  //           gifUrl: newgifUrl,
-  //           recieverUserId: recieverUserId,
-  //           senderUser: value!,
-  //           messageReply: messageReply,
-  //           isGroupChat: isGroupChat,
-  //         ),
-  //       );
-  //   ref.read(messageReplyProvider.state).update((state) => null);
-  // }
+  void sendGIFMessage(
+    BuildContext context,
+    String gifUrl,
+    String receiverUid,
+  ) {
+    int gifUrlPartIndex = gifUrl.lastIndexOf('-') + 1;
+    String gifUrlPart = gifUrl.substring(gifUrlPartIndex);
+    String newgifUrl = 'https://i.giphy.com/media/$gifUrlPart/200.gif';
+
+    ref.read(userDataAuthProvider).whenData(
+          (value) => chatRepository.sendGIFMessage(
+            context: context,
+            gifUrl: newgifUrl,
+            receiverUid: receiverUid,
+            senderUser: value!,
+          ),
+        );
+  }
 
   // void setChatMessageSeen(
   //   BuildContext context,
-  //   String recieverUserId,
+  //   String receiverUid,
   //   String messageId,
   // ) {
   //   chatRepository.setChatMessageSeen(
   //     context,
-  //     recieverUserId,
+  //     receiverUid,
   //     messageId,
   //   );
   // }

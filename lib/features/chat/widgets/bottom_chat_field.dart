@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/enums/message_enum.dart';
 import '../../../common/utils/utils.dart';
@@ -31,6 +32,14 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   final user = FirebaseAuth.instance.currentUser;
 
   var _userEnterMessage = '';
+  void openAudio() async {
+    final status = await Permission.microphone.request();
+    if (status != PermissionStatus.granted) {
+      throw RecordingPermissionException('Mic permission not allowed!');
+    }
+    await _soundRecorder!.openRecorder();
+    isRecorderInit = true;
+  }
 
   void _sendMessage() async {
     if (isShowSendButton) {

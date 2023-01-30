@@ -55,8 +55,6 @@ class ChatRepository {
         .map((event) {
       List<LastMessageModel> chats = [];
       for (var document in event.docs) {
-        print(document.get.toString());
-        print('\n\n\n\n\n\n\n\n');
         if (document.get('receiverUid') == auth.currentUser!.uid ||
             document.get('senderId') == auth.currentUser!.uid) {
           chats.add(LastMessageModel.fromJson(document.data()));

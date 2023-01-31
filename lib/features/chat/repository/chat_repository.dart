@@ -80,10 +80,12 @@ class ChatRepository {
       messageId: messageId,
       timeSent: timeSent,
     );
+    print('\n\n\n\n\n\n\n\n\n\n\n');
+    print(message);
     final String chatName = (receiverUid.compareTo(auth.currentUser!.uid) > 0)
         ? '$receiverUid-${auth.currentUser!.uid}'
         : '${auth.currentUser!.uid}-$receiverUid';
-    await FirebaseFirestore.instance
+    await firestore
         .collection('messages')
         .doc(chatName)
         .collection(chatName)
@@ -116,8 +118,7 @@ class ChatRepository {
     final String chatName = (receiverUid.compareTo(auth.currentUser!.uid) > 0)
         ? '$receiverUid-${auth.currentUser!.uid}'
         : '${auth.currentUser!.uid}-$receiverUid';
-    final currentChat =
-        FirebaseFirestore.instance.collection('messages').doc(chatName);
+    final currentChat = firestore.collection('messages').doc(chatName);
     final doc = await currentChat.get();
     (doc.exists)
         ? currentChat.update({
@@ -199,7 +200,7 @@ class ChatRepository {
           contactMsg = 'GIF 메세지';
           break;
         default:
-          contactMsg = 'GIF 메세지';
+          contactMsg = '📷 사진';
       }
       _saveMessageToMessageSubcollection(
         receiverUid: receiverUid,

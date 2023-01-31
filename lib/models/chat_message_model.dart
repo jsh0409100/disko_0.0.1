@@ -20,7 +20,7 @@ class ChatMessageModel {
       : senderId = json['senderId'],
         text = json['text'],
         timeSent = json['timeSent'],
-        type = json['type'],
+        type = (json['type'] as String).toEnum(),
         receiverUid = json['receiverUid'],
         messageId = json['messageId'];
 
@@ -29,7 +29,7 @@ class ChatMessageModel {
         'text': text,
         'timeSent': timeSent,
         'messageId': messageId,
-        'type': type,
+        'type': type.type,
         'receiverUid': receiverUid
       };
 }

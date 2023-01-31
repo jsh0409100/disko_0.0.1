@@ -83,7 +83,6 @@ class _PostState extends State<Post> {
 class PostsDatabase {
   Future<List<PostCardModel>> fetchPosts(PostCardModel? post) async {
     final postsCollectionRef = FirebaseFirestore.instance.collection('posts');
-
     if (post == null) {
       final documentSnapshot = await postsCollectionRef
           .orderBy('time', descending: true)

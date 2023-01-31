@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/enums/message_enum.dart';
@@ -42,32 +41,34 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   }
 
   void _sendMessage() async {
-    if (isShowSendButton) {
-      ref.read(chatControllerProvider).sendTextMessage(
-            context,
-            _userEnterMessage,
-            widget.receiverUid,
-          );
-      controller.clear();
-    } else {
-      var tempDir = await getTemporaryDirectory();
-      var path = '${tempDir.path}/flutter_sound.aac';
-      if (!isRecorderInit) {
-        return;
-      }
-      if (isRecording) {
-        await _soundRecorder!.stopRecorder();
-        sendFileMessage(File(path), MessageEnum.audio);
-      } else {
-        await _soundRecorder!.startRecorder(
-          toFile: path,
+    // if (isShowSendButton) {
+    ref.read(chatControllerProvider).sendTextMessage(
+          context,
+          _userEnterMessage,
+          widget.receiverUid,
         );
-      }
-
-      setState(() {
-        isRecording = !isRecording;
-      });
-    }
+    setState(() {
+      controller.text = '';
+    });
+    // } else {
+    //   var tempDir = await getTemporaryDirectory();
+    //   var path = '${tempDir.path}/flutter_sound.aac';
+    //   if (!isRecorderInit) {
+    //     return;
+    //   }
+    //   if (isRecording) {
+    //     await _soundRecorder!.stopRecorder();
+    //     sendFileMessage(File(path), MessageEnum.audio);
+    //   } else {
+    //     await _soundRecorder!.startRecorder(
+    //       toFile: path,
+    //     );
+    //   }
+    //
+    //   setState(() {
+    //     isRecording = !isRecording;
+    //   });
+    // }
   }
 
   void sendFileMessage(
@@ -136,7 +137,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void dispose() {
     super.dispose();
     controller.dispose();
-    _soundRecorder!.closeRecorder();
+    // _soundRecorder!.closeRecorder();
     isRecorderInit = false;
   }
 
@@ -152,6 +153,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
             ),
             Expanded(
               child: TextField(
+                // focusNode: focusNode,
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 controller: controller,
@@ -173,7 +175,10 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
               ),
             ),
             IconButton(
-              onPressed: _userEnterMessage.trim().isEmpty ? null : _sendMessage,
+              onPressed: (_userEnterMessage.trim().isEmpty ||
+                      _userEnterMessage.trim() == '')
+                  ? null
+                  : _sendMessage,
               icon: Icon(
                 Icons.send,
                 color: _userEnterMessage.trim().isEmpty

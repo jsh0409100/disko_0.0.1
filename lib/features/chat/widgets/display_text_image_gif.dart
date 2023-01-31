@@ -22,9 +22,10 @@ class DisplayTextImageGIF extends StatelessWidget {
     return type == MessageEnum.text
         ? Text(
             message,
-            style: const TextStyle(
-              fontSize: 16,
-            ),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.w500,
+                fontSize: 14),
           )
         : type == MessageEnum.audio
             ? StatefulBuilder(builder: (context, setState) {

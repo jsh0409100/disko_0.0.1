@@ -23,7 +23,7 @@ class BottomChatField extends ConsumerStatefulWidget {
 
 class _SendMessageState extends ConsumerState<BottomChatField> {
   final controller = TextEditingController();
-  bool isShowSendButton = false;
+  bool isShowSendButton = true;
   FlutterSoundRecorder? _soundRecorder;
   bool isRecorderInit = false;
   bool isShowEmojiContainer = false;
@@ -96,16 +96,16 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     }
   }
 
-  void selectGIF() async {
-    final gif = await pickGIF(context);
-    if (gif != null) {
-      ref.read(chatControllerProvider).sendGIFMessage(
-            context,
-            gif.url,
-            widget.receiverUid,
-          );
-    }
-  }
+  // void selectGIF() async {
+  //   final gif = await pickGIF(context);
+  //   if (gif != null) {
+  //     ref.read(chatControllerProvider).sendGIFMessage(
+  //           context,
+  //           gif.url,
+  //           widget.receiverUid,
+  //         );
+  //   }
+  // }
 
   void hideEmojiContainer() {
     setState(() {
@@ -183,38 +183,41 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
             ),
           ],
         ),
-        Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                GestureDetector(
-                  onTap: selectImage,
-                  child: const MessageCategoryCard(
-                      categoryIcon: Icons.add_photo_alternate_outlined,
-                      categoryName: '사진 보내기'),
+        Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: selectImage,
+                        child: const MessageCategoryCard(
+                            categoryIcon: Icons.add_photo_alternate_outlined,
+                            categoryName: '사진 보내기'),
+                      ),
+                      const MessageCategoryCard(
+                          categoryIcon: Icons.camera_alt_outlined,
+                          categoryName: '카메라'),
+                      const MessageCategoryCard(
+                          categoryIcon: Icons.mic, categoryName: '음성메세지'),
+                    ]),
+                SizedBox(height: 27),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    MessageCategoryCard(
+                        categoryIcon: Icons.location_on_outlined,
+                        categoryName: '위치 보내기'),
+                    MessageCategoryCard(
+                        categoryIcon: Icons.calendar_month_outlined,
+                        categoryName: '약속하기'),
+                  ],
                 ),
-                const MessageCategoryCard(
-                    categoryIcon: Icons.camera_alt_outlined,
-                    categoryName: '카메라'),
-                const MessageCategoryCard(
-                    categoryIcon: Icons.mic, categoryName: '음성메세지 보내기'),
               ]),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  MessageCategoryCard(
-                      categoryIcon: Icons.gif_box_outlined,
-                      categoryName: 'gif 공유하기'),
-                  MessageCategoryCard(
-                      categoryIcon: Icons.location_on_outlined,
-                      categoryName: '위치 보내기'),
-                  MessageCategoryCard(
-                      categoryIcon: Icons.calendar_month_outlined,
-                      categoryName: '약속하기'),
-                ],
-              ),
-            ])
+        )
       ],
     );
   }

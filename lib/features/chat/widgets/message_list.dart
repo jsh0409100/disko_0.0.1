@@ -49,10 +49,14 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
               if (messageData.senderId ==
                   FirebaseAuth.instance.currentUser!.uid) {
                 return MyChatBubble(
-                    text: chatDocs.text, timeSent: chatDocs.timeSent);
+                    text: chatDocs.text,
+                    timeSent: chatDocs.timeSent,
+                    type: chatDocs.type);
               }
               return PeerChatBubble(
-                  text: chatDocs.text, timeSent: chatDocs.timeSent);
+                  text: chatDocs.text,
+                  timeSent: chatDocs.timeSent,
+                  type: chatDocs.type);
             },
           );
         });

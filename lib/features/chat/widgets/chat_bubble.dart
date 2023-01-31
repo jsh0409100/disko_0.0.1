@@ -2,15 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../common/enums/message_enum.dart';
+import 'display_text_image_gif.dart';
+
 class MyChatBubble extends StatelessWidget {
+  final MessageEnum type;
+  final String text;
+  final Timestamp timeSent;
+
   const MyChatBubble({
     required this.text,
     required this.timeSent,
+    required this.type,
     Key? key,
   }) : super(key: key);
-
-  final String text;
-  final Timestamp timeSent;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +34,9 @@ class MyChatBubble extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: Text(
-            text,
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontWeight: FontWeight.w500,
-                fontSize: 14),
+          child: DisplayTextImageGIF(
+            message: text,
+            type: type,
           ),
         ),
       ],
@@ -43,14 +45,16 @@ class MyChatBubble extends StatelessWidget {
 }
 
 class PeerChatBubble extends StatelessWidget {
+  final MessageEnum type;
+  final String text;
+  final Timestamp timeSent;
+
   const PeerChatBubble({
     required this.text,
     required this.timeSent,
+    required this.type,
     Key? key,
   }) : super(key: key);
-
-  final String text;
-  final Timestamp timeSent;
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +72,9 @@ class PeerChatBubble extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: Text(
-            text,
-            style: const TextStyle(
-                color: Colors.black, fontWeight: FontWeight.w500, fontSize: 14),
+          child: DisplayTextImageGIF(
+            message: text,
+            type: type,
           ),
         ),
         Text('$showTime'),

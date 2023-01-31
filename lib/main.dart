@@ -42,6 +42,7 @@ class MyApp extends ConsumerWidget {
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: lightColorScheme,
+          cardColor: Colors.white,
           fontFamily: 'Pretendard'),
       // darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       onGenerateRoute: (settings) => generateRoute(settings),

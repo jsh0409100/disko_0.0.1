@@ -83,7 +83,7 @@ class ChatRepository {
     final String chatName = (receiverUid.compareTo(auth.currentUser!.uid) > 0)
         ? '$receiverUid-${auth.currentUser!.uid}'
         : '${auth.currentUser!.uid}-$receiverUid';
-    await firestore
+    await FirebaseFirestore.instance
         .collection('messages')
         .doc(chatName)
         .collection(chatName)

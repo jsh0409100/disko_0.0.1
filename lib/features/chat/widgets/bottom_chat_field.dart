@@ -25,12 +25,23 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   bool isShowSendButton = true;
   FlutterSoundRecorder? _soundRecorder;
   bool isRecorderInit = false;
-  bool isShowEmojiContainer = false;
+  bool isShowOptionsContainer = false;
   bool isRecording = false;
   FocusNode focusNode = FocusNode();
   final user = FirebaseAuth.instance.currentUser;
 
   var _userEnterMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode.addListener(onFocusChange);
+  }
+
+  void onFocusChange() {
+    if (focusNode.hasFocus) hideOptionsContainer();
+  }
+
   void openAudio() async {
     final status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
@@ -48,7 +59,8 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
           widget.receiverUid,
         );
     setState(() {
-      controller.text = '';
+      controller.clear();
+      _userEnterMessage = '';
     });
     // } else {
     //   var tempDir = await getTemporaryDirectory();
@@ -97,39 +109,27 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     }
   }
 
-  // void selectGIF() async {
-  //   final gif = await pickGIF(context);
-  //   if (gif != null) {
-  //     ref.read(chatControllerProvider).sendGIFMessage(
-  //           context,
-  //           gif.url,
-  //           widget.receiverUid,
-  //         );
-  //   }
-  // }
-
-  void hideEmojiContainer() {
+  void hideOptionsContainer() {
     setState(() {
-      isShowEmojiContainer = false;
+      isShowOptionsContainer = false;
     });
   }
 
-  void showEmojiContainer() {
+  void showOptionsContainer() {
     setState(() {
-      isShowEmojiContainer = true;
+      isShowOptionsContainer = true;
     });
   }
 
   void showKeyboard() => focusNode.requestFocus();
   void hideKeyboard() => focusNode.unfocus();
 
-  void toggleEmojiKeyboardContainer() {
-    if (isShowEmojiContainer) {
-      showKeyboard();
-      hideEmojiContainer();
+  void toggleOptionsContainer() {
+    if (isShowOptionsContainer) {
+      hideOptionsContainer();
     } else {
       hideKeyboard();
-      showEmojiContainer();
+      showOptionsContainer();
     }
   }
 
@@ -149,11 +149,13 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
           children: [
             IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () {},
+              onPressed: () {
+                toggleOptionsContainer();
+              },
             ),
             Expanded(
               child: TextField(
-                // focusNode: focusNode,
+                focusNode: focusNode,
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 controller: controller,
@@ -188,40 +190,49 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
+        Visibility(
+          visible: isShowOptionsContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: selectImage,
+                          child: const MessageCategoryCard(
+                              categoryIcon: Icons.add_photo_alternate_outlined,
+                              categoryName: '사진 보내기'),
+                        ),
+                        GestureDetector(
+                          onTap: selectVideo,
+                          child: const MessageCategoryCard(
+                              categoryIcon: Icons.video_file_outlined,
+                              categoryName: '영상 보내기'),
+                        ),
+                        const MessageCategoryCard(
+                            categoryIcon: Icons.camera_alt_outlined,
+                            categoryName: '카메라'),
+                      ]),
+                  SizedBox(height: 27),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: selectImage,
-                        child: const MessageCategoryCard(
-                            categoryIcon: Icons.add_photo_alternate_outlined,
-                            categoryName: '사진 보내기'),
-                      ),
-                      const MessageCategoryCard(
-                          categoryIcon: Icons.camera_alt_outlined,
-                          categoryName: '카메라'),
+                    children: const [
                       const MessageCategoryCard(
                           categoryIcon: Icons.mic, categoryName: '음성메세지'),
-                    ]),
-                SizedBox(height: 27),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    MessageCategoryCard(
-                        categoryIcon: Icons.location_on_outlined,
-                        categoryName: '위치 보내기'),
-                    MessageCategoryCard(
-                        categoryIcon: Icons.calendar_month_outlined,
-                        categoryName: '약속하기'),
-                  ],
-                ),
-              ]),
+                      MessageCategoryCard(
+                          categoryIcon: Icons.location_on_outlined,
+                          categoryName: '위치 보내기'),
+                      MessageCategoryCard(
+                          categoryIcon: Icons.calendar_month_outlined,
+                          categoryName: '약속하기'),
+                    ],
+                  ),
+                ]),
+          ),
         )
       ],
     );

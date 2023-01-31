@@ -85,15 +85,15 @@ class ChatController {
         );
   }
 
-  // void setChatMessageSeen(
-  //   BuildContext context,
-  //   String receiverUid,
-  //   String messageId,
-  // ) {
-  //   chatRepository.setChatMessageSeen(
-  //     context,
-  //     receiverUid,
-  //     messageId,
-  //   );
-  // }
+  void setChatMessageSeen(
+    BuildContext context,
+    String receiverUid,
+    String messageId,
+  ) {
+    chatRepository.setChatMessageSeen(
+      context,
+      receiverUid,
+      messageId,
+    );
+  }
 }

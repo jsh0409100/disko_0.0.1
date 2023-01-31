@@ -103,9 +103,10 @@ class ChatRepository {
     required String messageId,
     required String username,
   }) async {
+    final String senderId = auth.currentUser!.uid;
     String receiverDisplayName = await getDisplayNameByUid(receiverUid);
     final message = LastMessageModel(
-      senderId: auth.currentUser!.uid,
+      senderId: senderId,
       senderDisplayName: username,
       receiverDisplayName: receiverDisplayName,
       receiverUid: receiverUid,
@@ -115,12 +116,13 @@ class ChatRepository {
       unreadMessageCount: 1,
     );
 
-    final String chatName = (receiverUid.compareTo(auth.currentUser!.uid) > 0)
-        ? '$receiverUid-${auth.currentUser!.uid}'
-        : '${auth.currentUser!.uid}-$receiverUid';
+    final String chatName = (receiverUid.compareTo(senderId) > 0)
+        ? '$receiverUid-${senderId}'
+        : '${senderId}-$receiverUid';
     final currentChat = firestore.collection('messages').doc(chatName);
     final doc = await currentChat.get();
-    (doc.exists)
+    final data = doc.get('senderId');
+    (doc.exists && data == senderId)
         ? currentChat.update({
             'unreadMessageCount': FieldValue.increment(1),
             'timeSent': timeSent,
@@ -260,103 +262,22 @@ class ChatRepository {
     }
   }
 
-//   void _saveDataToContactsSubcollection(
-//     UserModel senderUserData,
-//     UserModel? recieverUserData,
-//     String text,
-//     Timestamp timeSent,
-//     String receiverUid,
-//     bool isGroupChat,
-//   ) async {
-// // users -> reciever user id => chats -> current user id -> set data
-//     var recieverChatContact = ChatContact(
-//       name: senderUserData.displayName,
-//       profilePic: senderUserData.profilePic,
-//       contactId: senderUserData.uid,
-//       timeSent: timeSent,
-//       lastMessage: text,
-//     );
-//     await firestore
-//         .collection('users')
-//         .doc(receiverUid)
-//         .collection('chats')
-//         .doc(auth.currentUser!.uid)
-//         .set(
-//           recieverChatContact.toMap(),
-//         );
-//     // users -> current user id  => chats -> reciever user id -> set data
-//     var senderChatContact = ChatContact(
-//       name: recieverUserData!.name,
-//       profilePic: recieverUserData.profilePic,
-//       contactId: recieverUserData.uid,
-//       timeSent: timeSent,
-//       lastMessage: text,
-//     );
-//     await firestore
-//         .collection('users')
-//         .doc(auth.currentUser!.uid)
-//         .collection('chats')
-//         .doc(receiverUid)
-//         .set(
-//           senderChatContact.toMap(),
-//         );
-//   }
+  void setChatMessageSeen(
+    BuildContext context,
+    String receiverUid,
+    String messageId,
+  ) async {
+    try {
+      final String chatName = (receiverUid.compareTo(auth.currentUser!.uid) > 0)
+          ? '$receiverUid-${auth.currentUser!.uid}'
+          : '${auth.currentUser!.uid}-$receiverUid';
 
-  // Stream<List<ChatContact>> getChatContacts() {
-  //   return firestore
-  //       .collection('users')
-  //       .doc(auth.currentUser!.uid)
-  //       .collection('chats')
-  //       .snapshots()
-  //       .asyncMap((event) async {
-  //     List<ChatContact> contacts = [];
-  //     for (var document in event.docs) {
-  //       var chatContact = ChatContact.fromJson(document.data());
-  //       var userData = await firestore
-  //           .collection('users')
-  //           .doc(chatContact.contactId)
-  //           .get();
-  //       var user = UserModel.fromJson(userData.data()!);
-  //
-  //       contacts.add(
-  //         ChatContact(
-  //           name: user.displayName,
-  //           profilePic: user.profilePic,
-  //           contactId: chatContact.contactId,
-  //           timeSent: chatContact.timeSent,
-  //           lastMessage: chatContact.lastMessage,
-  //         ),
-  //       );
-  //     }
-  //     return contacts;
-  //   });
-  // }
-
-  // void setChatMessageSeen(
-  //   BuildContext context,
-  //   String receiverUid,
-  //   String messageId,
-  // ) async {
-  //   try {
-  //     await firestore
-  //         .collection('users')
-  //         .doc(auth.currentUser!.uid)
-  //         .collection('chats')
-  //         .doc(receiverUid)
-  //         .collection('messages')
-  //         .doc(messageId)
-  //         .update({'isSeen': true});
-  //
-  //     await firestore
-  //         .collection('users')
-  //         .doc(receiverUid)
-  //         .collection('chats')
-  //         .doc(auth.currentUser!.uid)
-  //         .collection('messages')
-  //         .doc(messageId)
-  //         .update({'isSeen': true});
-  //   } catch (e) {
-  //     showSnackBar(context: context, content: e.toString());
-  //   }
-  // }
+      await firestore
+          .collection('messages')
+          .doc(chatName)
+          .update({'unreadMessageCount': 1});
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
 }

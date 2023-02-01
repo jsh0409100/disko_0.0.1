@@ -8,13 +8,18 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/enums/message_enum.dart';
 import '../../../common/utils/utils.dart';
+import '../../call/controller/call_controller.dart';
 import '../controller/chat_controller.dart';
 import 'message_category_card.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
-  const BottomChatField({Key? key, required this.receiverUid})
-      : super(key: key);
-  final String receiverUid;
+  const BottomChatField({
+    Key? key,
+    required this.receiverUid,
+    required this.profilePic,
+    required this.receiverDisplayName,
+  }) : super(key: key);
+  final String receiverUid, profilePic, receiverDisplayName;
 
   @override
   ConsumerState<BottomChatField> createState() => _SendMessageState();
@@ -121,6 +126,15 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     });
   }
 
+  void makeCall(WidgetRef ref, BuildContext context) {
+    ref.read(callControllerProvider).makeCall(
+          context,
+          widget.receiverDisplayName,
+          widget.receiverUid,
+          widget.profilePic,
+        );
+  }
+
   void showKeyboard() => focusNode.requestFocus();
   void hideKeyboard() => focusNode.unfocus();
 
@@ -217,7 +231,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                             categoryIcon: Icons.camera_alt_outlined,
                             categoryName: '카메라'),
                       ]),
-                  SizedBox(height: 27),
+                  SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: const [
@@ -229,6 +243,24 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                       MessageCategoryCard(
                           categoryIcon: Icons.calendar_month_outlined,
                           categoryName: '약속하기'),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () => makeCall(ref, context),
+                        child: const MessageCategoryCard(
+                            categoryIcon: Icons.video_call_outlined,
+                            categoryName: '영상통화'),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.25,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.25,
+                      ),
                     ],
                   ),
                 ]),

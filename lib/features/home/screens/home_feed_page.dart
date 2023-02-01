@@ -131,7 +131,7 @@ class PostsListBuilder extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           return FutureBuilder(
-              future: getDisplayNameByUid(posts[index].uid),
+              future: getUserDataByUid(posts[index].uid),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData == false) {
                   return Card(
@@ -148,13 +148,14 @@ class PostsListBuilder extends StatelessWidget {
                   );
                 } else {
                   return Post(
-                    userName: snapshot.data.toString(),
+                    userName: snapshot.data.displayName,
                     postTitle: posts[index].postTitle,
                     postCategory: posts[index].postCategory,
                     postText: posts[index].postText,
                     uid: posts[index].uid,
                     likes: posts[index].likes,
                     imagesUrl: posts[index].imagesUrl,
+                    profilePic: snapshot.data.profilePic,
                   );
                 }
               });

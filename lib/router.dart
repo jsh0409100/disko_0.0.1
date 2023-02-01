@@ -24,30 +24,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final arguments = settings.arguments as Map<String, dynamic>;
       final peerUid = arguments['peerUid'];
       final peerDisplayName = arguments['peerDisplayName'];
+      final profilePic = arguments['profilePic'];
       return MaterialPageRoute(
         builder: (context) => ChatScreen(
           peerUid: peerUid,
           peerDisplayName: peerDisplayName,
+          profilePic: profilePic,
         ),
       );
-    // case SelectContactsScreen.routeName:
-    //   return MaterialPageRoute(
-    //     builder: (context) => const SelectContactsScreen(),
-    //   );
-    // case MobileChatScreen.routeName:
-    //   final arguments = settings.arguments as Map<String, dynamic>;
-    //   final name = arguments['name'];
-    //   final uid = arguments['uid'];
-    //   final isGroupChat = arguments['isGroupChat'];
-    //   final profilePic = arguments['profilePic'];
-    //   return MaterialPageRoute(
-    //     builder: (context) => MobileChatScreen(
-    //       name: name,
-    //       uid: uid,
-    //       isGroupChat: isGroupChat,
-    //       profilePic: profilePic,
-    //     ),
-    //   );
+
     // case ConfirmStatusScreen.routeName:
     //   final file = settings.arguments as File;
     //   return MaterialPageRoute(

@@ -104,11 +104,12 @@ class ChatRepository {
     required String username,
   }) async {
     final String senderId = auth.currentUser!.uid;
-    String receiverDisplayName = await getDisplayNameByUid(receiverUid);
+    final receiverData = await getUserDataByUid(receiverUid);
     final message = LastMessageModel(
+      profilePic: receiverData.profilePic,
       senderId: senderId,
       senderDisplayName: username,
-      receiverDisplayName: receiverDisplayName,
+      receiverDisplayName: receiverData.displayName,
       receiverUid: receiverUid,
       text: text,
       timeSent: timeSent,

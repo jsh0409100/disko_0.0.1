@@ -5,19 +5,20 @@ import 'package:intl/intl.dart';
 import '../../../features/chat/screens/chat_screen.dart';
 
 class ChatItem extends StatefulWidget {
-  final String name, peerUid;
+  final String name, peerUid, profilePic;
   final String text;
   final Timestamp timeSent;
   final int unreadMessageCount;
 
-  const ChatItem(
-      {Key? key,
-      required this.name,
-      required this.text,
-      required this.timeSent,
-      required this.unreadMessageCount,
-      required this.peerUid})
-      : super(key: key);
+  const ChatItem({
+    Key? key,
+    required this.name,
+    required this.text,
+    required this.timeSent,
+    required this.unreadMessageCount,
+    required this.peerUid,
+    required this.profilePic,
+  }) : super(key: key);
 
   @override
   State<ChatItem> createState() => _ChatItemState();
@@ -36,7 +37,8 @@ class _ChatItemState extends State<ChatItem> {
           ChatScreen.routeName,
           arguments: {
             'peerUid': widget.peerUid,
-            'peerDisplayName': widget.name
+            'peerDisplayName': widget.name,
+            'profilePic': widget.profilePic,
           },
         );
       },

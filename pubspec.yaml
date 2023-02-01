@@ -53,6 +53,13 @@ dependencies:
   firebase_storage: ^11.0.10
   image_picker: ^0.8.6
   intl: ^0.17.0
+  flutter_localizations:
+    sdk: flutter
+  permission_handler: ^10.2.0
+  flutter_sound: ^9.2.13
+  cached_video_player: ^2.0.3
+  cached_network_image: ^3.2.3
+  audioplayers: ^3.0.1
 
 
 dev_dependencies:

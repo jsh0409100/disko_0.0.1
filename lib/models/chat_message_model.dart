@@ -1,26 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../common/enums/message_enum.dart';
+
 class ChatMessageModel {
-  final String senderId, message, receiverUid;
-  final Timestamp time;
+  final String senderId, text, receiverUid, messageId;
+  final Timestamp timeSent;
+  final MessageEnum type;
 
   ChatMessageModel({
-    required this.time,
+    required this.timeSent,
     required this.senderId,
-    required this.message,
+    required this.text,
     required this.receiverUid,
+    required this.type,
+    required this.messageId,
   });
 
   ChatMessageModel.fromJson(Map<String, dynamic> json)
       : senderId = json['senderId'],
-        message = json['message'],
-        time = json['time'],
-        receiverUid = json['receiverUid'];
+        text = json['text'],
+        timeSent = json['timeSent'],
+        type = (json['type'] as String).toEnum(),
+        receiverUid = json['receiverUid'],
+        messageId = json['messageId'];
 
   Map<String, dynamic> toJson() => {
         'senderId': senderId,
-        'message': message,
-        'time': time,
+        'text': text,
+        'timeSent': timeSent,
+        'messageId': messageId,
+        'type': type.type,
         'receiverUid': receiverUid
       };
 }

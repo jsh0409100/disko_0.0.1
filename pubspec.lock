@@ -15,6 +15,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.12"
+  agora_rtc_engine:
+    dependency: transitive
+    description:
+      name: agora_rtc_engine
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.1.0"
+  agora_rtm:
+    dependency: transitive
+    description:
+      name: agora_rtm
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.0"
+  agora_uikit:
+    dependency: "direct main"
+    description:
+      name: agora_uikit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   analyzer:
     dependency: transitive
     description:
@@ -665,6 +686,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.17.0"
+  iris_event:
+    dependency: transitive
+    description:
+      name: iris_event
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   js:
     dependency: transitive
     description:

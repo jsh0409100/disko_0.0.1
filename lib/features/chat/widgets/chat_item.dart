@@ -7,7 +7,6 @@ import '../../../features/chat/screens/chat_screen.dart';
 class ChatItem extends StatefulWidget {
   final String name, peerUid;
   final String text;
-  // final String imageUrl;
   final Timestamp timeSent;
   final int unreadMessageCount;
 
@@ -28,7 +27,7 @@ class _ChatItemState extends State<ChatItem> {
   @override
   Widget build(BuildContext context) {
     final DateTime date = widget.timeSent.toDate();
-    final timeFormat = DateFormat.jm();
+    final timeFormat = DateFormat('aa hh:mm', 'ko');
     final showTime = timeFormat.format(date);
     return GestureDetector(
       onTap: () {

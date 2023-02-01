@@ -193,7 +193,7 @@ class ChatRepository {
           contactMsg = '📷 사진';
           break;
         case MessageEnum.video:
-          contactMsg = '📸 영상 메세지';
+          contactMsg = '📽️ 영상 메세지';
           break;
         case MessageEnum.audio:
           contactMsg = '🎵 오디오 메세지';

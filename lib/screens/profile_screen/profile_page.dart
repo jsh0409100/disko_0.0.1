@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:disko_001/image_utils.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
   final String displayName, country, description;
+
   const ProfilePage(
       {Key? key,
       required this.displayName,
@@ -15,6 +19,12 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String test = 'test';
+  File? image;
+
+  void selectImage() async {
+    image = await pickImageFromGallery(context);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,21 +37,30 @@ class _ProfilePageState extends State<ProfilePage> {
             Container(
               height: 130,
               child: GestureDetector(
-                child: Stack(children: const [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: NetworkImage(
-                        'https://i.guim.co.uk/img/media/a72cabc3e4889bd471dec02579514f462cecf920/0_11_2189_1313/master/2189.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=a3fd231d883d268abe7b7e0b6a2b762b'),
-                  ),
+                child: Stack(children: [
+                  image == null
+                      ? const CircleAvatar(
+                          radius: 60,
+                          backgroundImage: NetworkImage(
+                              'https://i.guim.co.uk/img/media/a72cabc3e4889bd471dec02579514f462cecf920/0_11_2189_1313/master/2189.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=a3fd231d883d268abe7b7e0b6a2b762b'),
+                        )
+                      : CircleAvatar(
+                          radius: 60,
+                          backgroundImage: FileImage(
+                            image!,
+                          ),
+                        ),
                   Positioned(
                     left: 80,
                     top: 95,
                     child: CircleAvatar(
                       backgroundColor: Color(0xffEFEFEF),
                       radius: 15,
-                      child: Icon(
-                        Icons.edit_outlined,
-                        size: 20,
+                      child: IconButton(
+                        onPressed: selectImage,
+                        icon: const Icon(
+                          Icons.add_a_photo,
+                        ),
                         color: Colors.black,
                       ),
                     ),

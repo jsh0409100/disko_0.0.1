@@ -12,8 +12,6 @@ import 'color_schemes.g.dart';
 import 'common/widgets/error_screen.dart';
 import 'features/auth/controller/auth_controller.dart';
 
-//import 'start_pagerial.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -39,6 +37,7 @@ class MyApp extends ConsumerWidget {
         Locale('en'),
         Locale('ko'),
       ],
+      locale: const Locale('ko'),
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: lightColorScheme,

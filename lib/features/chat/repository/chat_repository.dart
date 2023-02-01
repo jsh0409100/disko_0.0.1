@@ -104,11 +104,12 @@ class ChatRepository {
     required String username,
   }) async {
     final String senderId = auth.currentUser!.uid;
-    String receiverDisplayName = await getDisplayNameByUid(receiverUid);
+    final receiverData = await getUserDataByUid(receiverUid);
     final message = LastMessageModel(
+      profilePic: receiverData.profilePic,
       senderId: senderId,
       senderDisplayName: username,
-      receiverDisplayName: receiverDisplayName,
+      receiverDisplayName: receiverData.displayName,
       receiverUid: receiverUid,
       text: text,
       timeSent: timeSent,
@@ -193,7 +194,7 @@ class ChatRepository {
           contactMsg = '📷 사진';
           break;
         case MessageEnum.video:
-          contactMsg = '📸 영상 메세지';
+          contactMsg = '📽️ 영상 메세지';
           break;
         case MessageEnum.audio:
           contactMsg = '🎵 오디오 메세지';

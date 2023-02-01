@@ -4,10 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../models/user_model.dart';
+
 Future<String> getDisplayNameByUid(String Uid) async {
   var UserDoc =
       await FirebaseFirestore.instance.collection('users').doc(Uid).get();
   return UserDoc.data()!['displayName'];
+}
+
+Future<UserModel> getUserDataByUid(String Uid) async {
+  var userDataMap =
+      await FirebaseFirestore.instance.collection('users').doc(Uid).get();
+  return UserModel.fromJson(userDataMap.data()!);
 }
 
 Future<void> resetUnreadMessageCount(String chatName) async {

@@ -184,7 +184,7 @@ class _WritePostPageState extends State<WritePostPage> {
                     await uploadFunction(_imageFileList!);
                     PostCardModel newPost = PostCardModel(
                       userName: userData.data()!['displayName'],
-                      postTitle: postTitleController.text,
+                      postTitle: postTitleController.text ,
                       postCategory:
                           CategoryList.categories[_CategoryCards.selected],
                       postText: postTextController.text,

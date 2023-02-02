@@ -231,11 +231,11 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                             categoryIcon: Icons.camera_alt_outlined,
                             categoryName: '카메라'),
                       ]),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: const [
-                      const MessageCategoryCard(
+                      MessageCategoryCard(
                           categoryIcon: Icons.mic, categoryName: '음성메세지'),
                       MessageCategoryCard(
                           categoryIcon: Icons.location_on_outlined,
@@ -245,7 +245,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                           categoryName: '약속하기'),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

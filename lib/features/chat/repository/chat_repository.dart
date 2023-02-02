@@ -118,18 +118,23 @@ class ChatRepository {
     );
 
     final String chatName = (receiverUid.compareTo(senderId) > 0)
-        ? '$receiverUid-${senderId}'
-        : '${senderId}-$receiverUid';
+        ? '$receiverUid-$senderId'
+        : '$senderId-$receiverUid';
     final currentChat = firestore.collection('messages').doc(chatName);
     final doc = await currentChat.get();
-    final data = doc.get('senderId');
-    (doc.exists && data == senderId)
-        ? currentChat.update({
-            'unreadMessageCount': FieldValue.increment(1),
-            'timeSent': timeSent,
-            'text': text,
-          })
-        : currentChat.set(message.toJson());
+
+    if (doc.exists) {
+      final data = doc.get(senderId);
+      (data == senderId)
+          ? currentChat.update({
+              'unreadMessageCount': FieldValue.increment(1),
+              'timeSent': timeSent,
+              'text': text,
+            })
+          : currentChat.set(message.toJson());
+    } else {
+      currentChat.set(message.toJson());
+    }
   }
 
   void sendTextMessage({

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:disko_001/features/chat/screens/send_location_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -112,6 +113,15 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     if (video != null) {
       sendFileMessage(video, MessageEnum.video);
     }
+  }
+
+  void showMap() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SendLocationMapScreen(),
+      ),
+    );
   }
 
   void hideOptionsContainer() {
@@ -234,12 +244,15 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                   const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
+                    children: [
                       MessageCategoryCard(
                           categoryIcon: Icons.mic, categoryName: '음성메세지'),
-                      MessageCategoryCard(
-                          categoryIcon: Icons.location_on_outlined,
-                          categoryName: '위치 보내기'),
+                      GestureDetector(
+                        onTap: showMap,
+                        child: MessageCategoryCard(
+                            categoryIcon: Icons.location_on_outlined,
+                            categoryName: '위치 보내기'),
+                      ),
                       MessageCategoryCard(
                           categoryIcon: Icons.calendar_month_outlined,
                           categoryName: '약속하기'),

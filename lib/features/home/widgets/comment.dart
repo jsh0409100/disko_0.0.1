@@ -1,25 +1,25 @@
-import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class DetailCommentList extends StatefulWidget {
-  final String username, reply;
-  final List<String> like;
+class Comment extends StatefulWidget {
+  final String userName, text, uid;
+  final List<String> likes;
   final Timestamp time;
 
-  const DetailCommentList({
+  const Comment({
     Key? key,
-    // required this.uid,
-    required this.username,
-    required this.reply,
-    required this.like,
+    required this.uid,
+    required this.userName,
+    required this.text,
+    required this.likes,
     required this.time,
   }) : super(key: key);
 
   @override
-  State<DetailCommentList> createState() => _DetailCommentListState();
+  State<Comment> createState() => _CommentState();
 }
 
-class _DetailCommentListState extends State<DetailCommentList> {
+class _CommentState extends State<Comment> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -37,7 +37,7 @@ class _DetailCommentListState extends State<DetailCommentList> {
             Row(
               children: [
                 Text(
-                  widget.username,
+                  widget.userName,
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -56,7 +56,7 @@ class _DetailCommentListState extends State<DetailCommentList> {
             ),
             const SizedBox(height: 4),
             Text(
-              widget.reply,
+              widget.text,
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,

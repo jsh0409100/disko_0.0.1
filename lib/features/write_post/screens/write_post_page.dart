@@ -28,7 +28,7 @@ class _WritePostPageState extends State<WritePostPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController postTitleController = TextEditingController();
   TextEditingController postTextController = TextEditingController();
-  CollectionReference posts = FirebaseFirestore.instance.collection('posts');
+  final posts = FirebaseFirestore.instance.collection('posts');
 
   bool _isLoading = false;
 

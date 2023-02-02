@@ -1,27 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ReplyModel {
-  final String userName, reply, uid;
+class CommentModel {
+  final String userName, text, uid;
   final List<String> likes;
   final Timestamp time;
 
-  ReplyModel({
+  CommentModel({
     required this.uid,
     required this.time,
     required this.userName,
-    required this.reply,
+    required this.text,
     required this.likes,
   });
 
-  factory ReplyModel.fromJson(Map<String, dynamic> json) {
+  factory CommentModel.fromJson(Map<String, dynamic> json) {
     var likesFromJson = json['likes'];
 
     List<String> parsedLikes = likesFromJson.cast<String>();
 
-    return ReplyModel(
+    return CommentModel(
         time: json['time'],
         userName: json['userName'],
-        reply: json['reply'],
+        text: json['text'],
         likes: parsedLikes,
         uid: json['uid'],
     );
@@ -30,7 +30,7 @@ class ReplyModel {
 
   Map<String, dynamic> toJson() => {
     'userName': userName,
-    'reply': reply,
+    'text': text,
     'time': time,
     'likes': likes,
     'uid' : uid,

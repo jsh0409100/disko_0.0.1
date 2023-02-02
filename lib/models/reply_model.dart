@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReplyModel {
-  final String userName, reply;
+  final String userName, reply, uid;
   final List<String> likes;
   final Timestamp time;
 
   ReplyModel({
+    required this.uid,
     required this.time,
     required this.userName,
     required this.reply,
@@ -22,6 +23,7 @@ class ReplyModel {
         userName: json['userName'],
         reply: json['reply'],
         likes: parsedLikes,
+        uid: json['uid'],
     );
   }
 
@@ -31,5 +33,6 @@ class ReplyModel {
     'reply': reply,
     'time': time,
     'likes': likes,
+    'uid' : uid,
   };
 }

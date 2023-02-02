@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../common/utils/utils.dart';
-
+import 'detail_comment_list.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -17,7 +17,11 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   var _PostCard = Get.arguments;
   final replyController = TextEditingController();
-  CollectionReference reply = FirebaseFirestore.instance.collection('reply');
+  CollectionReference reply = FirebaseFirestore.instance
+      .collection('posts')
+      .doc('cf6rL17wyLgX7r4u4rGA')
+      .collection('reply');
+  late final List<ReplyModel> replies;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,9 @@ class _DetailPageState extends State<DetailPage> {
               title: Text(
                 _PostCard.postCategory,
                 style: const TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.w700, fontSize: 17),
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 17),
               ),
               centerTitle: true,
             ),
@@ -45,108 +51,113 @@ class _DetailPageState extends State<DetailPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8.0),
-                      child:
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Row(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 22, vertical: 8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: const Image(
-                                  image: NetworkImage(
-                                      'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                                  height: 43,
-                                  width: 43,
-                                  fit: BoxFit.scaleDown,
-                                )),
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
                               children: [
-                                Text(
-                                  _PostCard.userName,
-                                  style: const TextStyle(fontSize: 16),
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: const Image(
+                                      image: NetworkImage(
+                                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                                      height: 43,
+                                      width: 43,
+                                      fit: BoxFit.scaleDown,
+                                    )),
+                                const SizedBox(
+                                  width: 12,
                                 ),
-                                Text(_PostCard.postCategory,
-                                    style: const TextStyle(
-                                        fontSize: 12, fontWeight: FontWeight.w800)),
-                              ],
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 23,
-                        ),
-                        FittedBox(
-                          fit: BoxFit.contain,
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            _PostCard.postTitle,
-                            style:
-                            const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                          ),
-                        ),
-                        const SizedBox(height: 13),
-                        Row(
-                          children: [
-                            Column(
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.89,
-                                  child: Text(
-                                    _PostCard.postText,
-                                    style: const TextStyle(
-                                      fontSize: 14,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _PostCard.userName,
+                                      style: const TextStyle(fontSize: 16),
                                     ),
+                                    Text(_PostCard.postCategory,
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w800)),
+                                  ],
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 23,
+                            ),
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                _PostCard.postTitle,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700, fontSize: 20),
+                              ),
+                            ),
+                            const SizedBox(height: 13),
+                            Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.89,
+                                      child: Text(
+                                        _PostCard.postText,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 160,
+                                  height: 140,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xffD9D9D9),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                const SizedBox(width: 13),
+                                Container(
+                                  width: 160,
+                                  height: 140,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xffD9D9D9),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 14),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 160,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                color: const Color(0xffD9D9D9),
-                                borderRadius: BorderRadius.circular(12),
+                            const SizedBox(height: 19),
+                            Center(
+                              child: Container(
+                                width: 345,
+                                height: 278,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffD9D9D9),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 13),
-                            Container(
-                              width: 160,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                color: const Color(0xffD9D9D9),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 19),
-                        Center(
-                          child: Container(
-                            width: 345,
-                            height: 278,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffD9D9D9),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ]),
+                          ]),
                     ),
                     const SizedBox(height: 42),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Divider(
-                          color: Theme.of(context).colorScheme.outline, thickness: 1),
+                          color: Theme.of(context).colorScheme.outline,
+                          thickness: 1),
                     ),
                     const SizedBox(height: 9),
                     Row(
@@ -178,78 +189,27 @@ class _DetailPageState extends State<DetailPage> {
                       ],
                     ),
                     const SizedBox(height: 41),
-                    Row(
-                      children: [
-                        const SizedBox(width: 15),
-                        Container(
-                          height: 36,
-                          width: 36,
-                          decoration: const BoxDecoration(
-                              color: Color(0xffD9D9D9), shape: BoxShape.circle),
-                        ),
-                        const SizedBox(width: 14),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  snapshot.data.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(width: 5),
-                                const Text(
-                                  '시간',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'wow 예뻐요!',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 120),
-                        Row(
-                          children: [
-                            Column(
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                  },
-                                  icon: const Icon(Icons.chat_bubble_outline),
-                                  iconSize: 24,
-                                ),
-                                const Text('0'),
-                              ],
-                            ),
-                            const SizedBox(width: 5),
-                            Column(
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.favorite_border_outlined),
-                                  iconSize: 24,
-                                ),
-                                const Text('0'),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                    SliverList(
+                        delegate:
+                            SliverChildBuilderDelegate((context, index) {
+                              return FutureBuilder(
+                                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData == false) {
+                                      return Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                      );
+                                    } else {
+                                      DetailCommentList(
+                                        username: snapshot.data.displayName,
+                                        reply: replies[index].reply,
+                                        like: replies[index].likes,
+                                        time: replies[index].time,
+                                      );
+                                    }
+                                  });
+                            }),
                     ),
-                    const SizedBox(height: 29),
                     const SizedBox(
                       width: 376,
                       child: Divider(color: Color(0xffD9D9D9), thickness: 1),
@@ -295,11 +255,16 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                           ),
                           onPressed: () async {
+                            final userData = await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .get();
                             ReplyModel newReply = ReplyModel(
-                                time: Timestamp.now(),
-                                userName: snapshot.data.toString(),
-                                reply: replyController.text,
-                                likes: []
+                              time: Timestamp.now(),
+                              userName: userData.data()!['displayName'],
+                              reply: replyController.text,
+                              likes: [],
+                              uid: FirebaseAuth.instance.currentUser!.uid,
                             );
                             reply.add(newReply.toJson());
                             replyController.clear();
@@ -323,4 +288,3 @@ class _DetailPageState extends State<DetailPage> {
         });
   }
 }
-

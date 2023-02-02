@@ -46,7 +46,6 @@ class CallRepository {
           builder: (context) => CallScreen(
             channelId: senderCallData.callId,
             call: senderCallData,
-            isGroupChat: false,
           ),
         ),
       );

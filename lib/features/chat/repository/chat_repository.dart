@@ -185,11 +185,6 @@ class ChatRepository {
             file,
           );
 
-      UserModel? recieverUserData;
-      var userDataMap =
-          await firestore.collection('users').doc(receiverUid).get();
-      recieverUserData = UserModel.fromJson(userDataMap.data()!);
-
       String contactMsg;
 
       switch (messageEnum) {

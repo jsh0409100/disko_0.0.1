@@ -1,66 +1,42 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/enums/message_enum.dart';
-import '../../../models/chat_message_model.dart';
-import '../../../models/last_message_model.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../repository/write_post_repository.dart';
 
 final writePostControllerProvider = Provider((ref) {
-  final chatRepository = ref.watch(writePostRepositoryProvider);
-  return ChatController(
-    chatRepository: chatRepository,
+  final writePostRepository = ref.watch(writePostRepositoryProvider);
+  return WritePostController(
+    writePostRepository: writePostRepository,
     ref: ref,
   );
 });
 
-class ChatController {
-  final ChatRepository chatRepository;
+class WritePostController {
+  final WritePostRepository writePostRepository;
   final ProviderRef ref;
-  ChatController({
-    required this.chatRepository,
+  WritePostController({
+    required this.writePostRepository,
     required this.ref,
   });
 
-  Stream<List<ChatMessageModel>> chatStream(String receiverUid) {
-    return chatRepository.getChatStream(receiverUid);
-  }
-
-  Stream<List<LastMessageModel>> chatListStream() {
-    return chatRepository.getChatListStream();
-  }
-
-  void sendTextMessage(
+  void uploadPost(
     BuildContext context,
     String text,
-    String receiverUid,
+    String postCategory,
+    String postTitle,
+    List<String> imagesUrl,
+    String postId,
   ) {
     ref.read(userDataAuthProvider).whenData(
-          (value) => chatRepository.sendTextMessage(
+          (value) => writePostRepository.uploadPost(
             context: context,
             text: text,
-            receiverUid: receiverUid,
-            senderUser: value!,
-          ),
-        );
-  }
-
-  void sendFileMessage(
-    BuildContext context,
-    File file,
-    String receiverUid,
-    MessageEnum messageEnum,
-  ) {
-    ref.read(userDataAuthProvider).whenData(
-          (value) => chatRepository.sendFileMessage(
-            context: context,
-            file: file,
-            receiverUid: receiverUid,
-            senderUser: value!,
-            messageEnum: messageEnum,
-            ref: ref,
+            userData: value!,
+            postId: postId,
+            postCategory: postCategory,
+            postTitle: postTitle,
+            imagesUrl: imagesUrl,
           ),
         );
   }

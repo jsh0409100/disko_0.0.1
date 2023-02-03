@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:disko_001/common/utils/utils.dart';
 import 'package:disko_001/features/auth/controller/auth_controller.dart';
-import 'package:disko_001/features/profile/screens/profile_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfilePage extends ConsumerStatefulWidget {
+class ProfileEditPage extends ConsumerStatefulWidget {
+
   final String displayName, country, description, imageURL;
 
-  const ProfilePage(
+  const ProfileEditPage(
       {Key? key,
         required this.displayName,
         required this.country,
@@ -19,10 +19,10 @@ class ProfilePage extends ConsumerStatefulWidget {
       : super(key: key);
 
   @override
-  ConsumerState<ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<ProfileEditPage> createState() => _ProfileEditPageState();
 }
 
-class _ProfilePageState extends ConsumerState<ProfilePage> {
+class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   String test = 'test';
   File? image;
   final TextEditingController nameController = TextEditingController();
@@ -57,7 +57,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       padding: const EdgeInsets.all(20),
       children: [
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               height: 130,
@@ -67,7 +67,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ? CircleAvatar(
                           radius: 60,
                           backgroundImage: NetworkImage(
-                              widget.imageURL),
+                             widget.imageURL),
                         )
                       : CircleAvatar(
                           radius: 60,
@@ -111,13 +111,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ),
                     ),
                     Expanded(
-                      child: IconButton(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProfileEditPage(displayName: widget.displayName, country: widget.country, description: widget.description, imageURL: widget.imageURL,))),
-                        icon: Icon(Icons.done),
-                      ),
+                        child: IconButton(
+                            onPressed: (){},
+                            icon: Icon(Icons.done),
+                        ),
                     ),
                   ],
                 ),

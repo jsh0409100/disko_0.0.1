@@ -30,12 +30,12 @@ class CustomCommentNotification extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("---가 ----에 댓글을 남겼어요!"),
-              const SizedBox(
+            children: const [
+              Text("---가 ----에 댓글을 남겼어요!"),
+              SizedBox(
                 height: 10,
               ),
-              const Text(
+              Text(
                 "---분 전",
                 style: TextStyle(color: Colors.grey, fontSize: 8),
               ),

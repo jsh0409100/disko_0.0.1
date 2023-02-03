@@ -21,8 +21,8 @@ class WritePostPage extends StatefulWidget {
 
 class _WritePostPageState extends State<WritePostPage> {
   final ImagePicker _picker = ImagePicker();
-  List<XFile>? _imageFileList = [];
-  List<String> _arrImageUrls = [];
+  final List<XFile>? _imageFileList = [];
+  final List<String> _arrImageUrls = [];
   final FirebaseStorage _storageRef = FirebaseStorage.instance;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -94,7 +94,7 @@ class _WritePostPageState extends State<WritePostPage> {
                       ),
                     ),
                     _imageFileList == 0
-                        ? Padding(
+                        ? const Padding(
                             padding: EdgeInsets.all(10),
                             child: Text("No Images Selected"),
                           )

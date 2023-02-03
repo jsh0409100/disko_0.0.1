@@ -13,17 +13,17 @@ import '../../../models/chat_message_model.dart';
 import '../../../models/last_message_model.dart';
 import '../../../models/user_model.dart';
 
-final chatRepositoryProvider = Provider(
-  (ref) => ChatRepository(
+final writePostRepositoryProvider = Provider(
+  (ref) => WritePostRepository(
     firestore: FirebaseFirestore.instance,
     auth: FirebaseAuth.instance,
   ),
 );
 
-class ChatRepository {
+class WritePostRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
-  ChatRepository({
+  WritePostRepository({
     required this.firestore,
     required this.auth,
   });

@@ -43,11 +43,8 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
             controller: messageController,
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              final messageData = snapshot.data![index];
-
               final chatDocs = snapshot.data![index];
-              if (messageData.senderId ==
-                  FirebaseAuth.instance.currentUser!.uid) {
+              if (chatDocs.senderId == FirebaseAuth.instance.currentUser!.uid) {
                 return MyChatBubble(
                     text: chatDocs.text,
                     timeSent: chatDocs.timeSent,

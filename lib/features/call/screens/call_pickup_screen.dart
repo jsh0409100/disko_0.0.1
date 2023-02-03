@@ -56,7 +56,9 @@ class CallPickupScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            ref.read(callControllerProvider).endCall;
+                          },
                           icon: const Icon(Icons.call_end,
                               color: Colors.redAccent),
                         ),

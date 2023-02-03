@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 class SendLocationMapScreen extends StatefulWidget {
   const SendLocationMapScreen({super.key});
@@ -17,6 +18,27 @@ class _SendLocationMapScreenState extends State<SendLocationMapScreen> {
     mapController = controller;
   }
 
+  void _currentLocation() async {
+    // Create a map controller
+    LocationData? currentLocation;
+    var location = Location();
+    try {
+      // Find and store your location in a variable
+      currentLocation = await location.getLocation();
+    } on Exception {
+      currentLocation = null;
+    }
+
+    // Move the map camera to the found location using the controller
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(currentLocation!.latitude!, currentLocation.longitude!),
+        zoom: 17.0,
+      ),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,6 +53,8 @@ class _SendLocationMapScreenState extends State<SendLocationMapScreen> {
           backgroundColor: Colors.white,
         ),
         body: GoogleMap(
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
           onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
             target: _center,

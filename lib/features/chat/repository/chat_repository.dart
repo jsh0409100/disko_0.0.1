@@ -80,8 +80,6 @@ class ChatRepository {
       messageId: messageId,
       timeSent: timeSent,
     );
-    print('\n\n\n\n\n\n\n\n\n\n\n');
-    print(message);
     final String chatName = (receiverUid.compareTo(auth.currentUser!.uid) > 0)
         ? '$receiverUid-${auth.currentUser!.uid}'
         : '${auth.currentUser!.uid}-$receiverUid';
@@ -118,18 +116,23 @@ class ChatRepository {
     );
 
     final String chatName = (receiverUid.compareTo(senderId) > 0)
-        ? '$receiverUid-${senderId}'
-        : '${senderId}-$receiverUid';
+        ? '$receiverUid-$senderId'
+        : '$senderId-$receiverUid';
     final currentChat = firestore.collection('messages').doc(chatName);
     final doc = await currentChat.get();
-    final data = doc.get('senderId');
-    (doc.exists && data == senderId)
-        ? currentChat.update({
-            'unreadMessageCount': FieldValue.increment(1),
-            'timeSent': timeSent,
-            'text': text,
-          })
-        : currentChat.set(message.toJson());
+
+    if (doc.exists) {
+      final data = doc.get(senderId);
+      (data == senderId)
+          ? currentChat.update({
+              'unreadMessageCount': FieldValue.increment(1),
+              'timeSent': timeSent,
+              'text': text,
+            })
+          : currentChat.set(message.toJson());
+    } else {
+      currentChat.set(message.toJson());
+    }
   }
 
   void sendTextMessage({
@@ -181,11 +184,6 @@ class ChatRepository {
             'chat/${messageEnum.type}/${auth.currentUser!.uid}/$receiverUid/$messageId',
             file,
           );
-
-      UserModel? recieverUserData;
-      var userDataMap =
-          await firestore.collection('users').doc(receiverUid).get();
-      recieverUserData = UserModel.fromJson(userDataMap.data()!);
 
       String contactMsg;
 

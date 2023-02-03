@@ -83,6 +83,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
 
   void joinCall() async {
     await agoraEngine.startPreview();
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\nhasdialed: ${widget.call.hasDialed}\n\n\n\n\n\n\n\n\n\n\n\n\n');
 
     // Set channel options including the client role and channel profile
     ChannelMediaOptions options = ChannelMediaOptions(
@@ -128,13 +129,13 @@ class _CallScreenState extends ConsumerState<CallScreen> {
         body: ListView(
       children: [
         // Container for the local video
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height * 0.5,
           child: Center(child: _localPreview()),
         ),
         const SizedBox(height: 10),
         //Container for the Remote video
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height * 0.5,
           child: Center(child: _remoteVideo()),
         ),
@@ -169,7 +170,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       return AgoraVideoView(
         controller: VideoViewController(
           rtcEngine: agoraEngine,
-          canvas: VideoCanvas(uid: 0),
+          canvas: const VideoCanvas(uid: 0),
         ),
       );
     } else {

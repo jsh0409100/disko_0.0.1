@@ -57,9 +57,8 @@ class _ChatItemState extends State<ChatItem> {
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(100),
-                  child: const Image(
-                    image: NetworkImage(
-                        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                  child: Image(
+                    image: NetworkImage(widget.profilePic),
                     height: 43,
                     width: 43,
                     fit: BoxFit.scaleDown,

@@ -62,6 +62,8 @@ dependencies:
   audioplayers: ^3.0.1
   agora_uikit: ^1.1.2
   agora_rtc_engine: ^6.1.0
+  google_maps_flutter: ^2.2.3
+  location: ^4.4.0
 
 
 dev_dependencies:

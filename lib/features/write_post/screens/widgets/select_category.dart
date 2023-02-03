@@ -14,10 +14,11 @@ class CategoryCards extends StatefulWidget {
 }
 
 class _CategoryCardsState extends State<CategoryCards> {
-  Widget CategoryCardRadioButton(
-      {required String categoryIcon,
-      required String categoryName,
-      required int index}) {
+  Widget CategoryCardRadioButton({
+    required String categoryIcon,
+    required String categoryName,
+    required int index,
+  }) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.25,
       height: MediaQuery.of(context).size.width * 0.25,

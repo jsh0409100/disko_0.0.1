@@ -5,25 +5,28 @@ import 'package:disko_001/features/write_post/screens/widgets/select_category.da
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../app_layout_screen.dart';
 import '../../../models/category_list.dart';
-import '../../../models/post_card_model.dart';
+import '../controller/write_post_controller.dart';
 
-class WritePostPage extends StatefulWidget {
+class WritePostPage extends ConsumerStatefulWidget {
   const WritePostPage({Key? key}) : super(key: key);
 
   @override
-  State<WritePostPage> createState() => _WritePostPageState();
+  ConsumerState<WritePostPage> createState() => _ConsumerWritePostPageState();
 }
 
-class _WritePostPageState extends State<WritePostPage> {
+class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   final ImagePicker _picker = ImagePicker();
-  List<XFile>? _imageFileList = [];
-  List<String> _arrImageUrls = [];
+  final List<XFile>? _imageFileList = [];
+  final List<String> _arrImageUrls = [];
   final FirebaseStorage _storageRef = FirebaseStorage.instance;
+  late String postId;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController postTitleController = TextEditingController();
@@ -31,6 +34,68 @@ class _WritePostPageState extends State<WritePostPage> {
   final posts = FirebaseFirestore.instance.collection('posts');
 
   bool _isLoading = false;
+
+  Future<void> selectImage() async {
+    if (_imageFileList != null) {
+      _imageFileList?.clear();
+    }
+    try {
+      final List<XFile> images = await _picker.pickMultiImage();
+      if (images.isNotEmpty) {
+        _imageFileList?.addAll(images);
+      }
+      print("List of selected images : " + images.length.toString());
+    } catch (e) {
+      print("Something Wrong." + e.toString());
+    }
+    setState(() {});
+  }
+
+  void _uploadPost(String category) async {
+    ref.read(writePostControllerProvider).uploadPost(
+          context,
+          postTextController.text,
+          category,
+          postTitleController.text,
+          _arrImageUrls,
+          postId,
+        );
+  }
+
+  Future<void> uploadFunction(List<XFile> _images) async {
+    setState(() {
+      _isLoading = true;
+    });
+    for (int i = 0; i < _images.length; i++) {
+      var imageUrl = await uploadFile(_images[i]);
+      _arrImageUrls.add(imageUrl.toString());
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<String> uploadFile(XFile _image) async {
+    Reference reference = _storageRef
+        .ref()
+        .child('posts')
+        .child(FirebaseAuth.instance.currentUser!.uid)
+        .child(postId)
+        .child(_image.name);
+    UploadTask uploadTask = reference.putFile(File(_image.path));
+    await uploadTask.whenComplete(() {
+      print(reference.getDownloadURL());
+    });
+
+    return await reference.getDownloadURL();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    postTextController.dispose();
+    postTitleController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +159,7 @@ class _WritePostPageState extends State<WritePostPage> {
                       ),
                     ),
                     _imageFileList == 0
-                        ? Padding(
+                        ? const Padding(
                             padding: EdgeInsets.all(10),
                             child: Text("No Images Selected"),
                           )
@@ -149,12 +214,7 @@ class _WritePostPageState extends State<WritePostPage> {
   }
 
   Future<void> categoryDialogBuilder(BuildContext context) async {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    final userData = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser!.uid)
-        .get();
-    var _CategoryCards = CategoryCards(selected: 0);
+    final _CategoryCards = CategoryCards(selected: 0);
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -180,21 +240,11 @@ class _WritePostPageState extends State<WritePostPage> {
                   ),
                   child: const Text('게시'),
                   onPressed: () async {
+                    postId = const Uuid().v1();
                     Navigator.of(context).pop();
                     await uploadFunction(_imageFileList!);
-                    PostCardModel newPost = PostCardModel(
-                      userName: userData.data()!['displayName'],
-                      postTitle: postTitleController.text ,
-                      postCategory:
-                          CategoryList.categories[_CategoryCards.selected],
-                      postText: postTextController.text,
-                      time: Timestamp.now(),
-                      uid: currentUser.uid,
-                      likes: [],
-                      imagesUrl: _arrImageUrls,
-                      //postImage:
-                    );
-                    posts.add(newPost.toJson());
+                    _uploadPost(
+                        CategoryList.categories[_CategoryCards.selected]);
                     postTextController.clear();
                     postTitleController.clear();
                     Get.to(() => const AppLayoutScreen());
@@ -206,52 +256,5 @@ class _WritePostPageState extends State<WritePostPage> {
         );
       },
     );
-  }
-
-  Future<void> uploadFunction(List<XFile> _images) async {
-    setState(() {
-      _isLoading = true;
-    });
-    for (int i = 0; i < _images.length; i++) {
-      var imageUrl = await uploadFile(_images[i]);
-      _arrImageUrls.add(imageUrl.toString());
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  Future<String> uploadFile(XFile _image) async {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    final userData = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser!.uid)
-        .get();
-    Reference reference = _storageRef
-        .ref()
-        .child(userData.data()!['displayName'])
-        .child(_image.name);
-    UploadTask uploadTask = reference.putFile(File(_image.path));
-    await uploadTask.whenComplete(() {
-      print(reference.getDownloadURL());
-    });
-
-    return await reference.getDownloadURL();
-  }
-
-  Future<void> selectImage() async {
-    if (_imageFileList != null) {
-      _imageFileList?.clear();
-    }
-    try {
-      final List<XFile> images = await _picker.pickMultiImage();
-      if (images.isNotEmpty) {
-        _imageFileList?.addAll(images);
-      }
-      print("List of selected images : " + images.length.toString());
-    } catch (e) {
-      print("Something Wrong." + e.toString());
-    }
-    setState(() {});
   }
 }

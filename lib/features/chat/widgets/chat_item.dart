@@ -5,20 +5,20 @@ import 'package:intl/intl.dart';
 import '../../../features/chat/screens/chat_screen.dart';
 
 class ChatItem extends StatefulWidget {
-  final String name, peerUid;
+  final String name, peerUid, profilePic;
   final String text;
-  // final String imageUrl;
   final Timestamp timeSent;
   final int unreadMessageCount;
 
-  const ChatItem(
-      {Key? key,
-      required this.name,
-      required this.text,
-      required this.timeSent,
-      required this.unreadMessageCount,
-      required this.peerUid})
-      : super(key: key);
+  const ChatItem({
+    Key? key,
+    required this.name,
+    required this.text,
+    required this.timeSent,
+    required this.unreadMessageCount,
+    required this.peerUid,
+    required this.profilePic,
+  }) : super(key: key);
 
   @override
   State<ChatItem> createState() => _ChatItemState();
@@ -28,7 +28,7 @@ class _ChatItemState extends State<ChatItem> {
   @override
   Widget build(BuildContext context) {
     final DateTime date = widget.timeSent.toDate();
-    final timeFormat = DateFormat.jm();
+    final timeFormat = DateFormat('aa hh:mm', 'ko');
     final showTime = timeFormat.format(date);
     return GestureDetector(
       onTap: () {
@@ -37,7 +37,8 @@ class _ChatItemState extends State<ChatItem> {
           ChatScreen.routeName,
           arguments: {
             'peerUid': widget.peerUid,
-            'peerDisplayName': widget.name
+            'peerDisplayName': widget.name,
+            'profilePic': widget.profilePic,
           },
         );
       },
@@ -56,9 +57,8 @@ class _ChatItemState extends State<ChatItem> {
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(100),
-                  child: const Image(
-                    image: NetworkImage(
-                        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                  child: Image(
+                    image: NetworkImage(widget.profilePic),
                     height: 43,
                     width: 43,
                     fit: BoxFit.scaleDown,

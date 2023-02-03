@@ -20,7 +20,7 @@ class MyChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime date = timeSent.toDate();
-    final timeFormat = DateFormat.jm();
+    final timeFormat = DateFormat('aa hh:mm', 'ko');
     final showTime = timeFormat.format(date);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,

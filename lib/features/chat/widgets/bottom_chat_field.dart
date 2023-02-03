@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:disko_001/features/chat/screens/send_location_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,13 +9,18 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/enums/message_enum.dart';
 import '../../../common/utils/utils.dart';
+import '../../call/controller/call_controller.dart';
 import '../controller/chat_controller.dart';
 import 'message_category_card.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
-  const BottomChatField({Key? key, required this.receiverUid})
-      : super(key: key);
-  final String receiverUid;
+  const BottomChatField({
+    Key? key,
+    required this.receiverUid,
+    required this.profilePic,
+    required this.receiverDisplayName,
+  }) : super(key: key);
+  final String receiverUid, profilePic, receiverDisplayName;
 
   @override
   ConsumerState<BottomChatField> createState() => _SendMessageState();
@@ -109,6 +115,15 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     }
   }
 
+  void showMap() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SendLocationMapScreen(),
+      ),
+    );
+  }
+
   void hideOptionsContainer() {
     setState(() {
       isShowOptionsContainer = false;
@@ -119,6 +134,15 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     setState(() {
       isShowOptionsContainer = true;
     });
+  }
+
+  void makeCall(WidgetRef ref, BuildContext context) {
+    ref.read(callControllerProvider).makeCall(
+          context,
+          widget.receiverDisplayName,
+          widget.receiverUid,
+          widget.profilePic,
+        );
   }
 
   void showKeyboard() => focusNode.requestFocus();
@@ -217,18 +241,39 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                             categoryIcon: Icons.camera_alt_outlined,
                             categoryName: '카메라'),
                       ]),
-                  SizedBox(height: 27),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
-                      const MessageCategoryCard(
-                          categoryIcon: Icons.mic, categoryName: '음성메세지'),
+                    children: [
                       MessageCategoryCard(
-                          categoryIcon: Icons.location_on_outlined,
-                          categoryName: '위치 보내기'),
+                          categoryIcon: Icons.mic, categoryName: '음성메세지'),
+                      GestureDetector(
+                        onTap: showMap,
+                        child: MessageCategoryCard(
+                            categoryIcon: Icons.location_on_outlined,
+                            categoryName: '위치 보내기'),
+                      ),
                       MessageCategoryCard(
                           categoryIcon: Icons.calendar_month_outlined,
                           categoryName: '약속하기'),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () => makeCall(ref, context),
+                        child: const MessageCategoryCard(
+                            categoryIcon: Icons.video_call_outlined,
+                            categoryName: '영상통화'),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.25,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.25,
+                      ),
                     ],
                   ),
                 ]),

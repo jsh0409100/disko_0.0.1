@@ -55,6 +55,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                           ? chatDocs[index].receiverDisplayName
                           : chatDocs[index].senderDisplayName,
                       text: chatDocs[index].text,
+                      profilePic: chatDocs[index].profilePic,
                       peerUid: peerUid,
                       timeSent: chatDocs[index].timeSent,
                       unreadMessageCount: (currentIsSender)

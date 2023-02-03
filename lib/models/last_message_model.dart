@@ -7,7 +7,8 @@ class LastMessageModel {
       text,
       receiverUid,
       senderDisplayName,
-      receiverDisplayName;
+      receiverDisplayName,
+      profilePic;
   final Timestamp timeSent;
 
   LastMessageModel({
@@ -19,6 +20,7 @@ class LastMessageModel {
     required this.receiverDisplayName,
     required this.senderDisplayName,
     required this.timeSent,
+    required this.profilePic,
   });
 
   LastMessageModel.fromJson(Map<String, dynamic> json)
@@ -29,6 +31,7 @@ class LastMessageModel {
         isSeen = json['isSeen'],
         receiverDisplayName = json['receiverDisplayName'],
         senderDisplayName = json['senderDisplayName'],
+        profilePic = json['profilePic'],
         unreadMessageCount = json['unreadMessageCount'];
 
   Map<String, dynamic> toJson() => {
@@ -38,6 +41,7 @@ class LastMessageModel {
         'receiverUid': receiverUid,
         'receiverDisplayName': receiverDisplayName,
         'senderDisplayName': senderDisplayName,
+        'profilePic': profilePic,
         'unreadMessageCount': unreadMessageCount,
         'isSeen': isSeen,
       };

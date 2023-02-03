@@ -2,27 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/common/widgets/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../features/home/screens/detail_page.dart';
 import '../../models/post_card_model.dart';
 import '../utils/utils.dart';
 
 class Post extends StatefulWidget {
-  final String userName, postCategory, postTitle, postText, uid;
+  final String userName, postCategory, postTitle, postText, uid, profilePic;
   final List<String> likes, imagesUrl;
 
-  const Post(
-      {Key? key,
-      // required this.uid,
-      required this.userName,
-      required this.postCategory,
-      required this.postTitle,
-      required this.postText,
-      required this.uid,
-      required this.likes,
-      required this.imagesUrl})
-      : super(key: key);
+  const Post({
+    Key? key,
+    // required this.uid,
+    required this.userName,
+    required this.postCategory,
+    required this.postTitle,
+    required this.postText,
+    required this.uid,
+    required this.likes,
+    required this.imagesUrl,
+    required this.profilePic,
+  }) : super(key: key);
 
   @override
   State<Post> createState() => _PostState();
@@ -63,6 +63,7 @@ class _PostState extends State<Post> {
                       uid: widget.uid,
                       likes: widget.likes,
                       imagesUrl: widget.imagesUrl,
+                      profilePic: widget.profilePic,
                     ),
                   );
                 },
@@ -74,6 +75,7 @@ class _PostState extends State<Post> {
                   uid: widget.uid,
                   likes: widget.likes,
                   imagesUrl: widget.imagesUrl,
+                  profilePic: widget.profilePic,
                 ),
               ));
         });

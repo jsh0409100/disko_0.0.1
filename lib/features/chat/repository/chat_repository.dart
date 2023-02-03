@@ -80,8 +80,6 @@ class ChatRepository {
       messageId: messageId,
       timeSent: timeSent,
     );
-    print('\n\n\n\n\n\n\n\n\n\n\n');
-    print(message);
     final String chatName = (receiverUid.compareTo(auth.currentUser!.uid) > 0)
         ? '$receiverUid-${auth.currentUser!.uid}'
         : '${auth.currentUser!.uid}-$receiverUid';
@@ -104,11 +102,12 @@ class ChatRepository {
     required String username,
   }) async {
     final String senderId = auth.currentUser!.uid;
-    String receiverDisplayName = await getDisplayNameByUid(receiverUid);
+    final receiverData = await getUserDataByUid(receiverUid);
     final message = LastMessageModel(
+      profilePic: receiverData.profilePic,
       senderId: senderId,
       senderDisplayName: username,
-      receiverDisplayName: receiverDisplayName,
+      receiverDisplayName: receiverData.displayName,
       receiverUid: receiverUid,
       text: text,
       timeSent: timeSent,
@@ -117,18 +116,23 @@ class ChatRepository {
     );
 
     final String chatName = (receiverUid.compareTo(senderId) > 0)
-        ? '$receiverUid-${senderId}'
-        : '${senderId}-$receiverUid';
+        ? '$receiverUid-$senderId'
+        : '$senderId-$receiverUid';
     final currentChat = firestore.collection('messages').doc(chatName);
     final doc = await currentChat.get();
-    final data = doc.get('senderId');
-    (doc.exists && data == senderId)
-        ? currentChat.update({
-            'unreadMessageCount': FieldValue.increment(1),
-            'timeSent': timeSent,
-            'text': text,
-          })
-        : currentChat.set(message.toJson());
+
+    if (doc.exists) {
+      final data = doc.get(senderId);
+      (data == senderId)
+          ? currentChat.update({
+              'unreadMessageCount': FieldValue.increment(1),
+              'timeSent': timeSent,
+              'text': text,
+            })
+          : currentChat.set(message.toJson());
+    } else {
+      currentChat.set(message.toJson());
+    }
   }
 
   void sendTextMessage({
@@ -181,11 +185,6 @@ class ChatRepository {
             file,
           );
 
-      UserModel? recieverUserData;
-      var userDataMap =
-          await firestore.collection('users').doc(receiverUid).get();
-      recieverUserData = UserModel.fromJson(userDataMap.data()!);
-
       String contactMsg;
 
       switch (messageEnum) {
@@ -193,7 +192,7 @@ class ChatRepository {
           contactMsg = '📷 사진';
           break;
         case MessageEnum.video:
-          contactMsg = '📸 영상 메세지';
+          contactMsg = '📽️ 영상 메세지';
           break;
         case MessageEnum.audio:
           contactMsg = '🎵 오디오 메세지';

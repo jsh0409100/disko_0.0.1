@@ -6,17 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfileEditPage extends ConsumerStatefulWidget {
-
   final String displayName, country, description, imageURL;
 
-  const ProfileEditPage(
-      {Key? key,
-        required this.displayName,
-        required this.country,
-        required this.description,
-        required this.imageURL,
-      })
-      : super(key: key);
+  const ProfileEditPage({
+    Key? key,
+    required this.displayName,
+    required this.country,
+    required this.description,
+    required this.imageURL,
+  }) : super(key: key);
 
   @override
   ConsumerState<ProfileEditPage> createState() => _ProfileEditPageState();
@@ -26,11 +24,17 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   String test = 'test';
   File? image;
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController countryController = TextEditingController();
+  final TextEditingController keywordController = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
     nameController.dispose();
+    descriptionController.dispose();
+    countryController.dispose();
+    keywordController.dispose();
   }
 
   void selectImage() async {
@@ -53,21 +57,30 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: 130,
-              child: GestureDetector(
-                child: Stack(children: [
-                  image == null
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text("프로필 수정"),
+        actions: <Widget>[
+          TextButton(
+              onPressed: storeUserData,
+              child: Text("완료"),
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: 130,
+                child: GestureDetector(
+                  child: image == null
                       ? CircleAvatar(
                           radius: 60,
-                          backgroundImage: NetworkImage(
-                             widget.imageURL),
+                          backgroundImage: NetworkImage(widget.imageURL),
                         )
                       : CircleAvatar(
                           radius: 60,
@@ -75,282 +88,70 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                             image!,
                           ),
                         ),
-                  Positioned(
-                    left: 80,
-                    top: 95,
-                    child: CircleAvatar(
-                      backgroundColor: Color(0xffEFEFEF),
-                      radius: 15,
-                      child: IconButton(
-                        onPressed: selectImage,
-                        icon: const Icon(
-                          Icons.add_a_photo,
-                        ),
-                        color: Colors.black,
-                      ),
-                    ),
-                  )
-                ]),
-                onTap: () {},
-              ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: nameController,
-                        style: TextStyle(
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                        child: IconButton(
-                            onPressed: (){},
-                            icon: Icon(Icons.done),
-                        ),
-                    ),
-                  ],
-                ),
-                Text(
-                  widget.country,
-                  style: TextStyle(
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            Row(
-              children: [
-                Chip(
-                  label: const Text('✏ 유학생'),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                Chip(
-                  label: const Text('🍳 요리'),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                Chip(
-                  label: const Text('📸 사진찍기'),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            Text(
-              widget.description,
-              style: TextStyle(
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-              ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-            Card(
-              elevation: 5,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                padding: const EdgeInsets.only(top: 15),
-                width: double.infinity,
-                height: 82,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          test = 'mirror ball';
-                        });
-                      },
-                      child: Container(
-                        width: 50,
-                        height: 60,
-                        child: Column(
-                          children: const [
-                            Text(
-                              '미러볼',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                              ),
-                            ),
-                            Text(
-                              'Lv.2',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          test = 'My Post';
-                        });
-                      },
-                      child: Container(
-                        width: 50,
-                        height: 60,
-                        child: Column(
-                          children: const [
-                            Text(
-                              '게시물',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                              ),
-                            ),
-                            Text(
-                              '5',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          test = 'Q and A';
-                        });
-                      },
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        child: Column(
-                          children: const [
-                            Text(
-                              '질문답변',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                              ),
-                            ),
-                            Text(
-                              '30',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          test = 'Followings';
-                        });
-                      },
-                      child: Container(
-                        width: 50,
-                        height: 60,
-                        child: Column(
-                          children: const [
-                            Text(
-                              '팔로잉',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                              ),
-                            ),
-                            Text(
-                              '15',
-                              style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                  onTap: () {},
                 ),
               ),
+              TextButton(
+                onPressed: selectImage,
+                child: Text("사진변경"),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  textField("   2~8자 이내여야 합니다.","사용자 이름", 1, nameController),
+                  textField("   나라 선택.","국가", 1, countryController),
+                  textField("   2~8자 이내여야 합니다.","키워드 선택", 1, keywordController),
+                  textField("   40자 이내여야 합니다.", "자기소개", 10, descriptionController)
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget textField(String hint, String title, int size, TextEditingController controller) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            title,
+            style : TextStyle(
+              color : Colors.black87,
+              fontSize: 20,
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-            Container(
-              child: Text('$test'),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: TextFormField(
+            controller: controller,
+            cursorColor: Colors.black54,
+            maxLines: size,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 5),
+                hintText: hint,
+                hintStyle: const TextStyle(
+                  color: Colors.black54,
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black54,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                    color: Colors.black54,
+                  )),
             ),
-          ],
+          ),
         ),
       ],
     );
-  }
-
-  Widget mirrorballbuilder() {
-    return Container(
-      child: const Text('mirrorball'),
-    );
-  }
-
-  Widget Mypost() {
-    return Container(
-      child: const Text('My post'),
-    );
-  }
-
-  Widget QandA() {
-    return Container(
-      child: const Text('Q and A'),
-    );
-  }
-
-  Widget Followings() {
-    return const Text('Followings');
   }
 }

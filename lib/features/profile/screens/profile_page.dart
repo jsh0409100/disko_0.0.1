@@ -82,7 +82,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       backgroundColor: Color(0xffEFEFEF),
                       radius: 15,
                       child: IconButton(
-                        onPressed: selectImage,
+                        onPressed: ()=> Navigator.push(
+                          context, MaterialPageRoute(
+                          builder: (context) => ProfileEditPage(
+                              displayName: widget.displayName,
+                              country: widget.country,
+                              description: widget.description,
+                              imageURL: widget.imageURL,
+                          ),
+                        ),
+                        ),
                         icon: const Icon(
                           Icons.add_a_photo,
                         ),
@@ -98,28 +107,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: nameController,
-                        style: TextStyle(
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: IconButton(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProfileEditPage(displayName: widget.displayName, country: widget.country, description: widget.description, imageURL: widget.imageURL,))),
-                        icon: Icon(Icons.done),
-                      ),
-                    ),
-                  ],
+                Text(
+                  widget.displayName,
+                  style: TextStyle(
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                  ),
                 ),
                 Text(
                   widget.country,

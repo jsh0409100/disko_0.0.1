@@ -39,6 +39,7 @@ class MyChatBubble extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             child: DisplayTextImageGIF(
+              isSender: true,
               message: text,
               type: type,
             ),
@@ -78,6 +79,7 @@ class PeerChatBubble extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           child: DisplayTextImageGIF(
+            isSender: false,
             message: text,
             type: type,
           ),

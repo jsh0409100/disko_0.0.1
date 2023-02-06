@@ -1,19 +1,15 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../common/enums/message_enum.dart';
-import '../../../common/repositories/common_firebase_storage_repository.dart';
 import '../../../common/utils/utils.dart';
 import '../../../models/last_message_model.dart';
 import '../../../models/reply_model.dart';
 import '../../../models/user_model.dart';
 
-final CommentRepositoryProvider = Provider(
+final commentRepositoryProvider = Provider(
   (ref) => CommentRepository(
     firestore: FirebaseFirestore.instance,
     auth: FirebaseAuth.instance,
@@ -33,7 +29,7 @@ class CommentRepository {
 
     return firestore
         .collection(collectionPath)
-        .orderBy('timeSent')
+        .orderBy('time')
         .snapshots()
         .map((event) {
       List<CommentModel> comment = [];
@@ -50,14 +46,14 @@ class CommentRepository {
         .orderBy('timeSent')
         .snapshots()
         .map((event) {
-      List<LastMessageModel> Comments = [];
+      List<LastMessageModel> comments = [];
       for (var document in event.docs) {
         if (document.get('receiverUid') == auth.currentUser!.uid ||
             document.get('senderId') == auth.currentUser!.uid) {
-          Comments.add(LastMessageModel.fromJson(document.data()));
+          comments.add(LastMessageModel.fromJson(document.data()));
         }
       }
-      return Comments;
+      return comments;
     });
   }
 
@@ -67,7 +63,7 @@ class CommentRepository {
     required Timestamp time,
     required String uid,
     required List<String> likes,
-    required commentID,
+    required String commentId,
   }) async {
     final comment = CommentModel(
       userName: userName,
@@ -76,12 +72,12 @@ class CommentRepository {
       uid: uid,
       likes: likes,
     );
-
-    final String PostID = 'cf6rL17wyLgX7r4u4rGA';
+    final String postId = '7cd259c0-a368-11ed-9819-ddbd59478028';
     await firestore
         .collection('posts')
-        .doc(PostID)
-        .collection('comment').doc(commentID)
+        .doc(postId)
+        .collection('comment')
+        .doc(commentId)
         .set(
       comment.toJson(),
     );
@@ -94,12 +90,12 @@ class CommentRepository {
   }) async {
     try {
       var time = Timestamp.now();
-      var commentID = const Uuid().v1();
+      var commentId = const Uuid().v1();
 
       _saveComment(
         userName: senderUser.displayName,
         text: text,
-        commentID: commentID,
+        commentId: commentId,
         time: time,
         uid: auth.currentUser!.uid,
         likes: [],

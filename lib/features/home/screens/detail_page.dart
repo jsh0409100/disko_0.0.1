@@ -4,27 +4,27 @@ import 'package:disko_001/features/home/widgets/comment_list.dart';
 import 'package:disko_001/models/reply_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import '../../../common/utils/utils.dart';
-import '../widgets/comment.dart';
 
-class DetailPage extends StatefulWidget {
+class DetailPage extends ConsumerStatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
 
   @override
-  State<DetailPage> createState() => _DetailPageState();
+  _DetailPageState createState() => _DetailPageState();
 }
 
-class _DetailPageState extends State<DetailPage> {
+class _DetailPageState extends ConsumerState<DetailPage> {
   var _PostCard = Get.arguments;
   final replyController = TextEditingController();
   CollectionReference reply = FirebaseFirestore.instance
       .collection('posts')
-      .doc('cf6rL17wyLgX7r4u4rGA')
+      .doc('7cd259c0-a368-11ed-9819-ddbd59478028')
       .collection('reply');
   List<CommentModel>? replies;
-  final postId = 'cf6rL17wyLgX7r4u4rGA';
+  final postId = '7cd259c0-a368-11ed-9819-ddbd59478028';
 
   @override
   Widget build(BuildContext context) {
@@ -117,14 +117,12 @@ class _DetailPageState extends State<DetailPage> {
                         ),
                       ]),
                 ),
-                const SizedBox(height: 42),
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Divider(
                       color: Theme.of(context).colorScheme.outline,
                       thickness: 1),
                 ),
-                const SizedBox(height: 9),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -153,16 +151,10 @@ class _DetailPageState extends State<DetailPage> {
                     const SizedBox(width: 8),
                   ],
                 ),
-
                 Expanded(
                   child: CommentList(
                     postId: postId,
                   ),
-                ),
-
-                const SizedBox(
-                  width: double.infinity,
-                  child: Divider(color: Color(0xffD9D9D9), thickness: 1),
                 ),
                 BottomCommentField(
                   profilePic: snapshot.data.profilePic,

@@ -23,7 +23,7 @@ class CallScreen extends ConsumerStatefulWidget {
 }
 
 class _CallScreenState extends ConsumerState<CallScreen> {
-  String channelName = "test-call";
+  String channelName = "test-disko";
   String token = AgoraConfig.token;
 
   int uid = 0; // uid of the local user
@@ -34,26 +34,6 @@ class _CallScreenState extends ConsumerState<CallScreen> {
 
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>(); // Global key to access the scaffold
-
-  @override
-  void initState() {
-    super.initState();
-    initializeAgora();
-  }
-
-  Future<void> initializeAgora() async {
-    // if (APP_ID.isEmpty) {
-    //   setState(() {
-    //     _infoStrings.add(
-    //       'APP_ID missing, please provide your APP_ID in settings.dart',
-    //     );
-    //     _infoStrings.add('Agora Engine is not starting');
-    //   });
-    //   return;
-    // }
-    await setupVideoSDKEngine();
-    joinCall();
-  }
 
   Future<void> setupVideoSDKEngine() async {
     // retrieve or request camera and microphone permissions
@@ -87,16 +67,29 @@ class _CallScreenState extends ConsumerState<CallScreen> {
           setState(() {
             _remoteUid = null;
           });
+          leaveCall();
         },
       ),
     );
+    joinCall();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Set up an instance of Agora engine
+    setupVideoSDKEngine();
   }
 
   void joinCall() async {
     await agoraEngine.startPreview();
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\nhasdialed: ${widget.call.hasDialed}\n\n\n\n\n\n\n\n\n\n\n\n\n');
+
     // Set channel options including the client role and channel profile
-    ChannelMediaOptions options = const ChannelMediaOptions(
-      clientRoleType: ClientRoleType.clientRoleBroadcaster,
+    ChannelMediaOptions options = ChannelMediaOptions(
+      clientRoleType: widget.call.hasDialed
+          ? ClientRoleType.clientRoleBroadcaster
+          : ClientRoleType.clientRoleAudience,
       channelProfile: ChannelProfileType.channelProfileCommunication,
     );
 
@@ -109,11 +102,6 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   }
 
   void leaveCall() {
-    ref.read(callControllerProvider).endCall(
-          widget.call.callerId,
-          widget.call.receiverUid,
-          context,
-        );
     setState(() {
       _isJoined = false;
       _remoteUid = null;
@@ -159,6 +147,11 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                 onPressed: _isJoined
                     ? () async {
                         leaveCall();
+                        ref.read(callControllerProvider).endCall(
+                              widget.call.callerId,
+                              widget.call.receiverUid,
+                              context,
+                            );
                         Navigator.pop(context);
                       }
                     : null,

@@ -1,16 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../common/enums/message_enum.dart';
-import '../../../models/last_message_model.dart';
 import '../../../models/reply_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../repository/comment_repository.dart';
 
 final commentControllerProvider = Provider((ref) {
-  final commentRepository = ref.watch(CommentRepositoryProvider);
+  final commentRepository = ref.watch(commentRepositoryProvider);
   return CommentController(
     commentRepository: commentRepository,
     ref: ref,

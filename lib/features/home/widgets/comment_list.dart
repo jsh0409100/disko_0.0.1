@@ -1,17 +1,13 @@
 import 'package:disko_001/common/widgets/loading_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../models/chat_message_model.dart';
 import '../../../models/reply_model.dart';
 import '../controller/comment_controller.dart';
 import 'comment.dart';
 
 class CommentList extends ConsumerStatefulWidget {
   final String postId;
-
   const CommentList({super.key, required this.postId});
 
   @override
@@ -30,8 +26,7 @@ class _CommentListState extends ConsumerState<CommentList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<CommentModel>>(
-        stream:
-            ref.read(commentControllerProvider).commentStream(widget.postId),
+        stream: ref.read(commentControllerProvider).commentStream(widget.postId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingScreen();

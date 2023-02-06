@@ -1,20 +1,55 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-class ProfilePage extends StatefulWidget {
-  final String displayName, country, description;
+import 'package:disko_001/common/utils/utils.dart';
+import 'package:disko_001/features/auth/controller/auth_controller.dart';
+import 'package:disko_001/features/profile/screens/profile_edit_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class ProfilePage extends ConsumerStatefulWidget {
+  final String displayName, country, description, imageURL;
+
   const ProfilePage(
       {Key? key,
-      required this.displayName,
-      required this.country,
-      required this.description})
+        required this.displayName,
+        required this.country,
+        required this.description,
+        required this.imageURL,
+      })
       : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends ConsumerState<ProfilePage> {
   String test = 'test';
+  File? image;
+  final TextEditingController nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+  }
+
+  void selectImage() async {
+    image = await pickImageFromGallery(context);
+    setState(() {});
+  }
+
+  void storeUserData() async {
+    String name = nameController.text.trim();
+
+    if (name.isNotEmpty) {
+      ref.read(authControllerProvider).saveUserDataToFirebase(
+            context,
+            name,
+            image,
+            widget.country,
+          );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,21 +62,39 @@ class _ProfilePageState extends State<ProfilePage> {
             Container(
               height: 130,
               child: GestureDetector(
-                child: Stack(children: const [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: NetworkImage(
-                        'https://i.guim.co.uk/img/media/a72cabc3e4889bd471dec02579514f462cecf920/0_11_2189_1313/master/2189.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=a3fd231d883d268abe7b7e0b6a2b762b'),
-                  ),
+                child: Stack(children: [
+                  image == null
+                      ? CircleAvatar(
+                          radius: 60,
+                          backgroundImage: NetworkImage(
+                              widget.imageURL),
+                        )
+                      : CircleAvatar(
+                          radius: 60,
+                          backgroundImage: FileImage(
+                            image!,
+                          ),
+                        ),
                   Positioned(
                     left: 80,
                     top: 95,
                     child: CircleAvatar(
                       backgroundColor: Color(0xffEFEFEF),
                       radius: 15,
-                      child: Icon(
-                        Icons.edit_outlined,
-                        size: 20,
+                      child: IconButton(
+                        onPressed: ()=> Navigator.push(
+                          context, MaterialPageRoute(
+                          builder: (context) => ProfileEditPage(
+                              displayName: widget.displayName,
+                              country: widget.country,
+                              description: widget.description,
+                              imageURL: widget.imageURL,
+                          ),
+                        ),
+                        ),
+                        icon: const Icon(
+                          Icons.add_a_photo,
+                        ),
                         color: Colors.black,
                       ),
                     ),
@@ -51,28 +104,24 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.displayName,
-                      style: TextStyle(
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 17,
-                      ),
-                    ),
-                    Text(
-                      widget.country,
-                      style: TextStyle(
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
+                Text(
+                  widget.displayName,
+                  style: TextStyle(
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                  ),
+                ),
+                Text(
+                  widget.country,
+                  style: TextStyle(
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/common/repositories/common_firebase_storage_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,6 +63,7 @@ class AuthRepository {
     required String verificationId,
     required String userOTP,
     required String countryCode,
+    required ProviderRef ref,
   }) async {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -73,7 +75,9 @@ class AuthRepository {
           name: 'guest',
           profilePic: null,
           context: context,
-          countryCode: countryCode);
+          countryCode: countryCode,
+          ref: ref,
+      );
     } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: e.message!);
     }
@@ -83,12 +87,22 @@ class AuthRepository {
     required String name,
     required File? profilePic,
     required String countryCode,
+    required ProviderRef ref,
     required BuildContext context,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
       String photoUrl =
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+
+      if(profilePic!=null){
+        photoUrl = await ref
+            .read(commonFirebaseStorageRepositoryProvider).
+        storeFileToFirebase(
+            'profilePic/$uid',profilePic
+        );
+      }
+
 
       var user = UserModel(
         phoneNum: auth.currentUser!.phoneNumber!,

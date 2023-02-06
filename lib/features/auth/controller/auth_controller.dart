@@ -40,6 +40,7 @@ class AuthController {
       verificationId: verificationId,
       userOTP: userOTP,
       countryCode: countryCode,
+      ref: ref,
     );
   }
 
@@ -49,6 +50,7 @@ class AuthController {
       name: name,
       profilePic: profilePic,
       context: context,
+      ref: ref,
       countryCode: countryCode,
     );
   }

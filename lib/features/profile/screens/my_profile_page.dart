@@ -15,16 +15,17 @@ class _MyProfilePageState extends State<MyProfilePage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getDisplayNameByUid(FirebaseAuth.instance.currentUser!.uid),
+        future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
           }
           return Scaffold(
             body: ProfilePage(
-              displayName: snapshot.data.toString(),
+              displayName: snapshot.data.displayName,
               country: '이스라엘',
               description: '안녕하세요! 이스라엘 거주중 엥뿌삐 올리비아 입니다',
+              imageURL: snapshot.data.profilePic,
             ),
           );
         });

@@ -144,7 +144,6 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                     ),
                     Expanded(
                       flex: 75,
-                      //TODO 오버플로우 해결 방법 찾기
                       child: TextField(
                         controller: postTextController,
                         expands: true,

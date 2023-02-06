@@ -22,20 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.0"
-  agora_rtm:
-    dependency: transitive
-    description:
-      name: agora_rtm
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.5.0"
-  agora_uikit:
-    dependency: "direct main"
-    description:
-      name: agora_uikit
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.2"
   analyzer:
     dependency: transitive
     description:

@@ -8,10 +8,12 @@ import '../../../common/enums/message_enum.dart';
 class DisplayTextImageGIF extends StatelessWidget {
   final String message;
   final MessageEnum type;
+  final bool isSender;
   const DisplayTextImageGIF({
     Key? key,
     required this.message,
     required this.type,
+    required this.isSender,
   }) : super(key: key);
 
   @override
@@ -23,9 +25,10 @@ class DisplayTextImageGIF extends StatelessWidget {
         ? Text(
             message,
             style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontWeight: FontWeight.w500,
-                fontSize: 14),
+              color: isSender ? Colors.white : Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
           )
         : type == MessageEnum.audio
             ? StatefulBuilder(builder: (context, setState) {

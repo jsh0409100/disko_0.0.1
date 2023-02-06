@@ -63,6 +63,8 @@ dependencies:
   google_maps_flutter: ^2.2.3
   location: ^4.4.0
   agora_rtc_engine: ^6.1.0
+  geolocator: ^9.0.2
+  animate_icons: ^2.0.0
 
 
 dev_dependencies:

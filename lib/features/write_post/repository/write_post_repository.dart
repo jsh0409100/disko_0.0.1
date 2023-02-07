@@ -73,4 +73,28 @@ class WritePostRepository {
       showSnackBar(context: context, content: e.toString());
     }
   }
+
+  Stream<List<PostCardModel>> searchPost(String query){
+    return _posts
+        .where(
+      'postTitle',
+      isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+      isLessThan: query.isEmpty
+          ? null
+          :query.substring(0, query.length -1) +
+          String.fromCharCode(
+            query.codeUnitAt(query.length - 1) + 1,
+          ),
+    )
+        .snapshots()
+        .map((event){
+      List<PostCardModel> postcard = [];
+      for (var post in event.docs){
+        postcard.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+      }
+      return postcard;
+    });
+  }
+
+  CollectionReference get _posts => firestore.collection('posts');
 }

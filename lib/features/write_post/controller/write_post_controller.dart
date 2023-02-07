@@ -1,3 +1,4 @@
+import 'package:disko_001/models/post_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,7 +13,12 @@ final writePostControllerProvider = Provider((ref) {
   );
 });
 
-class WritePostController {
+final searchPostProvider = StreamProvider.family((ref, String query){
+  return ref.watch(writePostRepositoryProvider).searchPost(query);
+  //Todo 나중에 검증하기
+});
+
+class WritePostController{
   final WritePostRepository writePostRepository;
   final ProviderRef ref;
   WritePostController({
@@ -39,5 +45,9 @@ class WritePostController {
             imagesUrl: imagesUrl,
           ),
         );
+  }
+  
+  Stream<List<PostCardModel>> searchPost(String query){
+    return writePostRepository.searchPost(query);
   }
 }

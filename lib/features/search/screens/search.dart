@@ -1,4 +1,6 @@
+import 'package:disko_001/features/home/delegates/search_post_delegate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../write_post/screens/widgets/select_category.dart';
 
@@ -8,14 +10,14 @@ class Tech {
   Tech(this.label, this.isSelected);
 }
 
-class search extends StatefulWidget {
+class search extends ConsumerStatefulWidget {
   const search({Key? key}) : super(key: key);
 
   @override
-  State<search> createState() => _searchState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _searchState();
 }
 
-class _searchState extends State<search> {
+class _searchState extends ConsumerState<search> {
   bool selected = false;
   final List<Tech> _chipsList = [
     Tech('유학생활', false),
@@ -44,8 +46,8 @@ class _searchState extends State<search> {
             padding: const EdgeInsets.fromLTRB(15, 0, 0, 4),
             child: TextField(
               keyboardType: TextInputType.text,
-              onChanged: (text) {
-                //_streamSearch.add(text);
+              onTap: () {
+                showSearch(context: context, delegate: SearchPostDelegate(ref));
               },
               decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -56,15 +58,10 @@ class _searchState extends State<search> {
         actions: [
           IconButton(
             onPressed: () {
-              /*
-                showSearch(
-                    context: context,
-                    delegate: MysearchDelegate(),
-                );
-                 */
+              showSearch(context: context, delegate: SearchPostDelegate(ref));
             },
             icon: const Text(
-              "취소",
+              "검색",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
@@ -98,7 +95,8 @@ class _searchState extends State<search> {
                   padding: EdgeInsets.all(12.0),
                   child: Center(
                     child: CategoryCards(selected: 0),
-                  )),
+                  )
+              ),
             ],
           ),
         ),
@@ -128,69 +126,5 @@ class _searchState extends State<search> {
       chips.add(item);
     }
     return chips;
-  }
-}
-
-class MysearchDelegate extends SearchDelegate {
-  List<String> searchResults = [
-    '이스라엘',
-    '유학생활',
-    '요리',
-    '중고거래',
-  ];
-
-  @override
-  List<Widget>? buildActions(BuildContext context) => [
-        IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            if (query.isEmpty) {
-              close(context, null);
-            } else {
-              query = '';
-            }
-          },
-        ),
-      ];
-
-  @override
-  Widget? buildLeading(BuildContext context) => IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          close(context, null);
-        },
-      );
-
-  @override
-  Widget buildResults(BuildContext context) => Center(
-        child: Text(
-          query,
-          style: const TextStyle(fontSize: 64, fontWeight: FontWeight.bold),
-        ),
-      );
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> suggestion = searchResults.where((searchResults) {
-      final result = searchResults.toLowerCase();
-      final input = query.toLowerCase();
-
-      return result.contains(input);
-    }).toList();
-
-    return ListView.builder(
-      itemCount: suggestion.length,
-      itemBuilder: (context, index) {
-        final suggestions = suggestion[index];
-
-        return ListTile(
-          title: Text(suggestions),
-          onTap: () {
-            query = suggestions;
-            showResults(context);
-          },
-        );
-      },
-    );
   }
 }

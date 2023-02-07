@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,28 +41,39 @@ class _SendLocationMapScreenState extends ConsumerState<SendLocationMapScreen> {
   }
 
   void sendLocationMessage(
-    File file,
+    Uint8List imageBytes,
+    LatLng coordinates,
   ) {
-    ref.read(chatControllerProvider).sendFileMessage(
-          context,
-          file,
-          widget.receiverUid,
-          MessageEnum.location,
-        );
+    ref.read(chatControllerProvider).sendLocationMessage(context, imageBytes,
+        widget.receiverUid, MessageEnum.location, coordinates);
   }
 
-  void updateMarker(LatLng position) {
-    print(position);
-    _markers.clear();
-    _markers.add(Marker(
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-      markerId: const MarkerId("1"),
-      position: position,
-      infoWindow: const InfoWindow(
-        title: '현재 위치',
-        snippet: '주소: ',
-      ),
-    ));
+  void updateMarker(LatLng position) async {
+    if (_markers.isNotEmpty) {
+      _markers.clear();
+    }
+    setState(() {
+      _markers.add(Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+        markerId: const MarkerId("1"),
+        position: position,
+        infoWindow: const InfoWindow(
+          title: '현재 위치',
+          snippet: '주소: ',
+        ),
+      ));
+    });
+    print(_markers.first.position);
+    CameraPosition cameraPosition = CameraPosition(
+      target: position,
+      zoom: 20,
+    );
+
+    final GoogleMapController controller = await mapController.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    setState(() {
+      isLocationSelected = true;
+    });
   }
 
   @override
@@ -111,9 +122,8 @@ class _SendLocationMapScreenState extends ConsumerState<SendLocationMapScreen> {
             onPressed: () async {
               final GoogleMapController controller = await mapController.future;
               final imageBytes = await controller.takeSnapshot();
-              setState(() {
-                // _imageBytes = imageBytes;
-              });
+              sendLocationMessage(imageBytes!, _markers.first.position);
+              Navigator.pop(context);
             },
             child: Text(
               '이 위치 공유하기',
@@ -129,13 +139,11 @@ class _SendLocationMapScreenState extends ConsumerState<SendLocationMapScreen> {
           backgroundColor: Theme.of(context).colorScheme.onPrimary,
           onPressed: () async {
             getUserCurrentLocation().then((value) async {
-              print(
-                  value.latitude.toString() + " " + value.longitude.toString());
               updateMarker(LatLng(value.latitude, value.longitude));
               // specified current users location
               CameraPosition cameraPosition = CameraPosition(
                 target: LatLng(value.latitude, value.longitude),
-                zoom: 18,
+                zoom: 20,
               );
 
               final GoogleMapController controller = await mapController.future;

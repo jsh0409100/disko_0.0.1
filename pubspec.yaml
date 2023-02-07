@@ -65,6 +65,7 @@ dependencies:
   agora_rtc_engine: ^6.1.0
   geolocator: ^9.0.2
   animate_icons: ^2.0.0
+  map_launcher: ^2.4.0
 
 
 dev_dependencies:

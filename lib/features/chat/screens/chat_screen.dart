@@ -1,4 +1,5 @@
 import 'package:disko_001/features/call/screens/call_pickup_screen.dart';
+import 'package:disko_001/features/chat/controller/chat_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,9 +23,18 @@ class ChatScreen extends ConsumerStatefulWidget {
 
 class _ChatPageState extends ConsumerState<ChatScreen> {
   var currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+  @override
+  void dispose() {
+    super.dispose();
+    // print('user left chat');
+    // ref.read(chatControllerProvider).toggleUserOnline(context, currentUserUid);
+  }
 
   @override
   Widget build(BuildContext context) {
+    ref
+        .read(chatControllerProvider)
+        .setChatMessageSeen(context, widget.peerUid);
     return CallPickupScreen(
       scaffold: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),

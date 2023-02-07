@@ -244,8 +244,6 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                     await uploadFunction(_imageFileList!);
                     _uploadPost(
                         CategoryList.categories[_CategoryCards.selected]);
-                    postTextController.clear();
-                    postTitleController.clear();
                     Get.to(() => const AppLayoutScreen());
                   },
                 ),

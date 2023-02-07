@@ -18,6 +18,12 @@ Future<UserModel> getUserDataByUid(String Uid) async {
   return UserModel.fromJson(userDataMap.data()!);
 }
 
+String getChatName(String receiverUid, String myUid) {
+  return (receiverUid.compareTo(myUid) > 0)
+      ? '$receiverUid-${myUid}'
+      : '${myUid}-$receiverUid';
+}
+
 Future<void> resetUnreadMessageCount(String chatName) async {
   final currentChat =
       FirebaseFirestore.instance.collection('messages').doc(chatName);

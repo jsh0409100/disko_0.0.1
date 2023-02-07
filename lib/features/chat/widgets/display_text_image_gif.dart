@@ -4,6 +4,7 @@ import 'package:disko_001/features/chat/widgets/video_player_item.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/enums/message_enum.dart';
+import 'locationItem.dart';
 
 class DisplayTextImageGIF extends StatelessWidget {
   final String message;
@@ -20,7 +21,6 @@ class DisplayTextImageGIF extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isPlaying = false;
     final AudioPlayer audioPlayer = AudioPlayer();
-
     return type == MessageEnum.text
         ? Text(
             message,
@@ -59,7 +59,8 @@ class DisplayTextImageGIF extends StatelessWidget {
                     videoUrl: message,
                   )
                 : CachedNetworkImage(
-                    imageUrl: message,
-                  );
+                        imageUrl: message,
+                      );
+
   }
 }

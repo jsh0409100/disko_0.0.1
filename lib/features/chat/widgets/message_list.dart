@@ -1,8 +1,11 @@
+import 'package:disko_001/common/enums/message_enum.dart';
 import 'package:disko_001/common/widgets/loading_screen.dart';
+import 'package:disko_001/features/chat/widgets/locationItem.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 import '../../../models/chat_message_model.dart';
 import '../controller/chat_controller.dart';
@@ -45,10 +48,18 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
             itemBuilder: (context, index) {
               final chatDocs = snapshot.data![index];
               if (chatDocs.senderId == FirebaseAuth.instance.currentUser!.uid) {
-                return MyChatBubble(
-                    text: chatDocs.text,
+                if (chatDocs.type == MessageEnum.location) {
+                  return LocationItem(
+                    locationImageString: chatDocs.text,
                     timeSent: chatDocs.timeSent,
-                    type: chatDocs.type);
+                    coordinates: Coords(chatDocs.lat!, chatDocs.long!),
+                  );
+                } else {
+                  return MyChatBubble(
+                      text: chatDocs.text,
+                      timeSent: chatDocs.timeSent,
+                      type: chatDocs.type);
+                }
               }
               return PeerChatBubble(
                   text: chatDocs.text,

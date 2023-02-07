@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LastMessageModel {
-  final bool isSeen;
+  final bool isReceiverOnline,isSenderOnline;
   final int unreadMessageCount;
   final String senderId,
       text,
       receiverUid,
       senderDisplayName,
       receiverDisplayName,
+
       profilePic;
   final Timestamp timeSent;
 
   LastMessageModel({
-    required this.isSeen,
+    required this.isReceiverOnline,
+    required this.isSenderOnline,
     required this.unreadMessageCount,
     required this.senderId,
     required this.text,
@@ -28,7 +30,8 @@ class LastMessageModel {
         text = json['text'],
         timeSent = json['timeSent'],
         receiverUid = json['receiverUid'],
-        isSeen = json['isSeen'],
+        isReceiverOnline = json['isReceiverOnline'],
+        isSenderOnline = json['isSenderOnline'],
         receiverDisplayName = json['receiverDisplayName'],
         senderDisplayName = json['senderDisplayName'],
         profilePic = json['profilePic'],
@@ -43,6 +46,7 @@ class LastMessageModel {
         'senderDisplayName': senderDisplayName,
         'profilePic': profilePic,
         'unreadMessageCount': unreadMessageCount,
-        'isSeen': isSeen,
+        'isReceiverOnline': isReceiverOnline,
+        'isSenderOnline': isSenderOnline,
       };
 }

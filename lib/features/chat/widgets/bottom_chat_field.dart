@@ -12,6 +12,7 @@ import '../../../common/enums/message_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../call/controller/call_controller.dart';
 import '../controller/chat_controller.dart';
+import '../screens/make_appointment_screen.dart';
 import 'message_category_card.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
@@ -125,6 +126,16 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
         builder: (context) => SendLocationMapScreen(
           receiverUid: widget.receiverUid,
         ),
+      ),
+    );
+  }
+
+  void makeAppointment() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MakeAppointmentScreen(),
+        fullscreenDialog: true,
       ),
     );
   }
@@ -250,17 +261,20 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      MessageCategoryCard(
+                      const MessageCategoryCard(
                           categoryIcon: Icons.mic, categoryName: '음성메세지'),
                       GestureDetector(
                         onTap: showMap,
-                        child: MessageCategoryCard(
+                        child: const MessageCategoryCard(
                             categoryIcon: Icons.location_on_outlined,
                             categoryName: '위치 보내기'),
                       ),
-                      MessageCategoryCard(
-                          categoryIcon: Icons.calendar_month_outlined,
-                          categoryName: '약속하기'),
+                      GestureDetector(
+                        onTap: makeAppointment,
+                        child: const MessageCategoryCard(
+                            categoryIcon: Icons.calendar_month_outlined,
+                            categoryName: '약속하기'),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),

@@ -66,6 +66,8 @@ dependencies:
   geolocator: ^9.0.2
   animate_icons: ^2.0.0
   map_launcher: ^2.4.0
+  timezone: ^0.9.1
+  flutter_local_notifications: ^13.0.0
 
 
 dev_dependencies:

@@ -14,6 +14,7 @@ import 'features/auth/controller/auth_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
   runApp(const ProviderScope(
     child: MyApp(),
@@ -39,13 +40,16 @@ class MyApp extends ConsumerWidget {
       ],
       locale: const Locale('ko'),
       theme: ThemeData(
+        backgroundColor: Colors.white,
         useMaterial3: true,
         colorScheme: lightColorScheme,
-        primaryColor: Color(0xFF5E38EB),
+        primaryColor: const Color(0xFF5E38EB),
         cardColor: Colors.white,
         fontFamily: 'Pretendard',
         textTheme: const TextTheme(
           bodyLarge: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+          headlineMedium: TextStyle(
+              fontSize: 17.0, fontWeight: FontWeight.w700, color: Colors.black),
         ),
       ),
       // darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),

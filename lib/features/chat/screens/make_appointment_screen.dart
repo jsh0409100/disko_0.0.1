@@ -1,3 +1,4 @@
+import 'package:disko_001/common/utils/local_notification.dart';
 import 'package:flutter/material.dart';
 
 class MakeAppointmentScreen extends StatefulWidget {
@@ -11,6 +12,17 @@ class MakeAppointmentScreen extends StatefulWidget {
 
 class _MakeAppointmentScreenState extends State<MakeAppointmentScreen>
     with RestorationMixin {
+  @override
+  void initState() {
+    super.initState();
+    initializeNotification(context: context);
+  }
+
+  Future<bool> initializeNotification({required BuildContext context}) async {
+    LocalNotification.initialize();
+    return true;
+  }
+
   // In this example, the restoration ID for the mixin is passed in through
   // the [StatefulWidget]'s constructor.
   @override
@@ -72,44 +84,128 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen>
         title: const Text('약속잡기'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("약속 날짜"),
-                  GestureDetector(
-                    onTap: () {
-                      _restorableDatePickerRouteFuture.present();
-                    },
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Color(0xFFF4EEFF),
-                        ),
-                        child: const Text('Open Date Picker ▼', style: TextStyle(fontWeight: ),)),
-                  ),
-                ],
-              ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "약속 날짜",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _restorableDatePickerRouteFuture.present();
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color(0xFFF4EEFF),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(13, 6, 3, 6),
+                      width: 109,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '날짜 선택',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      )),
+                ),
+              ],
             ),
-            GestureDetector(
-              onTap: () async {
-                TimeOfDay? newTime = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.now(),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                      'Selected: ${newTime!.hour.toString()} : ${newTime.minute.toString()}'),
-                ));
-              },
-              child: const Text('Open Time Picker ▼'),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const Divider(color: Color(0xFFECECEC), thickness: 1),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "약속 시간",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    TimeOfDay? newTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          'Selected: ${newTime!.hour.toString()} : ${newTime.minute.toString()}'),
+                    ));
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color(0xFFF4EEFF),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(13, 6, 3, 6),
+                      width: 109,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '시간 선택',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      )),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const Divider(color: Color(0xFFECECEC), thickness: 1),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "약속 전 나에게 알림",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                GestureDetector(
+                  onTap: () async {},
+                  child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color(0xFFF4EEFF),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(13, 6, 3, 6),
+                      width: 109,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '30분 전',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      )),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const Divider(color: Color(0xFFECECEC), thickness: 1),
+          ),
+        ],
       ),
     );
   }

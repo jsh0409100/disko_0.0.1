@@ -8,7 +8,7 @@ import '../../features/chat/screens/chat_screen.dart';
 import '../../features/profile/screens/other_user_profile_page.dart';
 
 class PostCard extends StatefulWidget {
-  final String uid, userName, postCategory, postTitle, postText, profilePic;
+  final String uid, userName, postCategory, postTitle, postText, profilePic, postId;
   final List<String> likes, imagesUrl;
   const PostCard({
     Key? key,
@@ -20,6 +20,7 @@ class PostCard extends StatefulWidget {
     required this.likes,
     required this.imagesUrl,
     required this.profilePic,
+    required this.postId,
   }) : super(key: key);
 
   @override

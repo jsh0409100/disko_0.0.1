@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/features/write_post/repository/write_post_repository.dart';
+import 'package:disko_001/features/write_post/screens/write_post_page.dart';
+import 'package:disko_001/models/post_card_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../common/utils/utils.dart';
-import '../../../models/last_message_model.dart';
-import '../../../models/reply_model.dart';
+import '../../../models/comment_model.dart';
 import '../../../models/user_model.dart';
 
 final commentRepositoryProvider = Provider(
@@ -40,23 +42,6 @@ class CommentRepository {
     });
   }
 
-  Stream<List<LastMessageModel>> getCommentListStream() {
-    return firestore
-        .collection('messages')
-        .orderBy('timeSent')
-        .snapshots()
-        .map((event) {
-      List<LastMessageModel> comments = [];
-      for (var document in event.docs) {
-        if (document.get('receiverUid') == auth.currentUser!.uid ||
-            document.get('senderId') == auth.currentUser!.uid) {
-          comments.add(LastMessageModel.fromJson(document.data()));
-        }
-      }
-      return comments;
-    });
-  }
-
   void _saveComment({
     required String userName,
     required String text,
@@ -64,6 +49,7 @@ class CommentRepository {
     required String uid,
     required List<String> likes,
     required String commentId,
+    required String postId,
   }) async {
     final comment = CommentModel(
       userName: userName,
@@ -72,8 +58,7 @@ class CommentRepository {
       uid: uid,
       likes: likes,
     );
-    final String postId = '7cd259c0-a368-11ed-9819-ddbd59478028';
-    await firestore
+    return firestore
         .collection('posts')
         .doc(postId)
         .collection('comment')
@@ -87,6 +72,7 @@ class CommentRepository {
     required BuildContext context,
     required String text,
     required UserModel senderUser,
+    required String postId,
   }) async {
     try {
       var time = Timestamp.now();
@@ -99,9 +85,12 @@ class CommentRepository {
         time: time,
         uid: auth.currentUser!.uid,
         likes: [],
+        postId: postId,
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
   }
 }
+
+

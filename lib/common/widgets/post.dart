@@ -8,7 +8,7 @@ import '../../models/post_card_model.dart';
 import '../utils/utils.dart';
 
 class Post extends StatefulWidget {
-  final String userName, postCategory, postTitle, postText, uid, profilePic;
+  final String userName, postCategory, postTitle, postText, uid, profilePic, postId;
   final List<String> likes, imagesUrl;
 
   const Post({
@@ -22,6 +22,7 @@ class Post extends StatefulWidget {
     required this.likes,
     required this.imagesUrl,
     required this.profilePic,
+    required this.postId,
   }) : super(key: key);
 
   @override
@@ -53,8 +54,8 @@ class _PostState extends State<Post> {
                   maxWidth: MediaQuery.of(context).size.width * 0.92),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(
-                    const DetailPage(),
+                  Get.to(() =>
+                  const DetailPage(),
                     arguments: PostCard(
                       userName: widget.userName,
                       postCategory: widget.postCategory,
@@ -64,6 +65,7 @@ class _PostState extends State<Post> {
                       likes: widget.likes,
                       imagesUrl: widget.imagesUrl,
                       profilePic: widget.profilePic,
+                      postId: widget.postId,
                     ),
                   );
                 },
@@ -76,6 +78,7 @@ class _PostState extends State<Post> {
                   likes: widget.likes,
                   imagesUrl: widget.imagesUrl,
                   profilePic: widget.profilePic,
+                  postId: widget.postId,
                 ),
               ));
         });

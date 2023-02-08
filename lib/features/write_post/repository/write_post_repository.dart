@@ -40,7 +40,9 @@ class WritePostRepository {
         postCategory: postCategory,
         postTitle: postTitle,
         likes: likes,
-        imagesUrl: imagesUrl);
+        imagesUrl: imagesUrl,
+        postId: postId,
+    );
 
     await firestore.collection('posts').doc(postId).set(
           message.toJson(),

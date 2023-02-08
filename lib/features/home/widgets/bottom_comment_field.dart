@@ -10,8 +10,10 @@ class BottomCommentField extends ConsumerStatefulWidget {
   const BottomCommentField({
     Key? key,
     required this.profilePic,
+    required this.postId,
   }) : super(key: key);
   final String profilePic;
+  final String postId;
 
   @override
   ConsumerState<BottomCommentField> createState() => _BottomCommentFieldState();
@@ -23,11 +25,11 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
 
   var _userEnterMessage = '';
 
-
   void uploadComment() async {
     ref.read(commentControllerProvider).uploadComment(
       context,
       _userEnterMessage,
+      widget.postId,
     );
     setState(() {
       controller.clear();

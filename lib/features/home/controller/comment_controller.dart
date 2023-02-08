@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../models/reply_model.dart';
+import '../../../models/comment_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../repository/comment_repository.dart';
 
@@ -26,13 +26,14 @@ class CommentController {
 
   void uploadComment(
     BuildContext context,
-    String text,
+    String text, postId,
   ) {
     ref.read(userDataAuthProvider).whenData(
           (value) => commentRepository.uploadComment(
             context: context,
             text: text,
             senderUser: value!,
+            postId: postId,
           ),
         );
   }

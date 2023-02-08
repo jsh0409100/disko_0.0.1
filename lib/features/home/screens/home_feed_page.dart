@@ -153,6 +153,7 @@ class PostsListBuilder extends StatelessWidget {
                     postCategory: posts[index].postCategory,
                     postText: posts[index].postText,
                     uid: posts[index].uid,
+                    postId: posts[index].postId,
                     likes: posts[index].likes,
                     imagesUrl: posts[index].imagesUrl,
                     profilePic: snapshot.data.profilePic,

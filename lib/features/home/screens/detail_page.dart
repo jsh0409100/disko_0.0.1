@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/home/widgets/bottom_comment_field.dart';
 import 'package:disko_001/features/home/widgets/comment_list.dart';
-import 'package:disko_001/models/reply_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,14 +15,8 @@ class DetailPage extends ConsumerStatefulWidget {
 }
 
 class _DetailPageState extends ConsumerState<DetailPage> {
-  var _PostCard = Get.arguments;
+  final _PostCard = Get.arguments;
   final replyController = TextEditingController();
-  CollectionReference reply = FirebaseFirestore.instance
-      .collection('posts')
-      .doc('7cd259c0-a368-11ed-9819-ddbd59478028')
-      .collection('reply');
-  List<CommentModel>? replies;
-  final postId = '7cd259c0-a368-11ed-9819-ddbd59478028';
 
   @override
   Widget build(BuildContext context) {
@@ -153,11 +145,12 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                 ),
                 Expanded(
                   child: CommentList(
-                    postId: postId,
+                    postId: _PostCard.postId,
                   ),
                 ),
                 BottomCommentField(
                   profilePic: snapshot.data.profilePic,
+                  postId: _PostCard.postId,
                 ),
               ],
             ),

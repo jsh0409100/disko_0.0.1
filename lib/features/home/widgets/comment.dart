@@ -24,70 +24,70 @@ class _CommentState extends State<Comment> {
   @override
   Widget build(BuildContext context) {
     final DateTime date = widget.time.toDate();
-    final timeFormat = DateFormat('aa hh:mm', 'ko');
+    final timeFormat = DateFormat('yy.MM.dd aa hh:mm', 'ko');
     final showTime = timeFormat.format(date);
-    return Row(
-      children: [
-        Text(showTime),
-        Column(
-          children: [
-            Row(
+    return SizedBox(
+      height: 100,
+      child: Row(
+        children: [
+          const SizedBox(width: 10),
+          SizedBox(
+            height: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    Text(
+                      widget.userName,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(showTime),
+                  ],
+                ),
                 Text(
-                  widget.userName,
+                  widget.text,
                   style: const TextStyle(
                     fontSize: 14,
-                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 5),
-                Text(
-                  widget.time.toString(),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              widget.text,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            /*Row(
-              children: [
-                Column(
+                Row(
                   children: [
-                    IconButton(
-                      onPressed: () {
-                      },
-                      icon: const Icon(Icons.favorite_border_outlined),
-                      iconSize: 24,
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                          },
+                          icon: const Icon(Icons.favorite_border_outlined),
+                          iconSize: 24,
+                        ),
+                        const Text('0'),
+                      ],
                     ),
-                    const Text('0'),
-                  ],
-                ),
-                const SizedBox(width: 5),
-                Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.chat_outlined),
-                      iconSize: 24,
+                    const SizedBox(width: 5),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.chat_outlined),
+                          iconSize: 24,
+                        ),
+                        const Text('0'),
+                      ],
                     ),
-                    const Text('0'),
                   ],
                 ),
               ],
-            ),*/
-          ],
-        ),
-        const Icon(Icons.more_vert),
-      ],
+            ),
+          ),
+          const Icon(Icons.more_vert),
+        ],
+      ),
     );
   }
 }

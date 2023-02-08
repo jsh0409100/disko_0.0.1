@@ -2,7 +2,7 @@ import 'package:disko_001/common/widgets/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../models/reply_model.dart';
+import '../../../models/comment_model.dart';
 import '../controller/comment_controller.dart';
 import 'comment.dart';
 
@@ -31,7 +31,6 @@ class _CommentListState extends ConsumerState<CommentList> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingScreen();
           }
-
           return ListView.builder(
             controller: messageController,
             itemCount: snapshot.data!.length,

@@ -1,58 +1,142 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:rxdart/subjects.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
-class LocalNotification {
-  LocalNotification._();
+class NotificationService {
+  NotificationService();
+  final text = Platform.isIOS;
+  final BehaviorSubject<String?> behaviorSubject = BehaviorSubject();
 
-  static final FlutterLocalNotificationsPlugin
-      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final _localNotifications = FlutterLocalNotificationsPlugin();
+  Future<void> initializePlatformNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('mipmap/launcher_icon');
 
-  static initialize() async {
-    AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings("mipmap/ic_launcher");
+    final DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
+            requestSoundPermission: true,
+            requestBadgePermission: true,
+            requestAlertPermission: true,
+            onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
-    DarwinInitializationSettings initializationSettingsIOS =
-        const DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
-
-    InitializationSettings initializationSettings = InitializationSettings(
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
 
-    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+
+    await _localNotifications.initialize(
+      initializationSettings,
+    );
   }
 
-  static void requestPermission() {
-    _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+  Future<NotificationDetails> _notificationDetails() async {
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+        const AndroidNotificationDetails(
+      'channel id',
+      'channel name',
+      groupKey: 'com.example.flutter_push_notifications',
+      channelDescription: 'channel description',
+      importance: Importance.max,
+      priority: Priority.max,
+      playSound: true,
+      ticker: 'ticker',
+      color: Color(0xff2196f3),
+    );
+
+    DarwinNotificationDetails iosNotificationDetails =
+        const DarwinNotificationDetails(
+      threadIdentifier: "thread1",
+    );
+
+    final details = await _localNotifications.getNotificationAppLaunchDetails();
+    if (details != null && details.didNotificationLaunchApp) {
+      behaviorSubject.add(details.notificationResponse?.payload);
+    }
+
+    NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics, iOS: iosNotificationDetails);
+
+    return platformChannelSpecifics;
   }
 
-  // static Future<void> sampleNotification() async {
-  //   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  //       AndroidNotificationDetails("channel id", "channel name",
-  //           channelDescription: "channel description",
-  //           importance: Importance.max,
-  //           priority: Priority.max,
-  //           showWhen: false);
-  //
-  //   const NotificationDetails platformChannelSpecifics = NotificationDetails(
-  //     android: androidPlatformChannelSpecifics,
-  //     iOS: DarwinNotificationDetails(
-  //       badgeNumber: 1,
-  //     ),
-  //   );
-  //
-  //   await _flutterLocalNotificationsPlugin.show(
-  //       0, "plain title", "plain body", platformChannelSpecifics,
-  //       payload: "item x");
-  // }
+  Future<void> showScheduledLocalNotification({
+    required int id,
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    final platformChannelSpecifics = await _notificationDetails();
+    await _localNotifications.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime(tz.local, 2023, 2, 8, 18, 22, 40),
+      platformChannelSpecifics,
+      payload: payload,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
+    );
+  }
+
+  Future<void> showLocalNotification({
+    required int id,
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    final platformChannelSpecifics = await _notificationDetails();
+    await _localNotifications.show(
+      id,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: payload,
+    );
+  }
+
+  Future<void> showPeriodicLocalNotification({
+    required int id,
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    final platformChannelSpecifics = await _notificationDetails();
+    await _localNotifications.periodicallyShow(
+      id,
+      title,
+      body,
+      RepeatInterval.everyMinute,
+      platformChannelSpecifics,
+      payload: payload,
+      androidAllowWhileIdle: true,
+    );
+  }
+
+  void onDidReceiveLocalNotification(
+    int id,
+    String? title,
+    String? body,
+    String? payload,
+  ) {
+    print('id $id');
+  }
+
+  void selectNotification(String? payload) {
+    if (payload != null && payload.isNotEmpty) {
+      behaviorSubject.add(payload);
+    }
+  }
+
+  void cancelAllNotifications() => _localNotifications.cancelAll();
 }

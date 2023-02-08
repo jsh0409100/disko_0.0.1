@@ -1,5 +1,6 @@
-import 'package:disko_001/common/utils/local_notification.dart';
 import 'package:flutter/material.dart';
+
+import 'notification_example_screen.dart';
 
 class MakeAppointmentScreen extends StatefulWidget {
   const MakeAppointmentScreen({super.key, this.restorationId});
@@ -12,15 +13,14 @@ class MakeAppointmentScreen extends StatefulWidget {
 
 class _MakeAppointmentScreenState extends State<MakeAppointmentScreen>
     with RestorationMixin {
-  @override
-  void initState() {
-    super.initState();
-    initializeNotification(context: context);
-  }
-
-  Future<bool> initializeNotification({required BuildContext context}) async {
-    LocalNotification.initialize();
-    return true;
+  void moveToNotificationScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NotificationExamplePage(),
+        fullscreenDialog: true,
+      ),
+    );
   }
 
   // In this example, the restoration ID for the mixin is passed in through
@@ -205,6 +205,13 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen>
             width: MediaQuery.of(context).size.width,
             child: const Divider(color: Color(0xFFECECEC), thickness: 1),
           ),
+          GestureDetector(
+            onTap: moveToNotificationScreen,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Text("완료"),
+            ),
+          )
         ],
       ),
     );

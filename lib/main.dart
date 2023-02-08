@@ -39,10 +39,15 @@ class MyApp extends ConsumerWidget {
       ],
       locale: const Locale('ko'),
       theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: lightColorScheme,
-          cardColor: Colors.white,
-          fontFamily: 'Pretendard'),
+        useMaterial3: true,
+        colorScheme: lightColorScheme,
+        primaryColor: Color(0xFF5E38EB),
+        cardColor: Colors.white,
+        fontFamily: 'Pretendard',
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+        ),
+      ),
       // darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       onGenerateRoute: (settings) => generateRoute(settings),
       home: ref.watch(userDataAuthProvider).when(

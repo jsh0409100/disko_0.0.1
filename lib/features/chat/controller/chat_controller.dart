@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../common/enums/message_enum.dart';
 import '../../../models/chat_message_model.dart';
@@ -48,6 +50,16 @@ class ChatController {
         );
   }
 
+  // void toggleUserOnline(
+  //   BuildContext context,
+  //   String receiverUid,
+  // ) {
+  //   ref.read(chatRepositoryProvider).toggleUserOnline(
+  //         context: context,
+  //         receiverUid: receiverUid,
+  //       );
+  // }
+
   void sendFileMessage(
     BuildContext context,
     File file,
@@ -62,6 +74,25 @@ class ChatController {
             senderUser: value!,
             messageEnum: messageEnum,
             ref: ref,
+          ),
+        );
+  }
+
+  void sendLocationMessage(
+    BuildContext context,
+    Uint8List file,
+    String receiverUid,
+    MessageEnum messageEnum,
+    LatLng coordinates,
+  ) {
+    ref.read(userDataAuthProvider).whenData(
+          (value) => chatRepository.sendLocationMessage(
+            context: context,
+            imageBytes: file,
+            receiverUid: receiverUid,
+            senderUser: value!,
+            ref: ref,
+            coordinates: coordinates,
           ),
         );
   }
@@ -88,12 +119,10 @@ class ChatController {
   void setChatMessageSeen(
     BuildContext context,
     String receiverUid,
-    String messageId,
   ) {
     chatRepository.setChatMessageSeen(
       context,
       receiverUid,
-      messageId,
     );
   }
 }

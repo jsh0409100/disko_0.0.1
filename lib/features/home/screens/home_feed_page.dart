@@ -12,6 +12,7 @@ class HomeFeedPage extends ConsumerWidget {
   HomeFeedPage({Key? key}) : super(key: key);
 
   final ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     scrollController.addListener(() {

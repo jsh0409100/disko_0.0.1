@@ -29,7 +29,7 @@ class MyChatBubble extends StatelessWidget {
         Text(showTime),
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.6,
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -37,8 +37,9 @@ class MyChatBubble extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(15)),
             ),
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
             child: DisplayTextImageGIF(
+              isSender: true,
               message: text,
               type: type,
             ),
@@ -70,16 +71,22 @@ class PeerChatBubble extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFFECECEC),
-            borderRadius: BorderRadius.all(Radius.circular(15)),
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
           ),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: DisplayTextImageGIF(
-            message: text,
-            type: type,
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFFECECEC),
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            child: DisplayTextImageGIF(
+              isSender: false,
+              message: text,
+              type: type,
+            ),
           ),
         ),
         Text('$showTime'),

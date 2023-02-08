@@ -6,6 +6,7 @@ class ChatMessageModel {
   final String senderId, text, receiverUid, messageId;
   final Timestamp timeSent;
   final MessageEnum type;
+  final double? long, lat;
 
   ChatMessageModel({
     required this.timeSent,
@@ -14,6 +15,8 @@ class ChatMessageModel {
     required this.receiverUid,
     required this.type,
     required this.messageId,
+    required this.long,
+    required this.lat,
   });
 
   ChatMessageModel.fromJson(Map<String, dynamic> json)
@@ -22,7 +25,9 @@ class ChatMessageModel {
         timeSent = json['timeSent'],
         type = (json['type'] as String).toEnum(),
         receiverUid = json['receiverUid'],
-        messageId = json['messageId'];
+        messageId = json['messageId'],
+        long = json['long'],
+        lat = json['lat'];
 
   Map<String, dynamic> toJson() => {
         'senderId': senderId,
@@ -30,6 +35,8 @@ class ChatMessageModel {
         'timeSent': timeSent,
         'messageId': messageId,
         'type': type.type,
-        'receiverUid': receiverUid
+        'receiverUid': receiverUid,
+        'long': long,
+        'lat': lat,
       };
 }

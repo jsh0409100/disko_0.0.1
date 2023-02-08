@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/common/repositories/common_firebase_storage_repository.dart';
+import 'package:disko_001/models/post_card_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -136,4 +137,5 @@ class AuthRepository {
       'isOnline': isOnline,
     });
   }
+
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:animate_icons/animate_icons.dart';
 import 'package:disko_001/features/chat/screens/send_location_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,13 +36,15 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   bool isRecording = false;
   FocusNode focusNode = FocusNode();
   final user = FirebaseAuth.instance.currentUser;
+  late AnimateIconController animatedController;
 
   var _userEnterMessage = '';
 
   @override
   void initState() {
-    super.initState();
+    animatedController = AnimateIconController();
     focusNode.addListener(onFocusChange);
+    super.initState();
   }
 
   void onFocusChange() {
@@ -119,7 +122,9 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SendLocationMapScreen(),
+        builder: (context) => SendLocationMapScreen(
+          receiverUid: widget.receiverUid,
+        ),
       ),
     );
   }

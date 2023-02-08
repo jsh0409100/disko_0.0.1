@@ -1,42 +1,79 @@
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'dart:async';
+import 'dart:typed_data';
 
-class SendLocationMapScreen extends StatefulWidget {
-  const SendLocationMapScreen({super.key});
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../../common/enums/message_enum.dart';
+import '../controller/chat_controller.dart';
+
+class SendLocationMapScreen extends ConsumerStatefulWidget {
+  final String receiverUid;
+  const SendLocationMapScreen({
+    Key? key,
+    required this.receiverUid,
+  }) : super(key: key);
 
   @override
-  State<SendLocationMapScreen> createState() => _SendLocationMapScreenState();
+  ConsumerState<SendLocationMapScreen> createState() =>
+      _SendLocationMapScreenState();
 }
 
-class _SendLocationMapScreenState extends State<SendLocationMapScreen> {
-  late GoogleMapController mapController;
+class _SendLocationMapScreenState extends ConsumerState<SendLocationMapScreen> {
+  // late GoogleMapController mapController;
+  Completer<GoogleMapController> mapController = Completer();
 
   final LatLng _center = const LatLng(36.103422, 129.389222);
+  final List<Marker> _markers = <Marker>[];
+  bool isLocationSelected = false;
 
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+      print("ERROR" + error.toString());
+    });
+    return await Geolocator.getCurrentPosition();
   }
 
-  void _currentLocation() async {
-    // Create a map controller
-    LocationData? currentLocation;
-    var location = Location();
-    try {
-      // Find and store your location in a variable
-      currentLocation = await location.getLocation();
-    } on Exception {
-      currentLocation = null;
-    }
+  void sendLocationMessage(
+    Uint8List imageBytes,
+    LatLng coordinates,
+  ) {
+    ref.read(chatControllerProvider).sendLocationMessage(context, imageBytes,
+        widget.receiverUid, MessageEnum.location, coordinates);
+  }
 
-    // Move the map camera to the found location using the controller
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        bearing: 0,
-        target: LatLng(currentLocation!.latitude!, currentLocation.longitude!),
-        zoom: 17.0,
-      ),
-    ));
+  void updateMarker(LatLng position) async {
+    if (_markers.isNotEmpty) {
+      _markers.clear();
+    }
+    setState(() {
+      _markers.add(Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+        markerId: const MarkerId("1"),
+        position: position,
+        infoWindow: const InfoWindow(
+          title: '현재 위치',
+          snippet: '주소: ',
+        ),
+      ));
+    });
+    print(_markers.first.position);
+    CameraPosition cameraPosition = CameraPosition(
+      target: position,
+      zoom: 20,
+    );
+
+    final GoogleMapController controller = await mapController.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    setState(() {
+      isLocationSelected = true;
+    });
   }
 
   @override
@@ -52,13 +89,75 @@ class _SendLocationMapScreenState extends State<SendLocationMapScreen> {
           ),
           backgroundColor: Colors.white,
         ),
-        body: GoogleMap(
-          myLocationButtonEnabled: true,
-          myLocationEnabled: true,
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: _center,
-            zoom: 17.0,
+        body: Column(
+          children: [
+            Expanded(
+              child: GoogleMap(
+                myLocationButtonEnabled: true,
+                myLocationEnabled: true,
+                markers: Set<Marker>.of(_markers),
+                onMapCreated: (GoogleMapController controller) {
+                  mapController.complete(controller);
+                },
+                zoomControlsEnabled: false,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 17.0,
+                ),
+                onTap: updateMarker,
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 14),
+              backgroundColor: isLocationSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Color(0xFFECECEC), // Background color
+            ),
+            onPressed: () async {
+              final GoogleMapController controller = await mapController.future;
+              final imageBytes = await controller.takeSnapshot();
+              sendLocationMessage(imageBytes!, _markers.first.position);
+              Navigator.pop(context);
+            },
+            child: Text(
+              '이 위치 공유하기',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: isLocationSelected ? Colors.white : Colors.black12,
+              ),
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+          onPressed: () async {
+            getUserCurrentLocation().then((value) async {
+              updateMarker(LatLng(value.latitude, value.longitude));
+              // specified current users location
+              CameraPosition cameraPosition = CameraPosition(
+                target: LatLng(value.latitude, value.longitude),
+                zoom: 20,
+              );
+
+              final GoogleMapController controller = await mapController.future;
+              controller.animateCamera(
+                  CameraUpdate.newCameraPosition(cameraPosition));
+              setState(() {
+                isLocationSelected = true;
+              });
+            });
+          },
+          child: const Icon(
+            Icons.share_location_outlined,
+            color: Colors.black,
+            size: 40,
           ),
         ),
       ),

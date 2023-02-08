@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:disko_001/models/post_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -62,4 +63,5 @@ class AuthController {
   void setUserState(bool isOnline) {
     authRepository.setUserState(isOnline);
   }
+
 }

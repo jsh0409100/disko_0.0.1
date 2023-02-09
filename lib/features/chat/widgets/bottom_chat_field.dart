@@ -11,6 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../common/enums/message_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../call/controller/call_controller.dart';
+import '../../call/screens/call_practice.dart';
 import '../controller/chat_controller.dart';
 import '../screens/make_appointment_screen.dart';
 import 'message_category_card.dart';
@@ -135,6 +136,24 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
       context,
       MaterialPageRoute(
         builder: (context) => const MakeAppointmentScreen(),
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
+  void practiceCall() {
+    print("pressed");
+    print("pressed");
+    print("pressed");
+    print("pressed");
+    print("pressed");
+    print("pressed");
+    print("pressed");
+    print("pressed");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CallPracticeScreen(),
         fullscreenDialog: true,
       ),
     );
@@ -282,7 +301,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       GestureDetector(
-                        onTap: () => makeCall(ref, context),
+                        onTap: practiceCall,
                         child: const MessageCategoryCard(
                             categoryIcon: Icons.video_call_outlined,
                             categoryName: '영상통화'),

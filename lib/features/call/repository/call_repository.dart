@@ -56,12 +56,12 @@ class CallRepository {
 
   void endCall(
     String callerId,
-    String receiverId,
+    String receiverUid,
     BuildContext context,
   ) async {
     try {
+      await firestore.collection('call').doc(receiverUid).delete();
       await firestore.collection('call').doc(callerId).delete();
-      await firestore.collection('call').doc(receiverId).delete();
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }

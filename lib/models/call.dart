@@ -25,7 +25,7 @@ class Call {
       'callerId': callerId,
       'callerName': callerName,
       'callerPic': callerPic,
-      'receiverId': receiverUid,
+      'receiverUid': receiverUid,
       'receiverName': receiverName,
       'receiverPic': receiverPic,
       'callId': callId,

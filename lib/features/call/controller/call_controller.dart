@@ -66,10 +66,10 @@ class CallController {
 
   void endCall(
     String callerId,
-    String receiverId,
+    String receiverUid,
     BuildContext context,
   ) {
-    callRepository.endCall(callerId, receiverId, context);
+    callRepository.endCall(callerId, receiverUid, context);
   }
 }
 //

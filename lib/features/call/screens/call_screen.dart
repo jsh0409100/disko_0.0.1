@@ -83,20 +83,22 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   void initState() {
     super.initState();
     // Set up an instance of Agora engine
-    setupVideoSDKEngine();
+    initializeAgora();
+  }
+
+  Future<void> initializeAgora() async {
+    await setupVideoSDKEngine();
     widget.call.hasDialed
         ? fetchToken(uid, channelName, tokenRole)
-        : joinCall(widget.call.token);
+        : setToken(widget.call.token);
   }
 
   void joinCall(String token) async {
     await agoraEngine.startPreview();
 
     // Set channel options including the client role and channel profile
-    ChannelMediaOptions options = ChannelMediaOptions(
-      clientRoleType: widget.call.hasDialed
-          ? ClientRoleType.clientRoleBroadcaster
-          : ClientRoleType.clientRoleAudience,
+    ChannelMediaOptions options = const ChannelMediaOptions(
+      clientRoleType: ClientRoleType.clientRoleBroadcaster,
       channelProfile: ChannelProfileType.channelProfileCommunication,
     );
 
@@ -113,7 +115,13 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       _isJoined = false;
       _remoteUid = null;
     });
+    ref.read(callControllerProvider).endCall(
+          widget.call.callerId,
+          widget.call.receiverUid,
+          context,
+        );
     agoraEngine.leaveChannel();
+    Navigator.pop(context);
   }
 
   // Release the resources when you leave
@@ -135,71 +143,6 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       // If the server returns an OK response, then parse the JSON.
       Map<String, dynamic> json = jsonDecode(response.body);
       String newToken = json['rtcToken'];
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
-      print(newToken);
-      print('\n');
-      print('\n');
-      print('\n');
-      print('\n');
 
       // Use the token to join a channel or renew an expiring token
       setToken(newToken);
@@ -255,12 +198,12 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                 onPressed: _isJoined
                     ? () async {
                         leaveCall();
-                        ref.read(callControllerProvider).endCall(
-                              widget.call.callerId,
-                              widget.call.receiverUid,
-                              context,
-                            );
-                        Navigator.pop(context);
+                        // ref.read(callControllerProvider).endCall(
+                        //       widget.call.callerId,
+                        //       widget.call.receiverUid,
+                        //       context,
+                        //     );
+                        // Navigator.pop(context);
                       }
                     : null,
                 icon: const Icon(Icons.call_end),

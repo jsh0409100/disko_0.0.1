@@ -13,6 +13,15 @@ class CallPickupScreen extends ConsumerWidget {
     required this.scaffold,
   }) : super(key: key);
 
+  void endCall(
+    WidgetRef ref,
+    callerId,
+    receiverUid,
+    context,
+  ) {
+    ref.read(callControllerProvider).endCall(callerId, receiverUid, context);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return StreamBuilder<DocumentSnapshot>(
@@ -57,7 +66,8 @@ class CallPickupScreen extends ConsumerWidget {
                       children: [
                         IconButton(
                           onPressed: () {
-                            ref.read(callControllerProvider).endCall;
+                            endCall(
+                                ref, call.callerId, call.receiverUid, context);
                             Navigator.pop(context);
                           },
                           icon: const Icon(Icons.call_end,

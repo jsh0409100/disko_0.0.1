@@ -301,7 +301,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       GestureDetector(
-                        onTap: practiceCall,
+                        onTap: () => makeCall(ref, context),
                         child: const MessageCategoryCard(
                             categoryIcon: Icons.video_call_outlined,
                             categoryName: '영상통화'),

@@ -40,6 +40,7 @@ class CallController {
         receiverUid: receiverUid,
         receiverName: receiverName,
         receiverPic: receiverProfilePic,
+        token: '',
         callId: callId,
         hasDialed: true,
       );
@@ -51,11 +52,16 @@ class CallController {
         receiverUid: receiverUid,
         receiverName: receiverName,
         receiverPic: receiverProfilePic,
+        token: '',
         callId: callId,
         hasDialed: false,
       );
       callRepository.makeCall(senderCallData, context, receiverCallData);
     });
+  }
+
+  void setToken(String token, Call call) {
+    ref.read(callRepositoryProvider).setToken(token, call);
   }
 
   void endCall(

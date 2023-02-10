@@ -5,6 +5,7 @@ class Call {
   final String receiverUid;
   final String receiverName;
   final String receiverPic;
+  final String token;
   final String callId;
   final bool hasDialed;
   Call({
@@ -16,6 +17,7 @@ class Call {
     required this.receiverPic,
     required this.callId,
     required this.hasDialed,
+    required this.token,
   });
 
   Map<String, dynamic> toJson() {
@@ -28,6 +30,7 @@ class Call {
       'receiverPic': receiverPic,
       'callId': callId,
       'hasDialed': hasDialed,
+      'token': token,
     };
   }
 
@@ -40,6 +43,7 @@ class Call {
       receiverName: map['receiverName'] ?? '',
       receiverPic: map['receiverPic'] ?? '',
       callId: map['callId'] ?? '',
+      token: map['token'] ?? '',
       hasDialed: map['hasDialed'] ?? false,
     );
   }

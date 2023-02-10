@@ -70,6 +70,7 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   device_info_plus: ^8.0.0
   flutter_timezone: ^1.0.4
+  http: ^0.13.5
 
 
 dev_dependencies:

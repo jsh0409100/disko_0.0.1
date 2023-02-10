@@ -1,12 +1,9 @@
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/utils/utils.dart';
-import '../../../config/agora_config.dart';
 import '../../../models/call.dart';
 import '../screens/call_screen.dart';
 
@@ -68,5 +65,16 @@ class CallRepository {
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
+  }
+
+  void setToken(String token, Call call) async {
+    await firestore
+        .collection('call')
+        .doc(call.callerId)
+        .update({'token': token});
+    await firestore
+        .collection('call')
+        .doc(call.receiverUid)
+        .update({'token': token});
   }
 }

@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../config/agora_config.dart';
@@ -23,9 +25,13 @@ class CallScreen extends ConsumerStatefulWidget {
 }
 
 class _CallScreenState extends ConsumerState<CallScreen> {
-  String channelName = "test-disko";
   String token = AgoraConfig.token;
-
+  int tokenRole = 1; // use 1 for Host/Broadcaster, 2 for Subscriber/Audience
+  String serverUrl =
+      "https://agora-token-service-production-b53a.up.railway.app";
+  int tokenExpireTime = 45; // Expire time in Seconds.
+  bool isTokenExpiring = false; // Set to true when the token is about to expire
+  String channelName = "test-call";
   int uid = 0; // uid of the local user
 
   int? _remoteUid; // uid of the remote user
@@ -71,7 +77,6 @@ class _CallScreenState extends ConsumerState<CallScreen> {
         },
       ),
     );
-    joinCall();
   }
 
   @override
@@ -79,11 +84,11 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     super.initState();
     // Set up an instance of Agora engine
     setupVideoSDKEngine();
+    widget.call.hasDialed ? fetchToken(uid, channelName, tokenRole): joinCall(widget.call.token);
   }
 
-  void joinCall() async {
+  void joinCall(String token) async {
     await agoraEngine.startPreview();
-    print('\n\n\n\n\n\n\n\n\n\n\n\n\nhasdialed: ${widget.call.hasDialed}\n\n\n\n\n\n\n\n\n\n\n\n\n');
 
     // Set channel options including the client role and channel profile
     ChannelMediaOptions options = ChannelMediaOptions(
@@ -115,6 +120,41 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     await agoraEngine.leaveChannel();
     agoraEngine.release();
     super.dispose();
+  }
+
+  Future<void> fetchToken(int uid, String channelName, int tokenRole) async {
+    // Prepare the Url
+    String url =
+        '${serverUrl}rtc/$channelName/${tokenRole.toString()}/uid/${uid.toString()}/?expiry=${tokenExpireTime.toString()}';
+    // Send the request
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      // If the server returns an OK response, then parse the JSON.
+      Map<String, dynamic> json = jsonDecode(response.body);
+      String newToken = json['rtcToken'];
+      // Use the token to join a channel or renew an expiring token
+      setToken(newToken);
+    } else {
+      // If the server did not return an OK response,
+      // then throw an exception.
+      throw Exception(
+          'Failed to fetch a token. Make sure that your server URL is valid');
+    }
+  }
+
+  void setToken(String newToken) async {
+    if (isTokenExpiring) {
+      // Renew the token
+      agoraEngine.renewToken(newToken);
+      isTokenExpiring = false;
+      showMessage("Token renewed");
+    } else {
+      // Join a channel.
+      showMessage("Token received, joining a channel...");
+      joinCall(newToken);
+    }
+    ref.read(callControllerProvider).setToken(token, widget.call);
   }
 
   showMessage(String message) {

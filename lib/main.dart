@@ -1,6 +1,3 @@
-import 'package:disko_001/app_layout_screen.dart';
-import 'package:disko_001/common/widgets/loading_screen.dart';
-import 'package:disko_001/features/starting/start_page.dart';
 import 'package:disko_001/router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +5,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
+import 'app_layout_screen.dart';
 import 'color_schemes.g.dart';
 import 'common/widgets/error_screen.dart';
+import 'common/widgets/loading_screen.dart';
 import 'features/auth/controller/auth_controller.dart';
+import 'features/starting/start_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

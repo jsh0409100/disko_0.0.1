@@ -1,4 +1,5 @@
 import 'package:disko_001/app_layout_screen.dart';
+import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
 import 'package:flutter/material.dart';
 
 import 'common/widgets/error_screen.dart';
@@ -8,6 +9,10 @@ import 'features/chat/screens/chat_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
+    case LandingPage.routeName:
+      return MaterialPageRoute(
+        builder: (context) => LandingPage(),
+      );
     case SignUpScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const SignUpScreen(),

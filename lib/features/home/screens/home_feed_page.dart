@@ -7,6 +7,7 @@ import '../../../common/widgets/post.dart';
 import '../../../models/post_card_model.dart';
 import '../../../src/providers.dart';
 import '../../write_post/screens/write_post_page.dart';
+import '../../../common/widgets/common_app_bar.dart';
 
 class HomeFeedPage extends ConsumerWidget {
   HomeFeedPage({Key? key}) : super(key: key);
@@ -24,6 +25,10 @@ class HomeFeedPage extends ConsumerWidget {
       }
     });
     return Scaffold(
+      appBar: CommonAppBar(
+        title: '호주',
+        appBar: AppBar(),
+      ),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 11.0),

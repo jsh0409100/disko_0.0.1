@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/common/repositories/common_firebase_storage_repository.dart';
-import 'package:disko_001/models/post_card_model.dart';
+import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -73,11 +73,12 @@ class AuthRepository {
       );
       await auth.signInWithCredential(credential);
       saveUserDataToFirebase(
-          name: 'guest',
-          profilePic: null,
-          context: context,
-          countryCode: countryCode,
-          ref: ref,
+        name: 'guest',
+        profilePic: null,
+        context: context,
+        countryCode: countryCode,
+        ref: ref,
+        isUserCreated: true,
       );
     } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: e.message!);
@@ -90,20 +91,18 @@ class AuthRepository {
     required String countryCode,
     required ProviderRef ref,
     required BuildContext context,
+    required bool isUserCreated,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
       String photoUrl =
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
 
-      if(profilePic!=null){
+      if (profilePic != null) {
         photoUrl = await ref
-            .read(commonFirebaseStorageRepositoryProvider).
-        storeFileToFirebase(
-            'profilePic/$uid',profilePic
-        );
+            .read(commonFirebaseStorageRepositoryProvider)
+            .storeFileToFirebase('profilePic/$uid', profilePic);
       }
-
 
       var user = UserModel(
         phoneNum: auth.currentUser!.phoneNumber!,
@@ -114,11 +113,18 @@ class AuthRepository {
 
       await firestore.collection('users').doc(uid).set(user.toJson());
 
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppLayoutScreen.routeName,
-        (route) => false,
-      );
+      if (isUserCreated) {
+        Navigator.pushNamed(
+          context,
+          LandingPage.routeName,
+        );
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppLayoutScreen.routeName,
+          (route) => false,
+        );
+      }
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
@@ -137,5 +143,4 @@ class AuthRepository {
       'isOnline': isOnline,
     });
   }
-
 }

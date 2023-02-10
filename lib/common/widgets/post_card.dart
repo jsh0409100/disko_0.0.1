@@ -129,20 +129,35 @@ class _PostCardState extends State<PostCard> {
                       PopupMenuButton<String>(
                         onSelected: handleClick,
                         itemBuilder: (BuildContext context) {
-                          return {'메세지 보내기', '신고하기'}.map((String choice) {
-                            return PopupMenuItem<String>(
-                              value: choice,
-                              child: choice == '신고하기'
-                                  ? Text(
-                                      choice,
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .error),
-                                    )
-                                  : Text(choice),
-                            );
-                          }).toList();
+                          return (widget.uid != user!.uid)
+                              ? {'메세지 보내기', '신고하기'}.map((String choice) {
+                                  return PopupMenuItem<String>(
+                                    value: choice,
+                                    child: choice == '신고하기'
+                                        ? Text(
+                                            choice,
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .error),
+                                          )
+                                        : Text(choice),
+                                  );
+                                }).toList()
+                              : {'글 수정', '글 삭제'}.map((String choice) {
+                                  return PopupMenuItem<String>(
+                                    value: choice,
+                                    child: choice == '글 삭제'
+                                        ? Text(
+                                            choice,
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .error),
+                                          )
+                                        : Text(choice),
+                                  );
+                                }).toList();
                         },
                       ),
                     ]),

@@ -84,20 +84,6 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     super.initState();
     // Set up an instance of Agora engine
     setupVideoSDKEngine();
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
-    print(widget.call.hasDialed);
     widget.call.hasDialed
         ? fetchToken(uid, channelName, tokenRole)
         : joinCall(widget.call.token);
@@ -149,6 +135,72 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       // If the server returns an OK response, then parse the JSON.
       Map<String, dynamic> json = jsonDecode(response.body);
       String newToken = json['rtcToken'];
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+      print(newToken);
+      print('\n');
+      print('\n');
+      print('\n');
+      print('\n');
+
       // Use the token to join a channel or renew an expiring token
       setToken(newToken);
     } else {
@@ -170,7 +222,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       showMessage("Token received, joining a channel...");
       joinCall(newToken);
     }
-    ref.read(callControllerProvider).setToken(token, widget.call);
+    ref.read(callControllerProvider).setToken(newToken, widget.call);
   }
 
   showMessage(String message) {

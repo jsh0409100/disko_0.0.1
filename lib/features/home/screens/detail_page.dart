@@ -189,13 +189,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                             color: Colors.black,
                           ),
                         ),
-                        Text('getdocscout(docs_count)'),
-                        TextButton(
-                          onPressed: () {
-                            print('getdocscout(docs_count)');
-                          },
-                          child: Text('test'),
-                        ),
+                        Text(_PostCard.comment_count.toString()),
                         const SizedBox(width: 8),
                       ],
                     ),
@@ -207,6 +201,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                     BottomCommentField(
                       profilePic: snapshot.data.profilePic,
                       postId: _PostCard.postId,
+                      comment_count: _PostCard.comment_count,
                     ),
                   ],
                 ),

@@ -7,13 +7,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controller/comment_controller.dart';
 
 class BottomCommentField extends ConsumerStatefulWidget {
-  const BottomCommentField({
+  BottomCommentField({
     Key? key,
     required this.profilePic,
     required this.postId,
+    required this.comment_count,
   }) : super(key: key);
   final String profilePic;
   final String postId;
+  int comment_count;
 
   @override
   ConsumerState<BottomCommentField> createState() => _BottomCommentFieldState();
@@ -27,16 +29,15 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
 
   void uploadComment() async {
     ref.read(commentControllerProvider).uploadComment(
-      context,
-      _userEnterMessage,
-      widget.postId,
-    );
+          context,
+          _userEnterMessage,
+          widget.postId,
+        );
     setState(() {
       controller.clear();
       _userEnterMessage = '';
     });
   }
-
 
   @override
   void dispose() {
@@ -57,14 +58,13 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
         ),
         Expanded(
           child: TextField(
-            style:
-            const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             controller: controller,
             maxLines: null,
             decoration: const InputDecoration(
               isDense: true,
               contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
               ),
@@ -78,10 +78,14 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
           ),
         ),
         IconButton(
-          onPressed: (_userEnterMessage.trim().isEmpty ||
-              _userEnterMessage.trim() == '')
-              ? null
-              : uploadComment,
+          onPressed: () {
+            setState(() {
+              widget.comment_count = widget.comment_count + 1;
+            });
+            (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
+                ? null
+                : uploadComment;
+          },
           icon: Icon(
             Icons.send,
             color: _userEnterMessage.trim().isEmpty

@@ -27,6 +27,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   final List<String> _arrImageUrls = [];
   final FirebaseStorage _storageRef = FirebaseStorage.instance;
   late String postId;
+  int comment_count = 0;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController postTitleController = TextEditingController();
@@ -59,6 +60,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
           postTitleController.text,
           _arrImageUrls,
           postId,
+          comment_count,
         );
   }
 

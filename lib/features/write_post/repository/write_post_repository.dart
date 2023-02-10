@@ -31,6 +31,7 @@ class WritePostRepository {
     required String postTitle,
     required List<String> imagesUrl,
     required List<String> likes,
+    required int comment_count,
   }) async {
     final message = PostCardModel(
         uid: auth.currentUser!.uid,
@@ -42,6 +43,7 @@ class WritePostRepository {
         likes: likes,
         imagesUrl: imagesUrl,
         postId: postId,
+        comment_count: comment_count,
     );
 
     await firestore.collection('posts').doc(postId).set(
@@ -57,6 +59,7 @@ class WritePostRepository {
     required String postTitle,
     required List<String> imagesUrl,
     required String postId,
+    required int comment_count,
   }) async {
     try {
       var time = Timestamp.now();
@@ -70,6 +73,7 @@ class WritePostRepository {
         text: text,
         time: time,
         username: userData.displayName,
+        comment_count: comment_count,
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());

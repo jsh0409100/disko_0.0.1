@@ -33,6 +33,7 @@ class WritePostController{
     String postTitle,
     List<String> imagesUrl,
     String postId,
+    int comment_count
   ) {
     ref.read(userDataAuthProvider).whenData(
           (value) => writePostRepository.uploadPost(
@@ -43,6 +44,7 @@ class WritePostController{
             postCategory: postCategory,
             postTitle: postTitle,
             imagesUrl: imagesUrl,
+            comment_count: comment_count,
           ),
         );
   }

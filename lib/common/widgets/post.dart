@@ -10,6 +10,7 @@ import '../utils/utils.dart';
 class Post extends StatefulWidget {
   final String userName, postCategory, postTitle, postText, uid, profilePic, postId;
   final List<String> likes, imagesUrl;
+  final int comment_count;
 
   const Post({
     Key? key,
@@ -23,7 +24,9 @@ class Post extends StatefulWidget {
     required this.imagesUrl,
     required this.profilePic,
     required this.postId,
+    required this.comment_count,
   }) : super(key: key);
+
 
   @override
   State<Post> createState() => _PostState();
@@ -66,6 +69,7 @@ class _PostState extends State<Post> {
                       imagesUrl: widget.imagesUrl,
                       profilePic: widget.profilePic,
                       postId: widget.postId,
+                      comment_count: widget.comment_count,
                     ),
                   );
                 },
@@ -79,6 +83,7 @@ class _PostState extends State<Post> {
                   imagesUrl: widget.imagesUrl,
                   profilePic: widget.profilePic,
                   postId: widget.postId,
+                  comment_count: widget.comment_count,
                 ),
               ));
         });

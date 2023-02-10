@@ -158,6 +158,7 @@ class PostsListBuilder extends StatelessWidget {
                     likes: posts[index].likes,
                     imagesUrl: posts[index].imagesUrl,
                     profilePic: snapshot.data.profilePic,
+                    comment_count: posts[index].comment_count,
                   );
                 }
               });

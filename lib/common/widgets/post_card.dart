@@ -16,6 +16,8 @@ class PostCard extends StatefulWidget {
       profilePic,
       postId;
   final List<String> likes, imagesUrl;
+  final int comment_count;
+
   const PostCard({
     Key? key,
     required this.uid,
@@ -27,6 +29,7 @@ class PostCard extends StatefulWidget {
     required this.imagesUrl,
     required this.profilePic,
     required this.postId,
+    required this.comment_count,
   }) : super(key: key);
 
   @override
@@ -207,8 +210,7 @@ class _PostCardState extends State<PostCard> {
                       onPressed: () async {
                         FirebaseFirestore.instance
                             .collection('posts')
-                            .doc(
-                                'sTnT0stHrJV55                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           95ebfDm')
+                            .doc(widget.postId)
                             .get();
                         if (widget.likes.contains(user!.uid)) {
                           widget.likes.remove(user!.uid);
@@ -222,7 +224,7 @@ class _PostCardState extends State<PostCard> {
                           });
                         }
                         await postsCollection
-                            .doc('sTnT0stHrJV5595ebfDm')
+                            .doc(widget.postId)
                             .update({
                           'likes': widget.likes,
                         });
@@ -239,15 +241,7 @@ class _PostCardState extends State<PostCard> {
                         color: Colors.black,
                       ),
                     ),
-                    const Text('20'),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.bookmark_border,
-                        color: Colors.black,
-                      ),
-                    ),
+                    Text(widget.comment_count.toString()),
                     const SizedBox(width: 8),
                   ],
                 ),

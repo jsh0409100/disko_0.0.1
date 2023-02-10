@@ -84,7 +84,23 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     super.initState();
     // Set up an instance of Agora engine
     setupVideoSDKEngine();
-    widget.call.hasDialed ? fetchToken(uid, channelName, tokenRole): joinCall(widget.call.token);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    print(widget.call.hasDialed);
+    widget.call.hasDialed
+        ? fetchToken(uid, channelName, tokenRole)
+        : joinCall(widget.call.token);
   }
 
   void joinCall(String token) async {
@@ -125,7 +141,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   Future<void> fetchToken(int uid, String channelName, int tokenRole) async {
     // Prepare the Url
     String url =
-        '${serverUrl}rtc/$channelName/${tokenRole.toString()}/uid/${uid.toString()}/?expiry=${tokenExpireTime.toString()}';
+        '${serverUrl}/rtc/$channelName/${tokenRole.toString()}/uid/${uid.toString()}/?expiry=${tokenExpireTime.toString()}';
     // Send the request
     final response = await http.get(Uri.parse(url));
 

@@ -18,6 +18,12 @@ Future<UserModel> getUserDataByUid(String Uid) async {
   return UserModel.fromJson(userDataMap.data()!);
 }
 
+Stream<UserModel> getUserDataByUidStream(String Uid) async* {
+  var userDataMap =
+      await FirebaseFirestore.instance.collection('users').doc(Uid).get();
+  yield UserModel.fromJson(userDataMap.data()!);
+}
+
 String getChatName(String receiverUid, String myUid) {
   return (receiverUid.compareTo(myUid) > 0)
       ? '$receiverUid-${myUid}'

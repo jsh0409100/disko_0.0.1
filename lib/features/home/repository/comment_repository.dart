@@ -68,11 +68,53 @@ class CommentRepository {
     );
   }
 
+  void _saveCommentCount({
+    required String text,
+    required Timestamp time,
+    required String postId,
+    required String username,
+    required String postCategory,
+    required String postTitle,
+    required List<String> imagesUrl,
+    required List<String> likes,
+  }) async {
+    final comment = PostCardModel(
+      time: time,
+      userName: username,
+      postCategory: postCategory,
+      postTitle: postTitle,
+      postText: text,
+      uid: auth.currentUser!.uid,
+      likes: [],
+      imagesUrl: [],
+      postId: '',
+      comment_count: 0,
+    );
+
+    final currentComment = firestore.collection('posts').doc(postId);
+    final doc = await currentComment.get();
+
+    if (doc.exists) {
+      final data = doc.get('postId');
+      (data == postId)
+          ? currentComment.update({
+        'comment_count': FieldValue.increment(1),
+      })
+          : currentComment.set(comment.toJson());
+    } else {
+      currentComment.set(comment.toJson());
+    }
+  }
+
   void uploadComment({
     required BuildContext context,
     required String text,
     required UserModel senderUser,
     required String postId,
+    required String postCategory,
+    required String postTitle,
+    required List<String> imagesUrl,
+    required List<String> likes,
   }) async {
     try {
       var time = Timestamp.now();
@@ -86,6 +128,17 @@ class CommentRepository {
         uid: auth.currentUser!.uid,
         likes: [],
         postId: postId,
+      );
+
+      _saveCommentCount(
+        text: text,
+        time: time,
+        postId: postId,
+        username: senderUser.displayName,
+        postCategory: postCategory,
+        postTitle: postTitle,
+        imagesUrl: imagesUrl,
+        likes: likes,
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());

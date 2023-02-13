@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
@@ -246,7 +245,11 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                     await uploadFunction(_imageFileList!);
                     _uploadPost(
                         CategoryList.categories[_CategoryCards.selected]);
-                    Get.to(() => const AppLayoutScreen());
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppLayoutScreen.routeName,
+                      (route) => false,
+                    );
                   },
                 ),
               ],

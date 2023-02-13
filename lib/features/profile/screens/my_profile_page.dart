@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/utils/utils.dart';
+import '../../../common/widgets/common_app_bar.dart';
 
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({Key? key}) : super(key: key);
@@ -21,6 +22,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
             return const Center(child: CircularProgressIndicator());
           }
           return Scaffold(
+            appBar: CommonAppBar(
+              title: '내 프로필',
+              appBar: AppBar(),
+            ),
             body: ProfilePage(
               displayName: snapshot.data.displayName,
               country: '이스라엘',

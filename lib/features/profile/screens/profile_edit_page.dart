@@ -63,8 +63,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
         title: const Text("프로필 수정"),
         actions: <Widget>[
           TextButton(
-              onPressed: storeUserData,
-              child: Text("완료"),
+            onPressed: storeUserData,
+            child: const Text("완료"),
           ),
         ],
       ),
@@ -93,16 +93,18 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
               ),
               TextButton(
                 onPressed: selectImage,
-                child: Text("사진변경"),
+                child: const Text("사진변경"),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  textField("   2~8자 이내여야 합니다.","사용자 이름", 1, nameController),
-                  textField("   나라 선택.","국가", 1, countryController),
-                  textField("   2~8자 이내여야 합니다.","키워드 선택", 1, keywordController),
-                  textField("   40자 이내여야 합니다.", "자기소개", 10, descriptionController)
+                  textField("   2~8자 이내여야 합니다.", "사용자 이름", 1, nameController),
+                  textField("   나라 선택.", "국가", 1, countryController),
+                  textField(
+                      "   2~8자 이내여야 합니다.", "키워드 선택", 1, keywordController),
+                  textField(
+                      "   40자 이내여야 합니다.", "자기소개", 10, descriptionController)
                 ],
               ),
             ],
@@ -112,15 +114,16 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
     );
   }
 
-  Widget textField(String hint, String title, int size, TextEditingController controller) {
+  Widget textField(
+      String hint, String title, int size, TextEditingController controller) {
     return Column(
       children: [
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
             title,
-            style : TextStyle(
-              color : Colors.black87,
+            style: const TextStyle(
+              color: Colors.black87,
               fontSize: 20,
             ),
           ),
@@ -133,21 +136,21 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             cursorColor: Colors.black54,
             maxLines: size,
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 5),
-                hintText: hint,
-                hintStyle: const TextStyle(
+              contentPadding: const EdgeInsets.symmetric(vertical: 5),
+              hintText: hint,
+              hintStyle: const TextStyle(
+                color: Colors.black54,
+              ),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
                   color: Colors.black54,
                 ),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.black54,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                    color: Colors.black54,
-                  )),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                color: Colors.black54,
+              )),
             ),
           ),
         ),

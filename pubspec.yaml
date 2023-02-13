@@ -110,6 +110,14 @@ flutter:
   assets:
     - assets/disko_icon.png
     - assets/user.png
+    - assets/disco-ball-shiny.gif
+    - assets/dancing.gif
+    - assets/second_page_img.png
+    - assets/third_page_img.png
+    - assets/fifth_page_img.png
+    - assets/fourth_page_01.gif
+    - assets/fourth_page_02.gif
+    - assets/fourth_page_03.gif
 
   # To add assets to your application, add an assets section, like this:
   # assets:

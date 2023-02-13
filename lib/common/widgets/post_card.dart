@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../features/chat/screens/chat_screen.dart';
+import '../../features/profile/screens/my_profile_page.dart';
 import '../../features/profile/screens/other_user_profile_page.dart';
 
 class PostCard extends StatefulWidget {
@@ -125,8 +126,12 @@ class _PostCardState extends State<PostCard> {
                           ],
                         ),
                         onTap: () {
-                          Get.to(() => const OtherUserProfilePage(),
-                              arguments: widget.uid);
+                          if (widget.uid == user!.uid) {
+                            Get.to(() => const MyProfilePage());
+                          } else {
+                            Get.to(() => const OtherUserProfilePage(),
+                                arguments: widget.uid);
+                          }
                         },
                       ),
                       PopupMenuButton<String>(
@@ -223,9 +228,7 @@ class _PostCardState extends State<PostCard> {
                             _isLiked = true;
                           });
                         }
-                        await postsCollection
-                            .doc(widget.postId)
-                            .update({
+                        await postsCollection.doc(widget.postId).update({
                           'likes': widget.likes,
                         });
                       },

@@ -1,59 +1,52 @@
 import 'package:flutter/material.dart';
 
-class FirstLandingPage extends StatefulWidget {
-  const FirstLandingPage({Key? key}) : super(key: key);
+class LastLandingPage extends StatefulWidget {
+  const LastLandingPage({Key? key}) : super(key: key);
 
   @override
-  State<FirstLandingPage> createState() => _FirstLandingPageState();
+  State<LastLandingPage> createState() => _LastLandingPageState();
 }
 
-class _FirstLandingPageState extends State<FirstLandingPage> {
+class _LastLandingPageState extends State<LastLandingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(27.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 86),
                 const Text(
-                  '낯선 곳에서',
+                  'DISKO 에서',
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 38),
                 ),
                 const Text(
-                  '낯익은 우리',
+                  '누릴 수 있는',
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 38),
                 ),
                 const Text(
-                  '하나가 되는 순간!',
+                  'funfun한 경험들',
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 38),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Image.asset('assets/disco-ball-shiny.gif'),
+                Image.asset('assets/dancing.gif'),
+                const SizedBox(height: 45),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: const [
                 Text(
-                  '한인 대표 커뮤니티',
+                  '함께하실 준비가 되었나요?',
                   style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: Theme.of(context).colorScheme.primary),
-                ),
-                Text(
-                  'DISKO',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 40,
-                      color: Theme.of(context).colorScheme.primary),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                  ),
                 ),
               ],
             )

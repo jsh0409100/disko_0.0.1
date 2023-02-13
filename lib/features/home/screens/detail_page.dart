@@ -10,7 +10,10 @@ import 'package:get/get.dart';
 import '../../../common/utils/utils.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
-  const DetailPage({Key? key}) : super(key: key);
+
+  const DetailPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _DetailPageState createState() => _DetailPageState();
@@ -25,6 +28,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   bool _isLiked = false;
   Color likeColor = Colors.black;
   Icon likeIcon = const Icon(Icons.favorite_border);
+  late int size = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +40,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
       likeIcon = const Icon(Icons.favorite_border);
     }
 
-    return FutureBuilder(
-        future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
+
+    return StreamBuilder(
+        stream: getUserDataByUidStream(FirebaseAuth.instance.currentUser!.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
@@ -77,7 +82,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                       height: 43,
                                       width: 43,
                                       fit: BoxFit.scaleDown,
-                                    )),
+                                    )
+                                ),
                                 const SizedBox(
                                   width: 12,
                                 ),
@@ -202,6 +208,10 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                       profilePic: snapshot.data.profilePic,
                       postId: _PostCard.postId,
                       comment_count: _PostCard.comment_count,
+                      postCategory: _PostCard.postCategory,
+                      postTitle: _PostCard.postTitle,
+                      likes: _PostCard.likes,
+                      imagesUrl: _PostCard.imagesUrl,
                     ),
                   ],
                 ),

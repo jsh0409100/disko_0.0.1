@@ -26,7 +26,8 @@ class CommentController {
 
   void uploadComment(
     BuildContext context,
-    String text, postId,
+    String text, postId, postCategory, postTitle,
+    List<String> imagesUrl, likes,
   ) {
     ref.read(userDataAuthProvider).whenData(
           (value) => commentRepository.uploadComment(
@@ -34,6 +35,10 @@ class CommentController {
             text: text,
             senderUser: value!,
             postId: postId,
+            postCategory: postCategory,
+            postTitle: postTitle,
+            imagesUrl: imagesUrl,
+            likes: likes,
           ),
         );
   }

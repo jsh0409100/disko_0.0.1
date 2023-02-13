@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:disko_001/features/home/screens/detail_page.dart';
 import 'package:disko_001/features/home/widgets/comment_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +8,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controller/comment_controller.dart';
 
 class BottomCommentField extends ConsumerStatefulWidget {
-  BottomCommentField({
+  BottomCommentField( {
     Key? key,
     required this.profilePic,
     required this.postId,
     required this.comment_count,
+    required this.postCategory,
+    required this.postTitle,
+    required this.likes,
+    required this.imagesUrl,
   }) : super(key: key);
-  final String profilePic;
-  final String postId;
-  int comment_count;
+  final String profilePic, postId, postCategory, postTitle;
+  final List<String> likes, imagesUrl;
+  int comment_count = 0;
 
   @override
   ConsumerState<BottomCommentField> createState() => _BottomCommentFieldState();
@@ -27,11 +32,15 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
 
   var _userEnterMessage = '';
 
-  void uploadComment() async {
+  void uploadComment() {
     ref.read(commentControllerProvider).uploadComment(
           context,
           _userEnterMessage,
           widget.postId,
+          widget.postCategory,
+          widget.postTitle,
+          widget.imagesUrl,
+          widget.likes,
         );
     setState(() {
       controller.clear();
@@ -50,12 +59,14 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          height: 36,
-          width: 36,
-          decoration: const BoxDecoration(
-              color: Color(0xffD9D9D9), shape: BoxShape.circle),
-        ),
+        ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: Image(
+              image: NetworkImage(widget.profilePic),
+              height: 43,
+              width: 43,
+              fit: BoxFit.scaleDown,
+            )),
         Expanded(
           child: TextField(
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -84,7 +95,7 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
             });
             (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
                 ? null
-                : uploadComment;
+                : uploadComment();
           },
           icon: Icon(
             Icons.send,

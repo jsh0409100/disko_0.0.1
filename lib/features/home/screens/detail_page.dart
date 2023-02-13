@@ -8,10 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../common/utils/utils.dart';
+import '../../../common/enums/notification_enum.dart';
+import '../../../common/utils/ut
+import '../controller/post_controller.dart';ils.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
-
   const DetailPage({
     Key? key,
   }) : super(key: key);
@@ -30,6 +31,19 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   Color likeColor = Colors.black;
   Icon likeIcon = const Icon(Icons.favorite_border);
   late int size = 0;
+
+  void saveNotification({
+    required String postId,
+    required String peerUid,
+    required Timestamp time,
+    required NotificationEnum notificationType,
+  }) {
+    ref.read(postControllerProvider).saveNotification(
+        postId: postId,
+        peerUid: peerUid,
+        time: time,
+        notificationType: notificationType);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +112,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                       height: 43,
                                       width: 43,
                                       fit: BoxFit.scaleDown,
-                                    )
-                                ),
+                                    )),
                                 const SizedBox(
                                   width: 12,
                                 ),
@@ -159,18 +172,23 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     : Padding(
                                         padding: const EdgeInsets.all(3),
                                         child: Container(
-                                          height:
-                                              MediaQuery.of(context).size.height / 3,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              3,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
-                                            itemCount: _PostCard.imagesUrl.length,
-                                            dragStartBehavior: DragStartBehavior.start,
-                                            itemBuilder:
-                                                (BuildContext context, int index) {
+                                            itemCount:
+                                                _PostCard.imagesUrl.length,
+                                            dragStartBehavior:
+                                                DragStartBehavior.start,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
                                               return Padding(
-                                                padding: const EdgeInsets.all(2),
+                                                padding:
+                                                    const EdgeInsets.all(2),
                                                 child: Image.network(
-                                                    _PostCard.imagesUrl[index],
+                                                  _PostCard.imagesUrl[index],
                                                 ),
                                               );
                                             },
@@ -217,6 +235,14 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                             await postsCollection.doc(_PostCard.postId).update({
                               'likes': _PostCard.likes,
                             });
+                            if (_PostCard.uid != user!.uid) {
+                              saveNotification(
+                                peerUid: _PostCard.uid,
+                                postId: _PostCard.postId,
+                                time: Timestamp.now(),
+                                notificationType: NotificationEnum.like,
+                              );
+                            }
                           },
                           icon: likeIcon,
                           color: likeColor,
@@ -254,9 +280,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                     BottomCommentField(
                       profilePic: snapshot.data.profilePic,
                       postId: _PostCard.postId,
-                      comment_count: _PostCard.comment_count,
-                      postCategory: _PostCard.postCategory,
-                      postTitle: _PostCard.postTitle,
+                      uid: _PostCard.uid,
+                      comment_count: _PostCard.commentCount,
                       likes: _PostCard.likes,
                       imagesUrl: _PostCard.imagesUrl,
                     ),

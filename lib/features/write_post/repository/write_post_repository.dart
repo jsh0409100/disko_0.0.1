@@ -34,16 +34,16 @@ class WritePostRepository {
     required int comment_count,
   }) async {
     final message = PostCardModel(
-        uid: auth.currentUser!.uid,
-        postText: text,
-        time: time,
-        userName: username,
-        postCategory: postCategory,
-        postTitle: postTitle,
-        likes: likes,
-        imagesUrl: imagesUrl,
-        postId: postId,
-        comment_count: comment_count,
+      uid: auth.currentUser!.uid,
+      postText: text,
+      time: time,
+      userName: username,
+      postCategory: postCategory,
+      postTitle: postTitle,
+      likes: likes,
+      imagesUrl: imagesUrl,
+      postId: postId,
+      commentCount: comment_count,
     );
 
     await firestore.collection('posts').doc(postId).set(
@@ -80,23 +80,24 @@ class WritePostRepository {
     }
   }
 
-  Stream<List<PostCardModel>> searchPost(String query){
+  Stream<List<PostCardModel>> searchPost(String query) {
     return _posts
         .where(
-      'postTitle',
-      isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
-      isLessThan: query.isEmpty
-          ? null
-          :query.substring(0, query.length -1) +
-          String.fromCharCode(
-            query.codeUnitAt(query.length - 1) + 1,
-          ),
-    )
+          'postTitle',
+          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+          isLessThan: query.isEmpty
+              ? null
+              : query.substring(0, query.length - 1) +
+                  String.fromCharCode(
+                    query.codeUnitAt(query.length - 1) + 1,
+                  ),
+        )
         .snapshots()
-        .map((event){
+        .map((event) {
       List<PostCardModel> postcard = [];
-      for (var post in event.docs){
-        postcard.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+      for (var post in event.docs) {
+        postcard
+            .add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
       }
       return postcard;
     });

@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import '../../../common/utils/utils.dart';
-import '../../../common/widgets/post.dart';
+import '../../../common/widgets/common_app_bar.dart';
 import '../../../models/post_card_model.dart';
 import '../../../src/providers.dart';
 import '../../write_post/screens/write_post_page.dart';
-import '../../../common/widgets/common_app_bar.dart';
+import '../widgets/post.dart';
 
 class HomeFeedPage extends ConsumerWidget {
   HomeFeedPage({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class HomeFeedPage extends ConsumerWidget {
     scrollController.addListener(() {
       double maxScroll = scrollController.position.maxScrollExtent;
       double currentScroll = scrollController.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.20;
+      double delta = MediaQuery.of(context).size.height * 0.80;
       if (maxScroll - currentScroll <= delta) {
         ref.read(postsProvider.notifier).fetchNextBatch();
       }
@@ -163,8 +163,8 @@ class PostsListBuilder extends StatelessWidget {
                     likes: posts[index].likes,
                     imagesUrl: posts[index].imagesUrl,
                     profilePic: snapshot.data.profilePic,
-                    comment_count: posts[index].comment_count,
                     time: posts[index].time,
+                    commentCount: posts[index].commentCount,
                   );
                 }
               });

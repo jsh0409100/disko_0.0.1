@@ -1,17 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:disko_001/common/widgets/post_card.dart';
+import 'package:disko_001/features/home/widgets/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../features/home/screens/detail_page.dart';
-import '../../models/post_card_model.dart';
-import '../utils/utils.dart';
+import '../../../common/utils/utils.dart';
+import '../../../models/post_card_model.dart';
+import '../screens/detail_page.dart';
 
 class Post extends StatefulWidget {
-  final String userName, postCategory, postTitle, postText, uid, profilePic, postId;
+  final String userName,
+      postCategory,
+      postTitle,
+      postText,
+      uid,
+      profilePic,
+      postId;
   final List<String> likes, imagesUrl;
-  final int comment_count;
   final Timestamp time;
+  final int commentCount;
 
   const Post({
     Key? key,
@@ -25,10 +31,9 @@ class Post extends StatefulWidget {
     required this.imagesUrl,
     required this.profilePic,
     required this.postId,
-    required this.comment_count,
+    required this.commentCount,
     required this.time,
   }) : super(key: key);
-
 
   @override
   State<Post> createState() => _PostState();
@@ -59,8 +64,8 @@ class _PostState extends State<Post> {
                   maxWidth: MediaQuery.of(context).size.width * 0.92),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(() =>
-                  const DetailPage(),
+                  Get.to(
+                    () => const DetailPage(),
                     arguments: PostCard(
                       userName: widget.userName,
                       postCategory: widget.postCategory,
@@ -71,8 +76,8 @@ class _PostState extends State<Post> {
                       imagesUrl: widget.imagesUrl,
                       profilePic: widget.profilePic,
                       postId: widget.postId,
-                      comment_count: widget.comment_count,
                       time: widget.time,
+                      commentCount: widget.commentCount,
                     ),
                   );
                 },
@@ -86,8 +91,8 @@ class _PostState extends State<Post> {
                   imagesUrl: widget.imagesUrl,
                   profilePic: widget.profilePic,
                   postId: widget.postId,
-                  comment_count: widget.comment_count,
                   time: widget.time,
+                  commentCount: widget.commentCount,
                 ),
               ));
         });

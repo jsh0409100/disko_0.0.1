@@ -101,7 +101,6 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       clientRoleType: ClientRoleType.clientRoleBroadcaster,
       channelProfile: ChannelProfileType.channelProfileCommunication,
     );
-
     await agoraEngine.joinChannel(
       token: token,
       channelId: channelName,

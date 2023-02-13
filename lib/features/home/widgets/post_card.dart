@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/features/home/controller/post_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-import '../../features/chat/screens/chat_screen.dart';
-import '../../features/profile/screens/other_user_profile_page.dart';
+import '../../../common/enums/notification_enum.dart';
+import '../../chat/screens/chat_screen.dart';
+import '../../profile/screens/other_user_profile_page.dart';
 
-class PostCard extends StatefulWidget {
+class PostCard extends ConsumerStatefulWidget {
   final String uid,
       userName,
       postCategory,
@@ -16,7 +19,7 @@ class PostCard extends StatefulWidget {
       profilePic,
       postId;
   final List<String> likes, imagesUrl;
-  final int comment_count;
+  final int commentCount;
 
   const PostCard({
     Key? key,
@@ -29,14 +32,14 @@ class PostCard extends StatefulWidget {
     required this.imagesUrl,
     required this.profilePic,
     required this.postId,
-    required this.comment_count,
+    required this.commentCount,
   }) : super(key: key);
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  ConsumerState<PostCard> createState() => _PostCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _PostCardState extends ConsumerState<PostCard> {
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference postsCollection =
       FirebaseFirestore.instance.collection('posts');
@@ -70,6 +73,19 @@ class _PostCardState extends State<PostCard> {
         case '신고하기':
           break;
       }
+    }
+
+    void saveNotification({
+      required String postId,
+      required String peerUid,
+      required Timestamp time,
+      required NotificationEnum notificationType,
+    }) {
+      ref.read(postControllerProvider).saveNotification(
+          postId: postId,
+          peerUid: peerUid,
+          time: time,
+          notificationType: notificationType);
     }
 
     return Column(
@@ -228,6 +244,14 @@ class _PostCardState extends State<PostCard> {
                         await postsCollection.doc(widget.postId).update({
                           'likes': widget.likes,
                         });
+                        if (widget.uid != user!.uid) {
+                          saveNotification(
+                            peerUid: widget.uid,
+                            postId: widget.postId,
+                            time: Timestamp.now(),
+                            notificationType: NotificationEnum.like,
+                          );
+                        }
                       },
                       icon: likeIcon,
                       color: likeColor,
@@ -241,7 +265,7 @@ class _PostCardState extends State<PostCard> {
                         color: Colors.black,
                       ),
                     ),
-                    Text(widget.comment_count.toString()),
+                    Text(widget.commentCount.toString()),
                     const SizedBox(width: 8),
                   ],
                 ),

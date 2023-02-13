@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/comment_model.dart';
-import '../controller/comment_controller.dart';
+import '../controller/post_controller.dart';
 import 'comment.dart';
 
 class CommentList extends ConsumerStatefulWidget {
@@ -26,7 +26,7 @@ class _CommentListState extends ConsumerState<CommentList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<CommentModel>>(
-        stream: ref.read(commentControllerProvider).commentStream(widget.postId),
+        stream: ref.read(postControllerProvider).commentStream(widget.postId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingScreen();

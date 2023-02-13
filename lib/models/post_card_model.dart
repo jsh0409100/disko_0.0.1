@@ -4,7 +4,7 @@ class PostCardModel {
   final String userName, postCategory, postTitle, postText, uid, postId;
   final List<String> likes, imagesUrl;
   final Timestamp time;
-  final int comment_count;
+  final int commentCount;
 
   PostCardModel({
     required this.time,
@@ -16,7 +16,7 @@ class PostCardModel {
     required this.likes,
     required this.imagesUrl,
     required this.postId,
-    required this.comment_count,
+    required this.commentCount,
   });
 
   factory PostCardModel.fromJson(Map<String, dynamic> json) {
@@ -27,16 +27,16 @@ class PostCardModel {
     List<String> parsedUrl = iUrlFromJson.cast<String>();
 
     return PostCardModel(
-        time: json['time'],
-        userName: json['userName'],
-        postCategory: json['category'],
-        postTitle: json['postTitle'],
-        postText: json['postText'],
-        uid: json['uid'],
-        likes: parsedLikes,
-        imagesUrl: parsedUrl,
-        postId: json['postId'],
-        comment_count: json['comment_count'],
+      time: json['time'],
+      userName: json['userName'],
+      postCategory: json['category'],
+      postTitle: json['postTitle'],
+      postText: json['postText'],
+      uid: json['uid'],
+      likes: parsedLikes,
+      imagesUrl: parsedUrl,
+      postId: json['postId'],
+      commentCount: json['commentCount'],
     );
   }
 
@@ -50,6 +50,6 @@ class PostCardModel {
         'likes': likes,
         'imagesUrl': imagesUrl,
         'postId': postId,
-        'comment_count': comment_count,
+        'commentCount': commentCount,
       };
 }

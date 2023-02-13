@@ -4,18 +4,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../models/post_card_model.dart';
 import '../../models/user_model.dart';
 
-Future<String> getDisplayNameByUid(String Uid) async {
+Future<String> getDisplayNameByUid(String uid) async {
   var UserDoc =
-      await FirebaseFirestore.instance.collection('users').doc(Uid).get();
+      await FirebaseFirestore.instance.collection('users').doc(uid).get();
   return UserDoc.data()!['displayName'];
 }
 
-Future<UserModel> getUserDataByUid(String Uid) async {
+Future<UserModel> getUserDataByUid(String uid) async {
   var userDataMap =
-      await FirebaseFirestore.instance.collection('users').doc(Uid).get();
+      await FirebaseFirestore.instance.collection('users').doc(uid).get();
   return UserModel.fromJson(userDataMap.data()!);
+}
+
+Future<PostCardModel> getPostByPostId(String postId) async {
+  var postDataMap =
+      await FirebaseFirestore.instance.collection('posts').doc(postId).get();
+  return PostCardModel.fromJson(postDataMap.data()!);
 }
 
 Stream<UserModel> getUserDataByUidStream(String Uid) async* {

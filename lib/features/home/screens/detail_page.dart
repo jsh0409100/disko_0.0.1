@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../common/enums/notification_enum.dart';
-import '../../../common/utils/ut
-import '../controller/post_controller.dart';ils.dart';
+import '../../../common/utils/utils.dart';
+import '../controller/post_controller.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
   const DetailPage({
@@ -235,14 +235,12 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                             await postsCollection.doc(_PostCard.postId).update({
                               'likes': _PostCard.likes,
                             });
-                            if (_PostCard.uid != user!.uid) {
-                              saveNotification(
-                                peerUid: _PostCard.uid,
-                                postId: _PostCard.postId,
-                                time: Timestamp.now(),
-                                notificationType: NotificationEnum.like,
-                              );
-                            }
+                            saveNotification(
+                              peerUid: _PostCard.uid,
+                              postId: _PostCard.postId,
+                              time: Timestamp.now(),
+                              notificationType: NotificationEnum.like,
+                            );
                           },
                           icon: likeIcon,
                           color: likeColor,

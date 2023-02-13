@@ -246,14 +246,13 @@ class _PostCardState extends ConsumerState<PostCard> {
                         await postsCollection.doc(widget.postId).update({
                           'likes': widget.likes,
                         });
-                        if (widget.uid != user!.uid) {
-                          saveNotification(
-                            peerUid: widget.uid,
-                            postId: widget.postId,
-                            time: Timestamp.now(),
-                            notificationType: NotificationEnum.like,
-                          );
-                        }
+
+                        saveNotification(
+                          peerUid: widget.uid,
+                          postId: widget.postId,
+                          time: Timestamp.now(),
+                          notificationType: NotificationEnum.like,
+                        );
                       },
                       icon: likeIcon,
                       color: likeColor,

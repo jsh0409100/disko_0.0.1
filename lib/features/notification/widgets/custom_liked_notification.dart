@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../models/notification_model.dart';
+
 class CustomLikedNotification extends StatelessWidget {
-  const CustomLikedNotification({Key? key}) : super(key: key);
+  final NotificationModel notification;
+  const CustomLikedNotification({Key? key, required this.notification});
 
   @override
   Widget build(BuildContext context) {

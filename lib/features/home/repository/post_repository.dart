@@ -158,7 +158,7 @@ class PostRepository {
     required NotificationEnum notificationType,
   }) async {
     final notification = NotificationModel(
-        peerUid: peerUid,
+        peerUid: auth.currentUser!.uid,
         time: time,
         notificationType: notificationType,
         postId: postId);
@@ -178,6 +178,7 @@ class PostRepository {
       sendable = false;
     }
 
-    if (sendable) await docRef.set(notification.toJson());
+    if (sendable && peerUid != auth.currentUser!.uid)
+      await docRef.set(notification.toJson());
   }
 }

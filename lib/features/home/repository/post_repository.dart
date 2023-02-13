@@ -1,27 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:disko_001/features/write_post/repository/write_post_repository.dart';
-import 'package:disko_001/features/write_post/screens/write_post_page.dart';
+import 'package:disko_001/models/notification_model.dart';
 import 'package:disko_001/models/post_card_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../../models/comment_model.dart';
 import '../../../models/user_model.dart';
 
-final commentRepositoryProvider = Provider(
-  (ref) => CommentRepository(
+final postRepositoryProvider = Provider(
+  (ref) => PostRepository(
     firestore: FirebaseFirestore.instance,
     auth: FirebaseAuth.instance,
   ),
 );
 
-class CommentRepository {
+class PostRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
-  CommentRepository({
+  PostRepository({
     required this.firestore,
     required this.auth,
   });
@@ -64,8 +64,8 @@ class CommentRepository {
         .collection('comment')
         .doc(commentId)
         .set(
-      comment.toJson(),
-    );
+          comment.toJson(),
+        );
   }
 
   void _saveCommentCount({
@@ -88,7 +88,7 @@ class CommentRepository {
       likes: [],
       imagesUrl: [],
       postId: '',
-      comment_count: 0,
+      commentCount: 0,
     );
 
     final currentComment = firestore.collection('posts').doc(postId);
@@ -98,8 +98,8 @@ class CommentRepository {
       final data = doc.get('postId');
       (data == postId)
           ? currentComment.update({
-        'comment_count': FieldValue.increment(1),
-      })
+              'comment_count': FieldValue.increment(1),
+            })
           : currentComment.set(comment.toJson());
     } else {
       currentComment.set(comment.toJson());
@@ -110,16 +110,14 @@ class CommentRepository {
     required BuildContext context,
     required String text,
     required UserModel senderUser,
-    required String postId,
-    required String postCategory,
-    required String postTitle,
+    required postId,
     required List<String> imagesUrl,
     required List<String> likes,
   }) async {
     try {
       var time = Timestamp.now();
       var commentId = const Uuid().v1();
-
+      var post = await getPostByPostId(postId);
       _saveComment(
         userName: senderUser.displayName,
         text: text,
@@ -135,15 +133,51 @@ class CommentRepository {
         time: time,
         postId: postId,
         username: senderUser.displayName,
-        postCategory: postCategory,
-        postTitle: postTitle,
+        postCategory: post.postCategory,
+        postTitle: post.postTitle,
         imagesUrl: imagesUrl,
         likes: likes,
       );
+
+      saveNotification(
+          postId: postId,
+          peerUid: post.uid,
+          time: time,
+          notificationType: NotificationEnum.comment,
+          commentId: commentId);
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
   }
+
+  void saveNotification({
+    required String postId,
+    required String peerUid,
+    required String commentId,
+    required Timestamp time,
+    required NotificationEnum notificationType,
+  }) async {
+    final notification = NotificationModel(
+        peerUid: peerUid,
+        time: time,
+        notificationType: notificationType,
+        postId: postId);
+    bool sendable = true;
+    final String notificationId =
+        (notificationType == NotificationEnum.like) ? 'like' : commentId;
+    final String docName = '$postId&${auth.currentUser!.uid}&$notificationId';
+
+    final docRef = firestore
+        .collection('users')
+        .doc(peerUid)
+        .collection('notification')
+        .doc(docName);
+    final doc = await docRef.get();
+
+    if (doc.exists) {
+      sendable = false;
+    }
+
+    if (sendable) await docRef.set(notification.toJson());
+  }
 }
-
-

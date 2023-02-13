@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../features/home/screens/notification.dart';
+import '../../features/notification/screen/notification.dart';
 import '../../features/search/screens/search.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {

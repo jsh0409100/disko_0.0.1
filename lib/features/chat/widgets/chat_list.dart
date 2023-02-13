@@ -34,28 +34,28 @@ class _ChatListState extends ConsumerState<ChatList> {
                   ? chatDocs[index].receiverUid
                   : chatDocs[index].senderId;
               return FutureBuilder(
-                  future: getDisplayNameByUid(peerUid),
+                  future: getUserDataByUid(peerUid),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    // if (snapshot.hasData == false) {
-                    //   return Card(
-                    //     color: Colors.grey.shade300,
-                    //     child: Column(children: [
-                    //       SizedBox(
-                    //         height: 50,
-                    //         width: MediaQuery.of(context).size.width * 0.9,
-                    //       ),
-                    //       const SizedBox(
-                    //         height: 11,
-                    //       )
-                    //     ]),
-                    //   );
-                    // }
+                    if (snapshot.hasData == false) {
+                      return Card(
+                        color: Colors.grey.shade300,
+                        child: Column(children: [
+                          SizedBox(
+                            height: 50,
+                            width: MediaQuery.of(context).size.width * 0.9,
+                          ),
+                          const SizedBox(
+                            height: 11,
+                          )
+                        ]),
+                      );
+                    }
                     return ChatItem(
                       name: currentIsSender
-                          ? chatDocs[index].receiverDisplayName
+                          ? snapshot.data.displayName
                           : chatDocs[index].senderDisplayName,
                       text: chatDocs[index].text,
-                      profilePic: chatDocs[index].profilePic,
+                      profilePic: snapshot.data.profilePic,
                       peerUid: peerUid,
                       timeSent: chatDocs[index].timeSent,
                       unreadMessageCount: (currentIsSender)

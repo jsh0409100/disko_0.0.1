@@ -1,24 +1,20 @@
-import 'dart:io';
-
-import 'package:disko_001/features/home/screens/detail_page.dart';
-import 'package:disko_001/features/home/widgets/comment_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../controller/comment_controller.dart';
+
+import '../controller/post_controller.dart';
 
 class BottomCommentField extends ConsumerStatefulWidget {
-  BottomCommentField( {
+  BottomCommentField({
     Key? key,
     required this.profilePic,
     required this.postId,
+    required this.uid,
     required this.comment_count,
-    required this.postCategory,
-    required this.postTitle,
     required this.likes,
     required this.imagesUrl,
   }) : super(key: key);
-  final String profilePic, postId, postCategory, postTitle;
+  final String profilePic, postId, uid;
   final List<String> likes, imagesUrl;
   int comment_count = 0;
 
@@ -33,12 +29,10 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
   var _userEnterMessage = '';
 
   void uploadComment() {
-    ref.read(commentControllerProvider).uploadComment(
+    ref.read(postControllerProvider).uploadComment(
           context,
           _userEnterMessage,
           widget.postId,
-          widget.postCategory,
-          widget.postTitle,
           widget.imagesUrl,
           widget.likes,
         );

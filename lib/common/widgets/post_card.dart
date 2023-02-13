@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../features/chat/screens/chat_screen.dart';
-import '../../features/profile/screens/my_profile_page.dart';
 import '../../features/profile/screens/other_user_profile_page.dart';
 
 class PostCard extends StatefulWidget {
@@ -126,9 +125,7 @@ class _PostCardState extends State<PostCard> {
                           ],
                         ),
                         onTap: () {
-                          if (widget.uid == user!.uid) {
-                            Get.to(() => const MyProfilePage());
-                          } else {
+                          if (widget.uid != user!.uid) {
                             Get.to(() => const OtherUserProfilePage(),
                                 arguments: widget.uid);
                           }

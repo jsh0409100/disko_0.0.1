@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Comment extends StatefulWidget {
-  final String userName, text, uid;
+  final String userName, text, uid, profilePic;
   final List<String> likes;
   final Timestamp time;
 
@@ -14,6 +14,7 @@ class Comment extends StatefulWidget {
     required this.text,
     required this.likes,
     required this.time,
+    required this.profilePic,
   }) : super(key: key);
 
   @override
@@ -38,46 +39,79 @@ class _CommentState extends State<Comment> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      widget.userName,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(showTime),
-                  ],
-                ),
-                Text(
-                  widget.text,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Row(
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image(
+                          image: NetworkImage(widget.profilePic),
+                          height: 36,
+                          width: 36,
+                          fit: BoxFit.scaleDown,
+                        )),
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                          },
-                          icon: const Icon(Icons.favorite_border_outlined),
-                          iconSize: 24,
+                        Row(
+                          children: [
+                            Text(
+                              widget.userName,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              showTime,
+                              style: const TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                        const Text('0'),
-                      ],
-                    ),
-                    const SizedBox(width: 5),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.chat_outlined),
-                          iconSize: 24,
+                        Text(
+                          widget.text,
+                          style: const TextStyle(
+                            fontSize: 15,
+                          ),
                         ),
-                        const Text('0'),
+                        Row(
+                          children: [
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                  },
+                                  icon: const Icon(Icons.favorite_border_outlined),
+                                  iconSize: 20,
+                                ),
+                                const Text(
+                                  '0',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 5),
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.chat_outlined),
+                                  iconSize: 20,
+                                ),
+                                const Text(
+                                  '0',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ],
@@ -85,7 +119,6 @@ class _CommentState extends State<Comment> {
               ],
             ),
           ),
-          const Icon(Icons.more_vert),
         ],
       ),
     );

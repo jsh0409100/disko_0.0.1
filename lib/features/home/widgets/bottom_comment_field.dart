@@ -57,54 +57,55 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Image(
-              image: NetworkImage(widget.profilePic),
-              height: 43,
-              width: 43,
-              fit: BoxFit.scaleDown,
-            )),
-        Expanded(
-          child: TextField(
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            controller: controller,
-            maxLines: null,
-            decoration: const InputDecoration(
-              isDense: true,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Container(
+        child: Row(
+          children: [
+            ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image(
+                  image: NetworkImage(widget.profilePic),
+                  height: 43,
+                  width: 43,
+                  fit: BoxFit.scaleDown,
+                )),
+            const SizedBox(width: 10),
+            Expanded(
+              child: TextField(
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                controller: controller,
+                maxLines: null,
+                decoration: const InputDecoration(
+                  isDense: true,
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                  hintText: "댓글 쓰기",
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _userEnterMessage = value.trim();
+                  });
+                },
               ),
-              hintText: "댓글 달기",
             ),
-            onChanged: (value) {
-              setState(() {
-                _userEnterMessage = value.trim();
-              });
-            },
-          ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  widget.comment_count = widget.comment_count + 1;
+                });
+                (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
+                    ? null
+                    : uploadComment();
+              },
+              child: Text('게시'),
+            ),
+          ],
         ),
-        IconButton(
-          onPressed: () {
-            setState(() {
-              widget.comment_count = widget.comment_count + 1;
-            });
-            (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
-                ? null
-                : uploadComment();
-          },
-          icon: Icon(
-            Icons.send,
-            color: _userEnterMessage.trim().isEmpty
-                ? Theme.of(context).colorScheme.outline
-                : Theme.of(context).colorScheme.primary,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

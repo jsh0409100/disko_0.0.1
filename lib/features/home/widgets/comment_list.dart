@@ -7,8 +7,8 @@ import '../controller/comment_controller.dart';
 import 'comment.dart';
 
 class CommentList extends ConsumerStatefulWidget {
-  final String postId;
-  const CommentList({super.key, required this.postId});
+  final String postId, profilePic;
+  const CommentList({super.key, required this.postId, required this.profilePic});
 
   @override
   ConsumerState<CommentList> createState() => _CommentListState();
@@ -42,6 +42,7 @@ class _CommentListState extends ConsumerState<CommentList> {
                 uid: commentDocs.uid,
                 likes: commentDocs.likes,
                 time: commentDocs.time,
+                profilePic: widget.profilePic,
               );
             },
           );

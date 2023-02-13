@@ -11,6 +11,7 @@ class Post extends StatefulWidget {
   final String userName, postCategory, postTitle, postText, uid, profilePic, postId;
   final List<String> likes, imagesUrl;
   final int comment_count;
+  final Timestamp time;
 
   const Post({
     Key? key,
@@ -25,6 +26,7 @@ class Post extends StatefulWidget {
     required this.profilePic,
     required this.postId,
     required this.comment_count,
+    required this.time,
   }) : super(key: key);
 
 
@@ -70,6 +72,7 @@ class _PostState extends State<Post> {
                       profilePic: widget.profilePic,
                       postId: widget.postId,
                       comment_count: widget.comment_count,
+                      time: widget.time,
                     ),
                   );
                 },
@@ -84,6 +87,7 @@ class _PostState extends State<Post> {
                   profilePic: widget.profilePic,
                   postId: widget.postId,
                   comment_count: widget.comment_count,
+                  time: widget.time,
                 ),
               ));
         });

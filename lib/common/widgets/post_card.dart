@@ -18,6 +18,7 @@ class PostCard extends StatefulWidget {
       postId;
   final List<String> likes, imagesUrl;
   final int comment_count;
+  final Timestamp time;
 
   const PostCard({
     Key? key,
@@ -31,6 +32,7 @@ class PostCard extends StatefulWidget {
     required this.profilePic,
     required this.postId,
     required this.comment_count,
+    required this.time,
   }) : super(key: key);
 
   @override

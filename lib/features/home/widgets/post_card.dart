@@ -83,7 +83,18 @@ class _PostCardState extends ConsumerState<PostCard> {
             future: getUserDataByUid(widget.uid),
             builder: (context, snapshot) {
               if (snapshot.hasData == false) {
-                return const Center(child: CircularProgressIndicator());
+                return Card(
+                  color: Colors.grey.shade300,
+                  child: Column(children: [
+                    SizedBox(
+                      height: 180,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                    ),
+                    const SizedBox(
+                      height: 11,
+                    )
+                  ]),
+                );
               }
               return Container(
                 decoration: BoxDecoration(

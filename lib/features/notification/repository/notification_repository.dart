@@ -40,8 +40,7 @@ class NotificationRepository {
     final String notificationId =
         (notification.notificationType == NotificationEnum.like) ? 'like' : notification.commentId;
 
-    final String docName = '${notification.postId}&${auth.currentUser!.uid}&$notificationId';
-
+    final String docName = '${notification.postId}&${notification.peerUid}&$notificationId';
     await firestore
         .collection('users')
         .doc(auth.currentUser!.uid)

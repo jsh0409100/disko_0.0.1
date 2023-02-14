@@ -68,8 +68,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
     final timeFormat = DateFormat('MM월 dd일', 'ko');
     final showTime = timeFormat.format(date);
 
-    return StreamBuilder(
-        stream: getUserDataByUidStream(FirebaseAuth.instance.currentUser!.uid),
+    return FutureBuilder(
+        future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
@@ -320,9 +320,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                             Padding(
                               padding: const EdgeInsets.all(15.0),
                               child: BottomCommentField(
-                                profilePic: snapshot.data!.profilePic,
                                 postId: _PostCard.postId,
-                                uid: _PostCard.uid,
                                 commentCount: _PostCard.commentCount,
                                 likes: _PostCard.likes,
                                 imagesUrl: _PostCard.imagesUrl,
@@ -331,7 +329,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                           ],
                         ),
                       );
-                    })),
+                    }
+                    )
+            ),
           );
         });
   }

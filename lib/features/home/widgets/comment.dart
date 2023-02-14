@@ -44,7 +44,7 @@ class _CommentState extends State<Comment> {
     }
 
     return FutureBuilder(
-      future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
+      future: getUserDataByUid(widget.uid),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData == false) {
           return Card(

@@ -10,13 +10,13 @@ class BottomCommentField extends ConsumerStatefulWidget {
     required this.profilePic,
     required this.postId,
     required this.uid,
-    required this.comment_count,
+    required this.commentCount,
     required this.likes,
     required this.imagesUrl,
   }) : super(key: key);
   final String profilePic, postId, uid;
   final List<String> likes, imagesUrl;
-  int comment_count = 0;
+  int commentCount = 0;
 
   @override
   ConsumerState<BottomCommentField> createState() => _BottomCommentFieldState();
@@ -72,8 +72,7 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
                 maxLines: null,
                 decoration: const InputDecoration(
                   isDense: true,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
@@ -89,7 +88,7 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  widget.comment_count = widget.comment_count + 1;
+                  widget.commentCount = widget.commentCount + 1;
                 });
                 (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
                     ? null

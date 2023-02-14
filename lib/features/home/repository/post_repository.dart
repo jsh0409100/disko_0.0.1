@@ -29,11 +29,7 @@ class PostRepository {
   Stream<List<CommentModel>> getCommentStream(String postId) {
     final String collectionPath = 'posts/$postId/comment';
 
-    return firestore
-        .collection(collectionPath)
-        .orderBy('time')
-        .snapshots()
-        .map((event) {
+    return firestore.collection(collectionPath).orderBy('time').snapshots().map((event) {
       List<CommentModel> comment = [];
       for (var document in event.docs) {
         comment.add(CommentModel.fromJson(document.data()));
@@ -58,12 +54,7 @@ class PostRepository {
       uid: uid,
       likes: likes,
     );
-    return firestore
-        .collection('posts')
-        .doc(postId)
-        .collection('comment')
-        .doc(commentId)
-        .set(
+    return firestore.collection('posts').doc(postId).collection('comment').doc(commentId).set(
           comment.toJson(),
         );
   }
@@ -98,7 +89,7 @@ class PostRepository {
       final data = doc.get('postId');
       (data == postId)
           ? currentComment.update({
-              'comment_count': FieldValue.increment(1),
+              'commentCount': FieldValue.increment(1),
             })
           : currentComment.set(comment.toJson());
     } else {
@@ -158,27 +149,25 @@ class PostRepository {
     required NotificationEnum notificationType,
   }) async {
     final notification = NotificationModel(
-        peerUid: auth.currentUser!.uid,
-        time: time,
-        notificationType: notificationType,
-        postId: postId);
+      commentId: commentId,
+      peerUid: auth.currentUser!.uid,
+      time: time,
+      notificationType: notificationType,
+      postId: postId,
+      seen: false,
+    );
     bool sendable = true;
-    final String notificationId =
-        (notificationType == NotificationEnum.like) ? 'like' : commentId;
+    final String notificationId = (notificationType == NotificationEnum.like) ? 'like' : commentId;
     final String docName = '$postId&${auth.currentUser!.uid}&$notificationId';
 
-    final docRef = firestore
-        .collection('users')
-        .doc(peerUid)
-        .collection('notification')
-        .doc(docName);
+    final docRef =
+        firestore.collection('users').doc(peerUid).collection('notification').doc(docName);
     final doc = await docRef.get();
 
     if (doc.exists) {
       sendable = false;
     }
 
-    if (sendable && peerUid != auth.currentUser!.uid)
-      await docRef.set(notification.toJson());
+    if (sendable && peerUid != auth.currentUser!.uid) await docRef.set(notification.toJson());
   }
 }

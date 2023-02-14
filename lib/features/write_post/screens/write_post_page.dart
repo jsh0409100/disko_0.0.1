@@ -26,7 +26,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   final List<String> _arrImageUrls = [];
   final FirebaseStorage _storageRef = FirebaseStorage.instance;
   late String postId;
-  int comment_count = 0;
+  int commentCount = 0;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController postTitleController = TextEditingController();
@@ -59,7 +59,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
           postTitleController.text,
           _arrImageUrls,
           postId,
-          comment_count,
+          commentCount,
         );
   }
 
@@ -102,8 +102,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            shape: const Border(
-                bottom: BorderSide(color: Colors.black, width: 0.5)),
+            shape: const Border(bottom: BorderSide(color: Colors.black, width: 0.5)),
             centerTitle: true,
             title: const Text(
               '글쓰기',
@@ -136,12 +135,10 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                       controller: postTitleController,
                       maxLength: 15,
                       decoration: const InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+                        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 24),
                         hintText: '제목',
                       ),
-                      style: const TextStyle(
-                          fontSize: 17, fontWeight: FontWeight.w700),
+                      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
                     ),
                     Expanded(
                       flex: 75,
@@ -151,8 +148,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                         maxLines: null,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(
-                              top: 10, left: 24, right: 24, bottom: 0),
+                          contentPadding: EdgeInsets.only(top: 10, left: 24, right: 24, bottom: 0),
                           hintText: '글작성',
                         ),
                         style: const TextStyle(fontSize: 16),
@@ -167,9 +163,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                             flex: 15,
                             child: GridView.builder(
                               itemCount: _imageFileList?.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 4),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4),
                               itemBuilder: (BuildContext context, int index) {
                                 return Padding(
                                   padding: const EdgeInsets.all(2),
@@ -243,8 +238,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                     postId = const Uuid().v1();
                     Navigator.of(context).pop();
                     await uploadFunction(_imageFileList!);
-                    _uploadPost(
-                        CategoryList.categories[_CategoryCards.selected]);
+                    _uploadPost(CategoryList.categories[_CategoryCards.selected]);
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       AppLayoutScreen.routeName,

@@ -22,4 +22,8 @@ class NotificationController {
   Stream<List<NotificationModel>> notificationStream() {
     return notificationRepository.getNotificationStream();
   }
+
+  void markNotificationAsSeen(NotificationModel notification) {
+    ref.read(notificationRepositoryProvider).markNotificationAsSeen(notification);
+  }
 }

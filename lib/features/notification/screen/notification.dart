@@ -27,10 +27,7 @@ class _NotificationTapState extends ConsumerState<NotificationTap> {
           appBar: AppBar(
             title: const Text(
               "알림",
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
             ),
             centerTitle: true,
             bottom: const TabBar(
@@ -55,32 +52,28 @@ class _NotificationTapState extends ConsumerState<NotificationTap> {
           body: TabBarView(
             children: <Widget>[
               StreamBuilder<List<NotificationModel>>(
-                  stream: ref
-                      .read(notificationControllerProvider)
-                      .notificationStream(),
+                  stream: ref.read(notificationControllerProvider).notificationStream(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const LoadingScreen();
                     }
-                    if (!snapshot.hasData) return Container();
+                    if (!snapshot.hasData) {
+                      return Container();
+                    }
                     final notificationDocs = snapshot.data!;
                     return ListView.builder(
                         itemCount: notificationDocs.length,
                         itemBuilder: (context, index) {
                           return FutureBuilder(
-                              future: getPostByPostId(
-                                  notificationDocs[index].postId),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot snapshot) {
+                              future: getPostByPostId(notificationDocs[index].postId),
+                              builder: (BuildContext context, AsyncSnapshot snapshot) {
                                 if (snapshot.hasData == false) {
                                   return Card(
                                     color: Colors.grey.shade300,
                                     child: Column(children: [
                                       SizedBox(
                                         height: 70,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.9,
+                                        width: MediaQuery.of(context).size.width * 0.9,
                                       ),
                                       const SizedBox(
                                         height: 11,
@@ -88,18 +81,20 @@ class _NotificationTapState extends ConsumerState<NotificationTap> {
                                     ]),
                                   );
                                 }
-                                return notificationDocs[index]
-                                            .notificationType ==
+                                return notificationDocs[index].notificationType ==
                                         NotificationEnum.comment
                                     ? CustomCommentNotification(
                                         notification: notificationDocs[index],
+                                        post: snapshot.data,
                                       )
                                     : CustomLikedNotification(
                                         notification: notificationDocs[index],
+                                        post: snapshot.data,
                                       );
                               });
                         });
-                  })
+                  }),
+              Container(),
             ],
           ),
         ),

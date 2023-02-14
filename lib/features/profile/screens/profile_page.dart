@@ -46,7 +46,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             context,
             name,
             image,
-            widget.country,
+            widget.country
           );
     }
   }

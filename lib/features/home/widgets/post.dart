@@ -8,13 +8,7 @@ import '../../../models/post_card_model.dart';
 import '../screens/detail_page.dart';
 
 class Post extends StatefulWidget {
-  final String userName,
-      postCategory,
-      postTitle,
-      postText,
-      uid,
-      profilePic,
-      postId;
+  final String userName, postCategory, postTitle, postText, uid, profilePic, postId;
   final List<String> likes, imagesUrl;
   final Timestamp time;
   final int commentCount;
@@ -60,21 +54,18 @@ class _PostState extends State<Post> {
             );
           }
           return Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.92),
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.92),
               child: GestureDetector(
                 onTap: () {
                   Get.to(
                     () => const DetailPage(),
                     arguments: PostCard(
-                      userName: widget.userName,
                       postCategory: widget.postCategory,
                       postTitle: widget.postTitle,
                       postText: widget.postText,
                       uid: widget.uid,
                       likes: widget.likes,
                       imagesUrl: widget.imagesUrl,
-                      profilePic: widget.profilePic,
                       postId: widget.postId,
                       time: widget.time,
                       commentCount: widget.commentCount,
@@ -82,14 +73,12 @@ class _PostState extends State<Post> {
                   );
                 },
                 child: PostCard(
-                  userName: widget.userName,
                   postCategory: widget.postCategory,
                   postTitle: widget.postTitle,
                   postText: widget.postText,
                   uid: widget.uid,
                   likes: widget.likes,
                   imagesUrl: widget.imagesUrl,
-                  profilePic: widget.profilePic,
                   postId: widget.postId,
                   time: widget.time,
                   commentCount: widget.commentCount,
@@ -103,22 +92,16 @@ class PostsDatabase {
   Future<List<PostCardModel>> fetchPosts(PostCardModel? post) async {
     final postsCollectionRef = FirebaseFirestore.instance.collection('posts');
     if (post == null) {
-      final documentSnapshot = await postsCollectionRef
-          .orderBy('time', descending: true)
-          .limit(5)
-          .get();
-      return documentSnapshot.docs
-          .map((doc) => PostCardModel.fromJson(doc.data()))
-          .toList();
+      final documentSnapshot =
+          await postsCollectionRef.orderBy('time', descending: true).limit(5).get();
+      return documentSnapshot.docs.map((doc) => PostCardModel.fromJson(doc.data())).toList();
     } else {
       final documentSnapshot = await postsCollectionRef
           .orderBy('time', descending: true)
           .startAfter([post.time])
           .limit(5)
           .get();
-      return documentSnapshot.docs
-          .map((doc) => PostCardModel.fromJson(doc.data()))
-          .toList();
+      return documentSnapshot.docs.map((doc) => PostCardModel.fromJson(doc.data())).toList();
     }
   }
 }

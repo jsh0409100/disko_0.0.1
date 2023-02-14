@@ -25,8 +25,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   final _PostCard = Get.arguments;
   final replyController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
-  CollectionReference postsCollection =
-      FirebaseFirestore.instance.collection('posts');
+  CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
   bool _isLiked = false;
   Color likeColor = Colors.black;
   Icon likeIcon = const Icon(Icons.favorite_border);
@@ -39,10 +38,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
     required NotificationEnum notificationType,
   }) {
     ref.read(postControllerProvider).saveNotification(
-        postId: postId,
-        peerUid: peerUid,
-        time: time,
-        notificationType: notificationType);
+        postId: postId, peerUid: peerUid, time: time, notificationType: notificationType);
   }
 
   @override
@@ -84,208 +80,201 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                   )),
               title: Text(
                 _PostCard.postCategory,
-                style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 17
-                ),
+                style:
+                    const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 17),
               ),
               centerTitle: true,
             ),
             body: SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height / 1.125,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
+              child: FutureBuilder(
+                  future: getUserDataByUid(_PostCard.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData == false) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return Container(
+                      height: MediaQuery.of(context).size.height / 1.125,
                       child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: Image(
-                                      image: NetworkImage(_PostCard.profilePic),
-                                      height: 43,
-                                      width: 43,
-                                      fit: BoxFit.scaleDown,
-                                    )),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _PostCard.userName,
-                                      style: const TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Text(_PostCard.postCategory,
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                        )
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: MediaQuery.of(context).size.width / 1.97),
-                                IconButton(
-                                  onPressed: () {
-
-                                  },
-                                  icon: const Icon(Icons.more_vert),
-                                  iconSize: 24,
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: MediaQuery.of(context).size.height / 50),
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                _PostCard.postTitle,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: MediaQuery.of(context).size.height / 100),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  child: Text(
-                                    _PostCard.postText,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                    ),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              Row(
+                                children: [
+                                  ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: Image(
+                                        image: NetworkImage(snapshot.data!.profilePic),
+                                        height: 43,
+                                        width: 43,
+                                        fit: BoxFit.scaleDown,
+                                      )),
+                                  const SizedBox(
+                                    width: 12,
                                   ),
-                                ),
-                                _PostCard.imagesUrl.isEmpty
-                                    ? Container()
-                                    : Padding(
-                                        padding: const EdgeInsets.all(3),
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              3,
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount:
-                                                _PostCard.imagesUrl.length,
-                                            dragStartBehavior:
-                                                DragStartBehavior.start,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2),
-                                                child: Image.network(
-                                                  _PostCard.imagesUrl[index],
-                                                ),
-                                              );
-                                            },
-                                          ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        snapshot.data!.displayName,
+                                        style: const TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                              ],
-                            ),
-                            SizedBox(height: MediaQuery.of(context).size.height / 50),
-                            Row(
-                              children: [
-                                SizedBox(width: MediaQuery.of(context).size.width / 1.35),
-                                Text(
-                                  showTime,
+                                      Text(_PostCard.postCategory,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                    ],
+                                  ),
+                                  SizedBox(width: MediaQuery.of(context).size.width / 1.97),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.more_vert),
+                                    iconSize: 24,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: MediaQuery.of(context).size.height / 50),
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  _PostCard.postTitle,
                                   style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xff767676),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ]),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          onPressed: () async {
-                            FirebaseFirestore.instance
-                                .collection('posts')
-                                .doc(_PostCard.postId)
-                                .get();
-                            if (_PostCard.likes.contains(user!.uid)) {
-                              _PostCard.likes.remove(user!.uid);
-                              setState(() {
-                                _isLiked = false;
-                              });
-                            } else {
-                              _PostCard.likes.add(user!.uid);
-                              setState(() {
-                                _isLiked = true;
-                              });
-                            }
-                            await postsCollection.doc(_PostCard.postId).update({
-                              'likes': _PostCard.likes,
-                            });
-                            saveNotification(
-                              peerUid: _PostCard.uid,
+                              ),
+                              SizedBox(height: MediaQuery.of(context).size.height / 100),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    child: Text(
+                                      _PostCard.postText,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  _PostCard.imagesUrl.isEmpty
+                                      ? Container()
+                                      : Padding(
+                                          padding: const EdgeInsets.all(3),
+                                          child: Container(
+                                            height: MediaQuery.of(context).size.height / 3,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: _PostCard.imagesUrl.length,
+                                              dragStartBehavior: DragStartBehavior.start,
+                                              itemBuilder: (BuildContext context, int index) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.all(2),
+                                                  child: Image.network(
+                                                    _PostCard.imagesUrl[index],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                ],
+                              ),
+                              SizedBox(height: MediaQuery.of(context).size.height / 50),
+                              Row(
+                                children: [
+                                  SizedBox(width: MediaQuery.of(context).size.width / 1.35),
+                                  Text(
+                                    showTime,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xff767676),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                onPressed: () async {
+                                  FirebaseFirestore.instance
+                                      .collection('posts')
+                                      .doc(_PostCard.postId)
+                                      .get();
+                                  if (_PostCard.likes.contains(user!.uid)) {
+                                    _PostCard.likes.remove(user!.uid);
+                                    setState(() {
+                                      _isLiked = false;
+                                    });
+                                  } else {
+                                    _PostCard.likes.add(user!.uid);
+                                    setState(() {
+                                      _isLiked = true;
+                                    });
+                                  }
+                                  await postsCollection.doc(_PostCard.postId).update({
+                                    'likes': _PostCard.likes,
+                                  });
+                                  saveNotification(
+                                    peerUid: _PostCard.uid,
+                                    postId: _PostCard.postId,
+                                    time: Timestamp.now(),
+                                    notificationType: NotificationEnum.like,
+                                  );
+                                },
+                                icon: likeIcon,
+                                color: likeColor,
+                              ),
+                              Text(
+                                _PostCard.likes.length.toString(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.chat_outlined,
+                                  color: Colors.black,
+                                  size: 24,
+                                ),
+                              ),
+                              Text(
+                                _PostCard.commentCount.toString(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: CommentList(
+                              profilePic: snapshot.data!.profilePic,
                               postId: _PostCard.postId,
-                              time: Timestamp.now(),
-                              notificationType: NotificationEnum.like,
-                            );
-                          },
-                          icon: likeIcon,
-                          color: likeColor,
-                        ),
-                        Text(
-                          _PostCard.likes.length.toString(),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 5),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.chat_outlined,
-                            color: Colors.black,
-                            size: 24,
+                          BottomCommentField(
+                            profilePic: snapshot.data!.profilePic,
+                            postId: _PostCard.postId,
+                            uid: _PostCard.uid,
+                            commentCount: _PostCard.commentCount,
+                            likes: _PostCard.likes,
+                            imagesUrl: _PostCard.imagesUrl,
                           ),
-                        ),
-                        Text(
-                          _PostCard.comment_count.toString(),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                          ),),
-                      ],
-                    ),
-                    Expanded(
-                      child: CommentList(
-                        profilePic: snapshot.data.profilePic,
-                        postId: _PostCard.postId,
+                        ],
                       ),
-                    ),
-                    BottomCommentField(
-                      profilePic: snapshot.data.profilePic,
-                      postId: _PostCard.postId,
-                      uid: _PostCard.uid,
-                      comment_count: _PostCard.commentCount,
-                      likes: _PostCard.likes,
-                      imagesUrl: _PostCard.imagesUrl,
-                    ),
-                  ],
-                ),
-              ),
+                    );
+                  }),
             ),
           );
         });

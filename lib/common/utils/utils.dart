@@ -94,9 +94,9 @@ String readTimestamp(Timestamp time) {
     timediff = '${(diff.inDays / 7).floor().toString()}주 전';
   } else if (diff.inDays > 0 && diff.inDays < 7) {
     timediff = '${diff.inDays.toString()}일 전';
-  } else if (diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
+  } else if (diff.inHours > 0 && diff.inDays == 0) {
     timediff = '${diff.inHours.toString()}시간 전';
-  } else if (diff.inMinutes == 0 || diff.inMinutes > 0) {
+  } else if (diff.inMinutes > 0) {
     timediff = '${diff.inMinutes.toString()}분 전';
   } else {
     timediff = '${diff.inSeconds.toString()}초 전';

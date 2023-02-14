@@ -27,12 +27,13 @@ class CallScreen extends ConsumerStatefulWidget {
 class _CallScreenState extends ConsumerState<CallScreen> {
   String token = AgoraConfig.token;
   int tokenRole = 1; // use 1 for Host/Broadcaster, 2 for Subscriber/Audience
-  String serverUrl =
-      "https://agora-token-service-production-b53a.up.railway.app";
+  String serverUrl = "https://agora-token-service-production-b53a.up.railway.app";
   int tokenExpireTime = 45; // Expire time in Seconds.
   bool isTokenExpiring = false; // Set to true when the token is about to expire
   String channelName = "test-call";
   int uid = 0; // uid of the local user
+  bool isMuted = false;
+  bool isVideoHide = false;
 
   int? _remoteUid; // uid of the remote user
   bool _isJoined = false; // Indicates if the local user has joined the channel
@@ -55,20 +56,44 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     agoraEngine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-          showMessage(
-              "Local user uid:${connection.localUid} joined the channel");
-          setState(() {
-            _isJoined = true;
-          });
+          showMessage("Local user uid:${connection.localUid} joined the channel");
+          setState(() {});
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          showMessage("Remote user uid:$remoteUid joined the channel");
           setState(() {
             _remoteUid = remoteUid;
+            _isJoined = true;
           });
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
+          print(_isJoined);
         },
-        onUserOffline: (RtcConnection connection, int remoteUid,
-            UserOfflineReasonType reason) {
+        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
           showMessage("Remote user uid:$remoteUid left the channel");
           setState(() {
             _remoteUid = null;
@@ -88,9 +113,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
 
   Future<void> initializeAgora() async {
     await setupVideoSDKEngine();
-    widget.call.hasDialed
-        ? fetchToken(uid, channelName, tokenRole)
-        : setToken(widget.call.token);
+    widget.call.hasDialed ? fetchToken(uid, channelName, tokenRole) : setToken(widget.call.token);
   }
 
   void joinCall(String token) async {
@@ -126,9 +149,9 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   // Release the resources when you leave
   @override
   void dispose() async {
+    super.dispose();
     await agoraEngine.leaveChannel();
     agoraEngine.release();
-    super.dispose();
   }
 
   Future<void> fetchToken(int uid, String channelName, int tokenRole) async {
@@ -142,14 +165,66 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       // If the server returns an OK response, then parse the JSON.
       Map<String, dynamic> json = jsonDecode(response.body);
       String newToken = json['rtcToken'];
-
+      print(newToken);
+      print('');
+      print('');
+      print('');
+      print('');
+      print('');
+      print(newToken);
+      print('');
+      print('');
+      print('');
+      print('');
+      print('');
+      print(newToken);
+      print('');
+      print('');
+      print('');
+      print('');
+      print('');
+      print(newToken);
+      print('');
+      print('');
+      print('');
+      print('');
+      print('');
+      print(newToken);
+      print('');
+      print('');
+      print('');
+      print('');
+      print('');
+      print(newToken);
+      print('');
+      print('');
+      print('');
+      print('');
+      print('');
+      print(newToken);
+      print('');
+      print('');
+      print('');
+      print('');
+      print('');
+      print(newToken);
+      print('');
+      print('');
+      print('');
+      print('');
+      print('');
+      print(newToken);
+      print('');
+      print('');
+      print('');
+      print('');
+      print('');
       // Use the token to join a channel or renew an expiring token
       setToken(newToken);
     } else {
       // If the server did not return an OK response,
       // then throw an exception.
-      throw Exception(
-          'Failed to fetch a token. Make sure that your server URL is valid');
+      throw Exception('Failed to fetch a token. Make sure that your server URL is valid');
     }
   }
 
@@ -158,10 +233,8 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       // Renew the token
       agoraEngine.renewToken(newToken);
       isTokenExpiring = false;
-      showMessage("Token renewed");
     } else {
       // Join a channel.
-      showMessage("Token received, joining a channel...");
       joinCall(newToken);
     }
     ref.read(callControllerProvider).setToken(newToken, widget.call);
@@ -173,44 +246,75 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     ));
   }
 
+  void toggleMute() {
+    if (isMuted) {
+      agoraEngine.disableAudio();
+    } else {
+      agoraEngine.enableAudio();
+    }
+    setState(() {
+      isMuted = !isMuted;
+    });
+  }
+
+  void toggleVideoCam() {
+    if (isVideoHide) {
+      agoraEngine.disableVideo();
+    } else {
+      agoraEngine.enableVideo();
+    }
+    setState(() {
+      isVideoHide = !isVideoHide;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView(
+        body: Column(
       children: [
         // Container for the local video
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: Center(child: _localPreview()),
+        Expanded(
+          flex: 5,
+          child: isVideoHide ? const Center() : Center(child: _localPreview()),
         ),
         const SizedBox(height: 10),
         //Container for the Remote video
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.5,
+        Expanded(
+          flex: 5,
           child: Center(child: _remoteVideo()),
         ),
         // Button Row
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: IconButton(
-                onPressed: _isJoined
-                    ? () async {
-                        leaveCall();
-                        // ref.read(callControllerProvider).endCall(
-                        //       widget.call.callerId,
-                        //       widget.call.receiverUid,
-                        //       context,
-                        //     );
-                        // Navigator.pop(context);
-                      }
-                    : null,
+        Expanded(
+          flex: 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: toggleVideoCam,
+                    icon: isVideoHide
+                        ? const Icon(Icons.videocam_off_outlined)
+                        : const Icon(Icons.videocam_outlined),
+                  ),
+                  IconButton(
+                    onPressed: toggleMute,
+                    icon: isMuted ? const Icon(Icons.mic_off_outlined) : const Icon(Icons.mic),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.cached_outlined),
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: leaveCall,
                 icon: const Icon(Icons.call_end),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        // Button Row ends
       ],
     ));
   }
@@ -224,9 +328,24 @@ class _CallScreenState extends ConsumerState<CallScreen> {
         ),
       );
     } else {
-      return const Text(
-        'Joining Channel',
-        textAlign: TextAlign.center,
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: NetworkImage(widget.call.receiverPic),
+            ),
+            Text(
+              widget.call.receiverName,
+              textAlign: TextAlign.center,
+            ),
+            const Text(
+              "전화 거는 중...",
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       );
     }
   }
@@ -243,7 +362,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       );
     } else {
       String msg = '';
-      if (_isJoined) msg = 'Waiting for a remote user to join';
+      if (_isJoined) msg = '상대방이 들어오는 중입니다.';
       return Text(
         msg,
         textAlign: TextAlign.center,

@@ -49,11 +49,13 @@ class PostController {
   void saveNotification({
     required String postId,
     required String peerUid,
+    required String postTitle,
     required Timestamp time,
     required NotificationEnum notificationType,
   }) {
     ref.read(userDataAuthProvider).whenData(
           (value) => postRepository.saveNotification(
+            postTitle: postTitle,
             postId: postId,
             peerUid: peerUid,
             time: time,

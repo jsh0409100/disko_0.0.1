@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../features/notification/screen/notification.dart';
 import '../../features/search/screens/search.dart';
+import 'notification_button.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -39,18 +40,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.black,
             ),
           ),
-          const Visibility(
-            visible: true,
-            child: Positioned(
-              left: 23,
-              top: 13,
-              child: Icon(
-                Icons.circle,
-                size: 12,
-                color: Colors.red,
-              ),
-            ),
-          )
+          UnreadNotificationCounter(),
         ]),
       ],
       backgroundColor: Theme.of(context).colorScheme.onPrimary,

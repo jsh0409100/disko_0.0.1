@@ -16,7 +16,6 @@ class CustomCommentNotification extends ConsumerWidget {
       : super(key: key);
 
   void checkNotification(PostCardModel post, WidgetRef ref) {
-    ref.read(notificationControllerProvider).markNotificationAsSeen(notification);
     Get.to(
       () => const DetailPage(),
       arguments: PostCard(
@@ -35,6 +34,9 @@ class CustomCommentNotification extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (!notification.seen) {
+      ref.read(notificationControllerProvider).markNotificationAsSeen(notification);
+    }
     return GestureDetector(
       onTap: () => checkNotification(post, ref),
       child: FutureBuilder(
@@ -80,22 +82,25 @@ class CustomCommentNotification extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RichText(
-                          text: TextSpan(
-                              style: const TextStyle(
-                                  fontSize: 17, color: Colors.black), //apply style to all
-                              children: [
-                            TextSpan(
-                                text: '${snapshot.data.displayName}',
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.76,
+                        child: RichText(
+                            text: TextSpan(
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            const TextSpan(text: '가 '),
-                            TextSpan(
-                                text: post.postTitle,
-                                style: const TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: '글에 댓글을 남겼습니다.'),
-                          ])),
+                                    fontSize: 17, color: Colors.black), //apply style to all
+                                children: [
+                              TextSpan(
+                                  text: '${snapshot.data.displayName}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              const TextSpan(text: '님이 '),
+                              TextSpan(
+                                  text: notification.postTitle,
+                                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                              const TextSpan(text: '글에 댓글을 남겼습니다.'),
+                            ])),
+                      ),
                       const SizedBox(
                         height: 10,
                       ),

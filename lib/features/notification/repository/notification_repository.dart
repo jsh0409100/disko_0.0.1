@@ -25,7 +25,7 @@ class NotificationRepository {
         .collection('users')
         .doc(auth.currentUser!.uid)
         .collection('notification')
-        .orderBy('time')
+        .orderBy('time', descending: true)
         .snapshots()
         .map((event) {
       List<NotificationModel> notifications = [];
@@ -34,6 +34,17 @@ class NotificationRepository {
       }
       return notifications;
     });
+  }
+
+  Future<List<NotificationModel>> getNotifications() async {
+    // List<NotificationModel> notifications = [];
+    final documentSnapshot = await firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('notification')
+        .orderBy('time', descending: true)
+        .get();
+    return documentSnapshot.docs.map((doc) => NotificationModel.fromJson(doc.data())).toList();
   }
 
   void markNotificationAsSeen(NotificationModel notification) async {

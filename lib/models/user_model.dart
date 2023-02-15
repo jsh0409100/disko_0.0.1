@@ -3,7 +3,7 @@ class UserModel {
   final String phoneNum;
   final String countryCode;
   final String profilePic;
-  final String tag;
+  final List<String> tag;
 
   UserModel({
     required this.profilePic,
@@ -18,7 +18,7 @@ class UserModel {
         displayName = json['displayName'],
         profilePic = json['profilePic'],
         countryCode = json['countryCode'],
-        tag = json['tag'];
+        tag = json['tag'].cast<String>();
 
   Map<String, dynamic> toJson() => {
     'displayName': displayName,

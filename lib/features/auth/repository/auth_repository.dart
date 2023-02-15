@@ -109,7 +109,7 @@ class AuthRepository {
         displayName: name,
         countryCode: countryCode,
         profilePic: photoUrl,
-        tag: "",
+        tag: [],
       );
 
       await firestore.collection('users').doc(uid).set(user.toJson());
@@ -152,7 +152,7 @@ class AuthRepository {
     required ProviderRef ref,
     required BuildContext context,
     required bool isUserCreated,
-    required String tag,
+    required List<String> tag,
   }) async {
     try {
       String uid = auth.currentUser!.uid;

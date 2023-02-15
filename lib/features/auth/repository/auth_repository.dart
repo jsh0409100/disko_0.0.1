@@ -102,6 +102,8 @@ class AuthRepository {
         photoUrl = await ref
             .read(commonFirebaseStorageRepositoryProvider)
             .storeFileToFirebase('profilePic/$uid', profilePic);
+      } else{
+        photoUrl = auth.currentUser!.photoURL!;
       }
 
       var user = UserModel(

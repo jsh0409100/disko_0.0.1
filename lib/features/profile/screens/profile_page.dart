@@ -3,20 +3,22 @@ import 'dart:io';
 import 'package:disko_001/common/utils/utils.dart';
 import 'package:disko_001/features/auth/controller/auth_controller.dart';
 import 'package:disko_001/features/profile/screens/profile_edit_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   final String displayName, country, description, imageURL;
+  final List<String> tag;
 
-  const ProfilePage(
-      {Key? key,
-        required this.displayName,
-        required this.country,
-        required this.description,
-        required this.imageURL,
-      })
-      : super(key: key);
+  const ProfilePage({
+    Key? key,
+    required this.displayName,
+    required this.country,
+    required this.description,
+    required this.imageURL,
+    required this.tag,
+  }) : super(key: key);
 
   @override
   ConsumerState<ProfilePage> createState() => _ProfilePageState();
@@ -42,11 +44,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     String name = nameController.text.trim();
 
     if (name.isNotEmpty) {
-      ref.read(authControllerProvider).saveUserDataToFirebase(
+      ref.read(authControllerProvider).saveProfileDataToFirebase(
             context,
             name,
             image,
-            widget.country
+            widget.country,
+            widget.tag,
           );
     }
   }
@@ -66,8 +69,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   image == null
                       ? CircleAvatar(
                           radius: 60,
-                          backgroundImage: NetworkImage(
-                              widget.imageURL),
+                          backgroundImage: NetworkImage(widget.imageURL),
                         )
                       : CircleAvatar(
                           radius: 60,
@@ -82,15 +84,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       backgroundColor: Color(0xffEFEFEF),
                       radius: 15,
                       child: IconButton(
-                        onPressed: ()=> Navigator.push(
-                          context, MaterialPageRoute(
-                          builder: (context) => ProfileEditPage(
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfileEditPage(
                               displayName: widget.displayName,
                               country: widget.country,
                               description: widget.description,
                               imageURL: widget.imageURL,
+                              tag: widget.tag,
+                            ),
                           ),
-                        ),
                         ),
                         icon: const Icon(
                           Icons.add_a_photo,
@@ -109,7 +113,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               children: [
                 Text(
                   widget.displayName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontStyle: FontStyle.normal,
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
@@ -117,7 +121,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
                 Text(
                   widget.country,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontStyle: FontStyle.normal,
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
@@ -126,45 +130,34 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ],
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            Row(
-              children: [
-                Chip(
-                  label: const Text('✏ 유학생'),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                Chip(
-                  label: const Text('🍳 요리'),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                Chip(
-                  label: const Text('📸 사진찍기'),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            FutureBuilder(
+                future:
+                    getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return Wrap(
+                      spacing: MediaQuery.of(context).size.width * 0.03,
+                      runSpacing: MediaQuery.of(context).size.width * 0.001,
+                      children:
+                        List.generate(widget.tag.length,(index){
+                          if(index + 1 == widget.tag.length){
+                            return Row(
+                              children: [
+                                mChip(widget.tag[index]),
+                                IconButton(
+                                    onPressed: (){},
+                                    icon: const Icon(Icons.add_circle_outline),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return mChip(widget.tag[index]);
+                          }
+                        }),
+                    );
+                  }
+                  return size();
+                }),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Text(
               widget.description,
@@ -349,5 +342,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Widget Followings() {
     return const Text('Followings');
+  }
+
+  Widget mChip(String text) {
+    return Chip(
+      label: Text(text),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: const BorderSide(
+          color: Colors.black,
+          width: 1,
+        ),
+      ),
+    );
+  }
+
+  Widget size() {
+    return SizedBox(width: MediaQuery.of(context).size.width * 0.03);
   }
 }

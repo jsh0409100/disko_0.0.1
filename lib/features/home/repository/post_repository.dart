@@ -133,6 +133,7 @@ class PostRepository {
       saveNotification(
           postId: postId,
           peerUid: post.uid,
+          postTitle: post.postTitle,
           time: time,
           notificationType: NotificationEnum.comment,
           commentId: commentId);
@@ -145,6 +146,7 @@ class PostRepository {
     required String postId,
     required String peerUid,
     required String commentId,
+    required String postTitle,
     required Timestamp time,
     required NotificationEnum notificationType,
   }) async {
@@ -154,6 +156,7 @@ class PostRepository {
       time: time,
       notificationType: notificationType,
       postId: postId,
+      postTitle: postTitle,
       seen: false,
     );
     bool sendable = true;

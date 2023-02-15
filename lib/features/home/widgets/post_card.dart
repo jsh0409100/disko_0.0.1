@@ -70,11 +70,17 @@ class _PostCardState extends ConsumerState<PostCard> {
     void saveNotification({
       required String postId,
       required String peerUid,
+      required String postTitle,
       required Timestamp time,
       required NotificationEnum notificationType,
     }) {
       ref.read(postControllerProvider).saveNotification(
-          postId: postId, peerUid: peerUid, time: time, notificationType: notificationType);
+            postId: postId,
+            peerUid: peerUid,
+            postTitle: postTitle,
+            time: time,
+            notificationType: notificationType,
+          );
     }
 
     return Column(
@@ -244,6 +250,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                               saveNotification(
                                 peerUid: widget.uid,
                                 postId: widget.postId,
+                                postTitle: widget.postTitle,
                                 time: Timestamp.now(),
                                 notificationType: NotificationEnum.like,
                               );

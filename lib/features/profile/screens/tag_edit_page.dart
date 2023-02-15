@@ -23,40 +23,30 @@ class ProfileEditPage extends ConsumerStatefulWidget {
 }
 
 class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
-  String test = 'test';
-  File? image;
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController countryController = TextEditingController();
-  final TextEditingController keywordController = TextEditingController();
 
-
+  final TextEditingController ImojiController = TextEditingController();
+  final TextEditingController tagController = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
-    nameController.dispose();
-    descriptionController.dispose();
-    countryController.dispose();
-    keywordController.dispose();
-  }
+    ImojiController.dispose();
+    tagController.dispose();
 
-  void selectImage() async {
-    image = await pickImageFromGallery(context);
-    setState(() {});
   }
 
   void storeUserData() async {
-    String name = nameController.text.trim();
 
-    if (name.isNotEmpty) {
+    File? image;
+
+    if (widget.displayName.isNotEmpty) {
       ref.read(authControllerProvider).saveProfileDataToFirebase(
-            context,
-            name,
-            image,
-            widget.country,
-            widget.tag,
-          );
+        context,
+        widget.displayName,
+        image,
+        widget.country,
+        widget.tag,
+      );
     }
   }
 
@@ -84,15 +74,15 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                 child: GestureDetector(
                   child: image == null
                       ? CircleAvatar(
-                          radius: 60,
-                          backgroundImage: NetworkImage(widget.imageURL),
-                        )
+                    radius: 60,
+                    backgroundImage: NetworkImage(widget.imageURL),
+                  )
                       : CircleAvatar(
-                          radius: 60,
-                          backgroundImage: FileImage(
-                            image!,
-                          ),
-                        ),
+                    radius: 60,
+                    backgroundImage: FileImage(
+                      image!,
+                    ),
+                  ),
                   onTap: () {},
                 ),
               ),
@@ -117,6 +107,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
         ],
       ),
     );
+  }
+  void makeImage(){
+    image = widget.imageURL as File?;
   }
 
   Widget textField(
@@ -154,8 +147,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
               ),
               focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
-                color: Colors.black54,
-              )),
+                    color: Colors.black54,
+                  )),
             ),
           ),
         ),

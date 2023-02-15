@@ -56,6 +56,19 @@ class AuthController {
     );
   }
 
+  void saveProfileDataToFirebase(
+      BuildContext context, String name, File? profilePic, String countryCode, List<String> tag) {
+    authRepository.saveProfileDataToFirebase(
+      name: name,
+      profilePic: profilePic,
+      context: context,
+      ref: ref,
+      countryCode: countryCode,
+      isUserCreated: false,
+      tag: tag,
+    );
+  }
+
   Stream<UserModel> userDataById(String userId) {
     return authRepository.userData(userId);
   }

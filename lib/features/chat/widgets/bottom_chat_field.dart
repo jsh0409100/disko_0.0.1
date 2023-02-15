@@ -142,14 +142,6 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   }
 
   void practiceCall() {
-    print("pressed");
-    print("pressed");
-    print("pressed");
-    print("pressed");
-    print("pressed");
-    print("pressed");
-    print("pressed");
-    print("pressed");
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -215,14 +207,12 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
             Expanded(
               child: TextField(
                 focusNode: focusNode,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 controller: controller,
                 maxLines: null,
                 decoration: const InputDecoration(
                   isDense: true,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
@@ -236,8 +226,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
               ),
             ),
             IconButton(
-              onPressed: (_userEnterMessage.trim().isEmpty ||
-                      _userEnterMessage.trim() == '')
+              onPressed: (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
                   ? null
                   : _sendMessage,
               icon: Icon(
@@ -257,42 +246,34 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: selectImage,
-                          child: const MessageCategoryCard(
-                              categoryIcon: Icons.add_photo_alternate_outlined,
-                              categoryName: '사진 보내기'),
-                        ),
-                        GestureDetector(
-                          onTap: selectVideo,
-                          child: const MessageCategoryCard(
-                              categoryIcon: Icons.video_file_outlined,
-                              categoryName: '영상 보내기'),
-                        ),
-                        const MessageCategoryCard(
-                            categoryIcon: Icons.camera_alt_outlined,
-                            categoryName: '카메라'),
-                      ]),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                    GestureDetector(
+                      onTap: selectImage,
+                      child: const MessageCategoryCard(
+                          categoryIcon: Icons.add_photo_alternate_outlined, categoryName: '사진 보내기'),
+                    ),
+                    GestureDetector(
+                      onTap: selectVideo,
+                      child: const MessageCategoryCard(
+                          categoryIcon: Icons.video_file_outlined, categoryName: '영상 보내기'),
+                    ),
+                    const MessageCategoryCard(
+                        categoryIcon: Icons.camera_alt_outlined, categoryName: '카메라'),
+                  ]),
                   const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const MessageCategoryCard(
-                          categoryIcon: Icons.mic, categoryName: '음성메세지'),
+                      const MessageCategoryCard(categoryIcon: Icons.mic, categoryName: '음성메세지'),
                       GestureDetector(
                         onTap: showMap,
                         child: const MessageCategoryCard(
-                            categoryIcon: Icons.location_on_outlined,
-                            categoryName: '위치 보내기'),
+                            categoryIcon: Icons.location_on_outlined, categoryName: '위치 보내기'),
                       ),
                       GestureDetector(
                         onTap: makeAppointment,
                         child: const MessageCategoryCard(
-                            categoryIcon: Icons.calendar_month_outlined,
-                            categoryName: '약속하기'),
+                            categoryIcon: Icons.calendar_month_outlined, categoryName: '약속하기'),
                       ),
                     ],
                   ),
@@ -303,8 +284,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                       GestureDetector(
                         onTap: () => makeCall(ref, context),
                         child: const MessageCategoryCard(
-                            categoryIcon: Icons.video_call_outlined,
-                            categoryName: '영상통화'),
+                            categoryIcon: Icons.video_call_outlined, categoryName: '영상통화'),
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.25,

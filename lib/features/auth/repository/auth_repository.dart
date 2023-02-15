@@ -102,6 +102,8 @@ class AuthRepository {
         photoUrl = await ref
             .read(commonFirebaseStorageRepositoryProvider)
             .storeFileToFirebase('profilePic/$uid', profilePic);
+      } else{
+        photoUrl = auth.currentUser!.photoURL!;
       }
 
       var user = UserModel(
@@ -109,6 +111,7 @@ class AuthRepository {
         displayName: name,
         countryCode: countryCode,
         profilePic: photoUrl,
+        tag: [],
       );
 
       await firestore.collection('users').doc(uid).set(user.toJson());
@@ -143,4 +146,52 @@ class AuthRepository {
       'isOnline': isOnline,
     });
   }
+
+  void saveProfileDataToFirebase({
+    required String name,
+    required File? profilePic,
+    required String countryCode,
+    required ProviderRef ref,
+    required BuildContext context,
+    required bool isUserCreated,
+    required List<String> tag,
+  }) async {
+    try {
+      String uid = auth.currentUser!.uid;
+      String photoUrl =
+          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+
+      if (profilePic != null) {
+        photoUrl = await ref
+            .read(commonFirebaseStorageRepositoryProvider)
+            .storeFileToFirebase('profilePic/$uid', profilePic);
+      }
+
+      var user = UserModel(
+          phoneNum: auth.currentUser!.phoneNumber!,
+          displayName: name,
+          countryCode: countryCode,
+          profilePic: photoUrl,
+          tag : tag,
+      );
+
+      await firestore.collection('users').doc(uid).set(user.toJson());
+
+      if (isUserCreated) {
+        Navigator.pushNamed(
+          context,
+          LandingPage.routeName,
+        );
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppLayoutScreen.routeName,
+              (route) => false,
+        );
+      }
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
 }

@@ -31,6 +31,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
               country: '이스라엘',
               description: '안녕하세요! 이스라엘 거주중 엥뿌삐 올리비아 입니다',
               imageURL: snapshot.data.profilePic,
+              tag: snapshot.data.tag,
             ),
           );
         });

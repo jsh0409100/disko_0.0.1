@@ -24,6 +24,7 @@ class BottomCommentField extends ConsumerStatefulWidget {
 class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
   final controller = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
+  late FocusNode _focusNode;
 
   var _userEnterMessage = '';
 
@@ -42,8 +43,15 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+  }
+
+  @override
   void dispose() {
     super.dispose();
+    _focusNode.dispose();
     controller.dispose();
     // _soundRecorder!.closeRecorder();
   }
@@ -51,62 +59,65 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-            child: Row(children: [
-          ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Image(
-                image: NetworkImage(snapshot.data!.profilePic),
-                height: 43,
-                width: 43,
-                fit: BoxFit.scaleDown,
-              )),
-          const SizedBox(width: 10),
-          Expanded(
-            child: TextField(
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              controller: controller,
-              maxLines: null,
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding: const EdgeInsets.all(10),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
+        future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return Container(
+              child: Row(children: [
+            ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image(
+                  image: NetworkImage(snapshot.data!.profilePic),
+                  height: 43,
+                  width: 43,
+                  fit: BoxFit.scaleDown,
+                )),
+            const SizedBox(width: 10),
+            Expanded(
+              child: TextField(
+                focusNode: _focusNode,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                controller: controller,
+                maxLines: null,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: const EdgeInsets.all(10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: const Color(0xffD9D9D9),
+                  hintText: "댓글 쓰기",
                 ),
-                filled: true,
-                fillColor: const Color(0xffD9D9D9),
-                hintText: "댓글 쓰기",
+                onChanged: (value) {
+                  setState(() {
+                    _userEnterMessage = value.trim();
+                  });
+                },
               ),
-              onChanged: (value) {
+            ),
+            TextButton(
+              onPressed: () {
                 setState(() {
-                  _userEnterMessage = value.trim();
+                  widget.commentCount = widget.commentCount + 1;
                 });
+                (_userEnterMessage.trim().isEmpty ||
+                        _userEnterMessage.trim() == '')
+                    ? null
+                    : uploadComment();
+                _focusNode.requestFocus();
               },
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                widget.commentCount = widget.commentCount + 1;
-              });
-              (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
-                  ? null
-                  : uploadComment();
-            },
-            child: const Text(
-              '게시',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+              child: const Text(
+                '게시',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-        ]));
-      }
-    );
+          ]));
+        });
   }
 }

@@ -8,7 +8,7 @@ import '../../../common/utils/utils.dart';
 import '../controller/post_controller.dart';
 
 class Comment extends StatefulWidget {
-  final String userName, text, uid, postId;
+  final String userName, text, uid, postId, commentId;
   final List<String> likes;
   final Timestamp time;
 
@@ -20,6 +20,7 @@ class Comment extends StatefulWidget {
     required this.likes,
     required this.time,
     required this.postId,
+    required this.commentId,
   }) : super(key: key);
 
   @override
@@ -31,16 +32,16 @@ class _CommentState extends State<Comment> {
   CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
   bool _isLiked = false;
   Color likeColor = Colors.black;
-  Icon likeIcon = const Icon(Icons.favorite_border);
+  Icon likeIcon = const Icon(Icons.favorite_border, size: 20,);
 
   @override
   Widget build(BuildContext context) {
     if (widget.likes.contains(user!.uid)) {
       likeColor = Theme.of(context).colorScheme.primary;
-      likeIcon = const Icon(Icons.favorite);
+      likeIcon = const Icon(Icons.favorite, size: 20,);
     } else {
       likeColor = Colors.black;
-      likeIcon = const Icon(Icons.favorite_border);
+      likeIcon = const Icon(Icons.favorite_border, size: 20,);
     }
 
     return FutureBuilder(
@@ -120,15 +121,39 @@ class _CommentState extends State<Comment> {
                                 children: [
                                   IconButton(
                                     onPressed: () async {
-
+                                      FirebaseFirestore.instance
+                                          .collection('posts')
+                                          .doc(widget.postId)
+                                          .collection('comment')
+                                          .doc(widget.commentId)
+                                          .get();
+                                      if (widget.likes.contains(user!.uid)) {
+                                        widget.likes.remove(user!.uid);
+                                        setState(() {
+                                          _isLiked = false;
+                                        });
+                                      } else {
+                                        widget.likes.add(user!.uid);
+                                        setState(() {
+                                          _isLiked = true;
+                                        });
+                                      }
+                                      await postsCollection
+                                          .doc(widget.postId)
+                                          .collection('comment')
+                                          .doc(widget.commentId)
+                                          .update({
+                                        'likes': widget.likes,
+                                      });
                                     },
                                     icon: likeIcon,
                                     color: likeColor,
                                   ),
-                                  const Text(
-                                    '0',
-                                    style: TextStyle(
+                                  Text(
+                                    widget.likes.length.toString(),
+                                    style: const TextStyle(
                                       fontSize: 12,
+                                      color: Colors.black,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -138,7 +163,8 @@ class _CommentState extends State<Comment> {
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                    },
                                     icon: const Icon(Icons.chat_outlined),
                                     iconSize: 20,
                                   ),

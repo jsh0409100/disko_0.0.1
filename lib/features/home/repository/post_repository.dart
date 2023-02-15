@@ -53,6 +53,7 @@ class PostRepository {
       time: time,
       uid: uid,
       likes: likes,
+      commentId: commentId,
     );
     return firestore.collection('posts').doc(postId).collection('comment').doc(commentId).set(
           comment.toJson(),
@@ -135,7 +136,8 @@ class PostRepository {
           peerUid: post.uid,
           time: time,
           notificationType: NotificationEnum.comment,
-          commentId: commentId);
+          commentId: commentId
+      );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }

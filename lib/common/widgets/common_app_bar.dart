@@ -1,7 +1,7 @@
+import 'package:disko_001/features/notification/screen/notification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../features/notification/screen/notification.dart';
 import '../../features/search/screens/search.dart';
 import 'notification_button.dart';
 
@@ -33,14 +33,19 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
         Stack(children: [
           IconButton(
             onPressed: () {
-              Get.to(() => const NotificationTap());
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationScreen(),
+                ),
+              );
             },
             icon: const Icon(
               Icons.notifications_none_outlined,
               color: Colors.black,
             ),
           ),
-          UnreadNotificationCounter(),
+          const UnreadNotificationCounter(),
         ]),
       ],
       backgroundColor: Theme.of(context).colorScheme.onPrimary,

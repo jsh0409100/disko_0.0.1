@@ -34,11 +34,7 @@ class ChatRepository {
     final String chatName = getChatName(receiverUid, auth.currentUser!.uid);
     final String collectionPath = 'messages/$chatName/$chatName';
 
-    return firestore
-        .collection(collectionPath)
-        .orderBy('timeSent')
-        .snapshots()
-        .map((event) {
+    return firestore.collection(collectionPath).orderBy('timeSent').snapshots().map((event) {
       List<ChatMessageModel> messages = [];
       for (var document in event.docs) {
         messages.add(ChatMessageModel.fromJson(document.data()));
@@ -50,7 +46,7 @@ class ChatRepository {
   Stream<List<LastMessageModel>> getChatListStream() {
     return firestore
         .collection('messages')
-        .orderBy('timeSent')
+        .orderBy('timeSent', descending: true)
         .snapshots()
         .map((event) {
       List<LastMessageModel> chats = [];
@@ -84,12 +80,7 @@ class ChatRepository {
       lat: coordinates?.latitude,
     );
     final String chatName = getChatName(receiverUid, auth.currentUser!.uid);
-    await firestore
-        .collection('messages')
-        .doc(chatName)
-        .collection(chatName)
-        .doc(messageId)
-        .set(
+    await firestore.collection('messages').doc(chatName).collection(chatName).doc(messageId).set(
           message.toJson(),
         );
   }
@@ -197,9 +188,7 @@ class ChatRepository {
     try {
       var timeSent = Timestamp.now();
       var messageId = const Uuid().v1();
-      String imageUrl = await ref
-          .read(commonFirebaseStorageRepositoryProvider)
-          .storeFileToFirebase(
+      String imageUrl = await ref.read(commonFirebaseStorageRepositoryProvider).storeFileToFirebase(
             'chat/${messageEnum.type}/${auth.currentUser!.uid}/$receiverUid/$messageId',
             file,
           );
@@ -323,10 +312,7 @@ class ChatRepository {
       if (doc.exists) {
         final data = doc.get('receiverUid');
         if (data != receiverUid) {
-          await firestore
-              .collection('messages')
-              .doc(chatName)
-              .update({'unreadMessageCount': 0});
+          await firestore.collection('messages').doc(chatName).update({'unreadMessageCount': 0});
         }
       }
     } catch (e) {

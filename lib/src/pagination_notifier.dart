@@ -39,13 +39,17 @@ class PaginationNotifier<T> extends StateNotifier<PaginationState<T>> {
     try {
       state = const PaginationState.loading();
 
-      final List<T> result = _items.isEmpty
-          ? await fetchNextItems(null)
-          : await fetchNextItems(_items.last);
+      final List<T> result =
+          _items.isEmpty ? await fetchNextItems(null) : await fetchNextItems(_items.last);
       updateData(result);
     } catch (e, stk) {
       state = PaginationState.error(e, stk);
     }
+  }
+
+  Future<void> reloadPage() async {
+    _items.clear();
+    fetchFirstBatch();
   }
 
   Future<void> fetchNextBatch() async {

@@ -73,25 +73,6 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
       controller.clear();
       _userEnterMessage = '';
     });
-    // } else {
-    //   var tempDir = await getTemporaryDirectory();
-    //   var path = '${tempDir.path}/flutter_sound.aac';
-    //   if (!isRecorderInit) {
-    //     return;
-    //   }
-    //   if (isRecording) {
-    //     await _soundRecorder!.stopRecorder();
-    //     sendFileMessage(File(path), MessageEnum.audio);
-    //   } else {
-    //     await _soundRecorder!.startRecorder(
-    //       toFile: path,
-    //     );
-    //   }
-    //
-    //   setState(() {
-    //     isRecording = !isRecording;
-    //   });
-    // }
   }
 
   void sendFileMessage(
@@ -117,6 +98,13 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     File? video = await pickVideoFromGallery(context);
     if (video != null) {
       sendFileMessage(video, MessageEnum.video);
+    }
+  }
+
+  void takePhoto() async {
+    File? image = await pickImageFromCamera(context);
+    if (image != null) {
+      sendFileMessage(image, MessageEnum.image);
     }
   }
 
@@ -257,14 +245,22 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                       child: const MessageCategoryCard(
                           categoryIcon: Icons.video_file_outlined, categoryName: '영상 보내기'),
                     ),
-                    const MessageCategoryCard(
-                        categoryIcon: Icons.camera_alt_outlined, categoryName: '카메라'),
+                    GestureDetector(
+                      onTap: takePhoto,
+                      child: const MessageCategoryCard(
+                          categoryIcon: Icons.camera_alt_outlined, categoryName: '카메라'),
+                    ),
                   ]),
                   const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const MessageCategoryCard(categoryIcon: Icons.mic, categoryName: '음성메세지'),
+                      // const MessageCategoryCard(categoryIcon: Icons.mic, categoryName: '음성메세지'),
+                      GestureDetector(
+                        onTap: () => makeCall(ref, context),
+                        child: const MessageCategoryCard(
+                            categoryIcon: Icons.video_call_outlined, categoryName: '영상통화'),
+                      ),
                       GestureDetector(
                         onTap: showMap,
                         child: const MessageCategoryCard(
@@ -278,22 +274,6 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () => makeCall(ref, context),
-                        child: const MessageCategoryCard(
-                            categoryIcon: Icons.video_call_outlined, categoryName: '영상통화'),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.25,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.25,
-                      ),
-                    ],
-                  ),
                 ]),
           ),
         )

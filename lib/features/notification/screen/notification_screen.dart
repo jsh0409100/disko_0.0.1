@@ -1,22 +1,22 @@
-import 'package:disko_001/common/enums/notification_enum.dart';
-import 'package:disko_001/common/widgets/loading_screen.dart';
-import 'package:disko_001/features/notification/widgets/custom_comment_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
+import '../../../common/widgets/loading_screen.dart';
 import '../../../models/notification_model.dart';
 import '../controller/notification_controller.dart';
+import '../widgets/custom_comment_notification.dart';
 import '../widgets/custom_liked_notification.dart';
 
-class NotificationTap extends ConsumerStatefulWidget {
-  const NotificationTap({Key? key}) : super(key: key);
+class NotificationScreen extends ConsumerStatefulWidget {
+  const NotificationScreen({Key? key}) : super(key: key);
 
   @override
-  _NotificationTapState createState() => _NotificationTapState();
+  ConsumerState<NotificationScreen> createState() => _NotificationScreenState();
 }
 
-class _NotificationTapState extends ConsumerState<NotificationTap> {
+class _NotificationScreenState extends ConsumerState<NotificationScreen> {
   var notificationList;
 
   Future<void> refreshList(BuildContext context) async {
@@ -68,10 +68,10 @@ class _NotificationTapState extends ConsumerState<NotificationTap> {
                   if (!snapshot.hasData) {
                     return const LoadingScreen();
                   }
-                  notificationList = snapshot.data!;
                   return ListView.builder(
-                      itemCount: notificationList.length,
+                      itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
+                        notificationList = snapshot.data!;
                         return FutureBuilder(
                             future: getPostByPostId(snapshot.data![index].postId),
                             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -92,7 +92,7 @@ class _NotificationTapState extends ConsumerState<NotificationTap> {
                               }
                               return Container(
                                   color: notificationList[index].seen
-                                      ? Colors.white
+                                      ? Theme.of(context).colorScheme.onPrimary
                                       : const Color(0x0fff4eff),
                                   child: notificationList[index].notificationType ==
                                           NotificationEnum.comment

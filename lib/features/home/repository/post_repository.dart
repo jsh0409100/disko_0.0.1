@@ -38,6 +38,18 @@ class PostRepository {
     });
   }
 
+  Stream<List<CommentModel>> getNestedCommentStream(String postId, String commentId) {
+    final String collectionPath = 'posts/$postId/comment/$commentId';
+
+    return firestore.collection(collectionPath).orderBy('time').snapshots().map((event) {
+      List<CommentModel> nestedcomment = [];
+      for (var document in event.docs) {
+        nestedcomment.add(CommentModel.fromJson(document.data()));
+      }
+      return nestedcomment;
+    });
+  }
+
   void _saveComment({
     required String userName,
     required String text,
@@ -98,6 +110,78 @@ class PostRepository {
     }
   }
 
+  void _saveNestedComment({
+    required String userName,
+    required String text,
+    required Timestamp time,
+    required String uid,
+    required List<String> likes,
+    required String commentId,
+    required String postId,
+    required String nestedcommentId,
+  }) async {
+    final comment = CommentModel(
+      userName: userName,
+      text: text,
+      time: time,
+      uid: uid,
+      likes: likes,
+      commentId: commentId,
+    );
+    return firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comment')
+        .doc(commentId)
+        .collection('nestedcomment')
+        .doc(nestedcommentId)
+        .set(
+      comment.toJson(),
+    );
+  }
+
+  void _saveNestedCommentCount({
+    required String text,
+    required Timestamp time,
+    required String postId,
+    required String username,
+    required String postCategory,
+    required String postTitle,
+    required List<String> likes,
+    required String commentId,
+  }) async {
+    final comment = PostCardModel(
+      time: time,
+      userName: username,
+      postCategory: postCategory,
+      postTitle: postTitle,
+      postText: text,
+      uid: auth.currentUser!.uid,
+      likes: [],
+      imagesUrl: [],
+      postId: '',
+      commentCount: 0,
+    );
+
+    final currentComment = firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comment')
+        .doc(commentId);
+    final doc = await currentComment.get();
+
+    if (doc.exists) {
+      final data = doc.get('commentId');
+      (data == commentId)
+          ? currentComment.update({
+        'commentCount': FieldValue.increment(1),
+      })
+          : currentComment.set(comment.toJson());
+    } else {
+      currentComment.set(comment.toJson());
+    }
+  }
+
   void uploadComment({
     required BuildContext context,
     required String text,
@@ -129,6 +213,53 @@ class PostRepository {
         postTitle: post.postTitle,
         imagesUrl: imagesUrl,
         likes: likes,
+      );
+
+      saveNotification(
+          postId: postId,
+          peerUid: post.uid,
+          postTitle: post.postTitle,
+          time: time,
+          notificationType: NotificationEnum.comment,
+          commentId: commentId
+      );
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void uploadNestedComment({
+    required BuildContext context,
+    required String text,
+    required UserModel senderUser,
+    required postId,
+    required commentId,
+    required List<String> likes,
+  }) async {
+    try {
+      var time = Timestamp.now();
+      var nestedcommentId= const Uuid().v1();
+      var post = await getPostByPostId(postId);
+      _saveNestedComment(
+        userName: senderUser.displayName,
+        text: text,
+        commentId: commentId,
+        time: time,
+        uid: auth.currentUser!.uid,
+        likes: [],
+        postId: postId,
+        nestedcommentId: nestedcommentId,
+      );
+
+      _saveNestedCommentCount(
+        text: text,
+        time: time,
+        postId: postId,
+        username: senderUser.displayName,
+        postCategory: post.postCategory,
+        postTitle: post.postTitle,
+        likes: likes,
+        commentId: commentId,
       );
 
       saveNotification(

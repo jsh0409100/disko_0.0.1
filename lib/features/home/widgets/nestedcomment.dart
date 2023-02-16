@@ -8,12 +8,12 @@ import '../../../common/utils/utils.dart';
 import '../controller/post_controller.dart';
 import 'bottom_nestedcomment_field.dart';
 
-class Comment extends StatefulWidget {
+class NestedComment extends StatefulWidget {
   final String userName, text, uid, postId, commentId;
   final List<String> likes;
   final Timestamp time;
 
-  const Comment({
+  const NestedComment({
     Key? key,
     required this.uid,
     required this.userName,
@@ -25,10 +25,10 @@ class Comment extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<Comment> createState() => _CommentState();
+  State<NestedComment> createState() => _NestedCommentState();
 }
 
-class _CommentState extends State<Comment> {
+class _NestedCommentState extends State<NestedComment> {
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
   bool _isLiked = false;
@@ -211,11 +211,6 @@ class _CommentState extends State<Comment> {
                                                       fontSize: 15, fontWeight: FontWeight.w500),
                                                   '서비스 이용약관 내용은 이렇습니당구리구리구리구 니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구'),
                                             ),
-                                          ),
-                                          BottomNestedCommentField(
-                                            postId: widget.postId,
-                                            commentId: widget.commentId,
-                                            likes: widget.likes,
                                           ),
                                         ],
                                       ),

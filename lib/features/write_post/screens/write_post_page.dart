@@ -35,7 +35,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
 
   bool _isLoading = false;
 
-  Future<void> selectImage() async {
+  Future<void> selectImageFromGallery() async {
     if (_imageFileList != null) {
       _imageFileList?.clear();
     }
@@ -44,9 +44,24 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
       if (images.isNotEmpty) {
         _imageFileList?.addAll(images);
       }
-      print("List of selected images : " + images.length.toString());
+      print("List of selected images : ${images.length}");
     } catch (e) {
-      print("Something Wrong." + e.toString());
+      print("Something Wrong.$e");
+    }
+    setState(() {});
+  }
+
+  Future<void> selectImageFromCamera() async {
+    if (_imageFileList != null) {
+      _imageFileList?.clear();
+    }
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+      if (image != null) {
+        _imageFileList?.add(image);
+      }
+    } catch (e) {
+      print("Something Wrong.$e");
     }
     setState(() {});
   }
@@ -61,6 +76,11 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
           postId,
           commentCount,
         );
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppLayoutScreen.routeName,
+      (route) => false,
+    );
   }
 
   Future<void> uploadFunction(List<XFile> _images) async {
@@ -190,14 +210,12 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                             child: Row(
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.add_reaction_outlined),
-                                  onPressed: () {},
+                                  icon: const Icon(Icons.photo_camera_outlined),
+                                  onPressed: selectImageFromCamera,
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.photo_camera_outlined),
-                                  onPressed: () {
-                                    selectImage();
-                                  },
+                                  icon: const Icon(Icons.image_outlined),
+                                  onPressed: selectImageFromGallery,
                                 ),
                               ],
                             ),
@@ -239,11 +257,6 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                     Navigator.of(context).pop();
                     await uploadFunction(_imageFileList!);
                     _uploadPost(CategoryList.categories[_CategoryCards.selected]);
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      AppLayoutScreen.routeName,
-                      (route) => false,
-                    );
                   },
                 ),
               ],

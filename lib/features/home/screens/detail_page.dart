@@ -254,7 +254,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+
+                                    },
                                     icon: const Icon(
                                       Icons.chat_outlined,
                                       color: Colors.black,

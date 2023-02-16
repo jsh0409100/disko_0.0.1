@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/utils/utils.dart';
 import '../controller/post_controller.dart';
 
-class BottomCommentField extends ConsumerStatefulWidget {
-  BottomCommentField({
+class BottomNestedCommentField extends ConsumerStatefulWidget {
+  BottomNestedCommentField({
     Key? key,
     required this.postId,
     required this.commentCount,
@@ -18,10 +18,10 @@ class BottomCommentField extends ConsumerStatefulWidget {
   int commentCount = 0;
 
   @override
-  ConsumerState<BottomCommentField> createState() => _BottomCommentFieldState();
+  ConsumerState<BottomNestedCommentField> createState() => _BottomNestedCommentFieldState();
 }
 
-class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
+class _BottomNestedCommentFieldState extends ConsumerState<BottomNestedCommentField> {
   final controller = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
 

@@ -9,13 +9,11 @@ class BottomNestedCommentField extends ConsumerStatefulWidget {
   BottomNestedCommentField({
     Key? key,
     required this.postId,
-    required this.commentCount,
+    required this.commentId,
     required this.likes,
-    required this.imagesUrl,
   }) : super(key: key);
-  final String postId;
-  final List<String> likes, imagesUrl;
-  int commentCount = 0;
+  final String postId, commentId;
+  final List<String> likes;
 
   @override
   ConsumerState<BottomNestedCommentField> createState() => _BottomNestedCommentFieldState();
@@ -28,11 +26,11 @@ class _BottomNestedCommentFieldState extends ConsumerState<BottomNestedCommentFi
   var _userEnterMessage = '';
 
   void uploadComment() {
-    ref.read(postControllerProvider).uploadComment(
+    ref.read(postControllerProvider).uploadNestedComment(
           context,
           _userEnterMessage,
           widget.postId,
-          widget.imagesUrl,
+          widget.commentId,
           widget.likes,
         );
     setState(() {
@@ -80,7 +78,7 @@ class _BottomNestedCommentFieldState extends ConsumerState<BottomNestedCommentFi
                   ),
                   filled: true,
                   fillColor: const Color(0xffD9D9D9),
-                  hintText: "댓글 쓰기",
+                  hintText: " 대댓글 쓰기",
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -91,9 +89,6 @@ class _BottomNestedCommentFieldState extends ConsumerState<BottomNestedCommentFi
             ),
             TextButton(
               onPressed: () {
-                setState(() {
-                  widget.commentCount = widget.commentCount + 1;
-                });
                 (_userEnterMessage.trim().isEmpty ||
                         _userEnterMessage.trim() == '')
                     ? null

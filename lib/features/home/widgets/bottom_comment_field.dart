@@ -91,9 +91,6 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
             ),
             TextButton(
               onPressed: () {
-                setState(() {
-                  widget.commentCount = widget.commentCount + 1;
-                });
                 (_userEnterMessage.trim().isEmpty ||
                         _userEnterMessage.trim() == '')
                     ? null

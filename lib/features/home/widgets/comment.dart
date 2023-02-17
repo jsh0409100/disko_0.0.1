@@ -13,6 +13,7 @@ class Comment extends StatefulWidget {
   final String userName, text, uid, postId, commentId;
   final List<String> likes;
   final Timestamp time;
+  final int commentCount;
 
   const Comment({
     Key? key,
@@ -23,6 +24,7 @@ class Comment extends StatefulWidget {
     required this.time,
     required this.postId,
     required this.commentId,
+    required this.commentCount,
   }) : super(key: key);
 
   @override
@@ -163,6 +165,7 @@ class _CommentState extends State<Comment> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
+                                const SizedBox(width: 15),
                                 Row(
                                   children: [
                                     IconButton(
@@ -172,7 +175,7 @@ class _CommentState extends State<Comment> {
                                       iconSize: 20,
                                       style: IconButton.styleFrom(
                                         minimumSize: Size.zero,
-                                        padding: const EdgeInsets.fromLTRB(20, 5, 5, 5),
+                                        padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                       ),
                                     ),
@@ -235,9 +238,9 @@ class _CommentState extends State<Comment> {
                                   padding: EdgeInsets.zero,
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
-                                child: const Text(
-                                  '답글 0개',
-                                  style: TextStyle(
+                                child: Text(
+                                  '답글 ${widget.commentCount}개',
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),

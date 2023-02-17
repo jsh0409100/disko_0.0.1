@@ -55,6 +55,7 @@ class _CommentListState extends ConsumerState<CommentList> {
                 time: commentDocs.time,
                 postId: widget.postId,
                 commentId: commentDocs.commentId,
+                commentCount: commentDocs.commentCount,
               );
             },
           );

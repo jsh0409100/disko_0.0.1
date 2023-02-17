@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../../models/comment_model.dart';
+import '../../../models/nestedcomment_model.dart';
 import '../../../models/user_model.dart';
 
 final postRepositoryProvider = Provider(
@@ -38,13 +39,13 @@ class PostRepository {
     });
   }
 
-  Stream<List<CommentModel>> getNestedCommentStream(String postId, String commentId) {
+  Stream<List<NestedCommentModel>> getNestedCommentStream(String postId, String commentId) {
     final String collectionPath = 'posts/$postId/comment/$commentId/nestedcomment';
 
     return firestore.collection(collectionPath).orderBy('time').snapshots().map((event) {
-      List<CommentModel> nestedcomment = [];
+      List<NestedCommentModel> nestedcomment = [];
       for (var document in event.docs) {
-        nestedcomment.add(CommentModel.fromJson(document.data()));
+        nestedcomment.add(NestedCommentModel.fromJson(document.data()));
       }
       return nestedcomment;
     });
@@ -66,6 +67,7 @@ class PostRepository {
       uid: uid,
       likes: likes,
       commentId: commentId,
+      commentCount: 0,
     );
     return firestore.collection('posts').doc(postId).collection('comment').doc(commentId).set(
           comment.toJson(),
@@ -120,13 +122,14 @@ class PostRepository {
     required String postId,
     required String nestedcommentId,
   }) async {
-    final comment = CommentModel(
+    final comment = NestedCommentModel(
       userName: userName,
       text: text,
       time: time,
       uid: uid,
       likes: likes,
       commentId: commentId,
+      nestedcommentId: nestedcommentId,
     );
     return firestore
         .collection('posts')

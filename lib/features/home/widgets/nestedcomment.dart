@@ -9,7 +9,7 @@ import '../controller/post_controller.dart';
 import 'bottom_nestedcomment_field.dart';
 
 class NestedComment extends StatefulWidget {
-  final String userName, text, uid, postId, commentId;
+  final String userName, text, uid, postId, commentId, nestedcommentId;
   final List<String> likes;
   final Timestamp time;
 
@@ -22,6 +22,7 @@ class NestedComment extends StatefulWidget {
     required this.time,
     required this.postId,
     required this.commentId,
+    required this.nestedcommentId,
   }) : super(key: key);
 
   @override
@@ -128,7 +129,7 @@ class _NestedCommentState extends State<NestedComment> {
                                           .collection('comment')
                                           .doc(widget.commentId)
                                           .collection('nestedcomment')
-                                          .doc()
+                                          .doc(widget.nestedcommentId)
                                           .get();
                                       if (widget.likes.contains(user!.uid)) {
                                         widget.likes.remove(user!.uid);
@@ -146,7 +147,7 @@ class _NestedCommentState extends State<NestedComment> {
                                           .collection('comment')
                                           .doc(widget.commentId)
                                           .collection('nestedcomment')
-                                          .doc()
+                                          .doc(widget.nestedcommentId)
                                           .update({
                                         'likes': widget.likes,
                                       });

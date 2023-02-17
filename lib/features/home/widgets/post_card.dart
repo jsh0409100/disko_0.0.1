@@ -223,6 +223,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                                 ),
                               )
                       ]),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -257,6 +258,11 @@ class _PostCardState extends ConsumerState<PostCard> {
                             },
                             icon: likeIcon,
                             color: likeColor,
+                            style: IconButton.styleFrom(
+                              minimumSize: Size.zero,
+                              padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
                           ),
                           Text(widget.likes.length.toString()),
                           const SizedBox(width: 8),
@@ -265,6 +271,11 @@ class _PostCardState extends ConsumerState<PostCard> {
                             icon: const Icon(
                               Icons.chat_outlined,
                               color: Colors.black,
+                            ),
+                            style: IconButton.styleFrom(
+                              minimumSize: Size.zero,
+                              padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                           ),
                           Text(widget.commentCount.toString()),

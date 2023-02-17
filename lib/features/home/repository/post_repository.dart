@@ -39,7 +39,7 @@ class PostRepository {
   }
 
   Stream<List<CommentModel>> getNestedCommentStream(String postId, String commentId) {
-    final String collectionPath = 'posts/$postId/comment/$commentId';
+    final String collectionPath = 'posts/$postId/comment/$commentId/nestedcomment';
 
     return firestore.collection(collectionPath).orderBy('time').snapshots().map((event) {
       List<CommentModel> nestedcomment = [];

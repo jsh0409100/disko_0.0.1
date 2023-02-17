@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/features/home/widgets/nestedcomment_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -62,183 +63,195 @@ class _CommentState extends State<Comment> {
             ]),
           );
         }
-        return SizedBox(
-          height: 150,
-          child: Row(
-            children: [
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image(
-                            image: NetworkImage(snapshot.data.profilePic),
-                            height: 36,
-                            width: 36,
-                            fit: BoxFit.scaleDown,
-                          )),
-                      const SizedBox(width: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                widget.userName,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+          child: SizedBox(
+            height: 130,
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image(
+                              image: NetworkImage(snapshot.data.profilePic),
+                              height: 36,
+                              width: 36,
+                              fit: BoxFit.scaleDown,
+                            )),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  widget.userName,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                readTimestamp(widget.time),
+                                const SizedBox(width: 5),
+                                Text(
+                                  readTimestamp(widget.time),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              width: 300,
+                              child: Text(
+                                widget.text,
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ],
-                          ),
-                          Container(
-                            width: 300,
-                            child: Text(
-                              widget.text,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
                             ),
-                          ),
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () async {
-                                      FirebaseFirestore.instance
-                                          .collection('posts')
-                                          .doc(widget.postId)
-                                          .collection('comment')
-                                          .doc(widget.commentId)
-                                          .get();
-                                      if (widget.likes.contains(user!.uid)) {
-                                        widget.likes.remove(user!.uid);
-                                        setState(() {
-                                          _isLiked = false;
-                                        });
-                                      } else {
-                                        widget.likes.add(user!.uid);
-                                        setState(() {
-                                          _isLiked = true;
-                                        });
-                                      }
-                                      await postsCollection
-                                          .doc(widget.postId)
-                                          .collection('comment')
-                                          .doc(widget.commentId)
-                                          .update({
-                                        'likes': widget.likes,
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () async {
+                                    FirebaseFirestore.instance
+                                        .collection('posts')
+                                        .doc(widget.postId)
+                                        .collection('comment')
+                                        .doc(widget.commentId)
+                                        .get();
+                                    if (widget.likes.contains(user!.uid)) {
+                                      widget.likes.remove(user!.uid);
+                                      setState(() {
+                                        _isLiked = false;
                                       });
-                                    },
-                                    icon: likeIcon,
-                                    color: likeColor,
+                                    } else {
+                                      widget.likes.add(user!.uid);
+                                      setState(() {
+                                        _isLiked = true;
+                                      });
+                                    }
+                                    await postsCollection
+                                        .doc(widget.postId)
+                                        .collection('comment')
+                                        .doc(widget.commentId)
+                                        .update({
+                                      'likes': widget.likes,
+                                    });
+                                  },
+                                  icon: likeIcon,
+                                  color: likeColor,
+                                  style: IconButton.styleFrom(
+                                    minimumSize: Size.zero,
+                                    padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   ),
-                                  Text(
-                                    widget.likes.length.toString(),
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
+                                ),
+                                Text(
+                                  widget.likes.length.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                      },
+                                      icon: const Icon(Icons.chat_outlined),
+                                      iconSize: 20,
+                                      style: IconButton.styleFrom(
+                                        minimumSize: Size.zero,
+                                        padding: const EdgeInsets.fromLTRB(20, 5, 5, 5),
+                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 5),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                    },
-                                    icon: const Icon(Icons.chat_outlined),
-                                    iconSize: 20,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              showModalBottomSheet<void>(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return SizedBox(
-                                    height: MediaQuery.of(context).size.height / 2,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 15),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Row(
-                                            children: [
-                                              IconButton(
-                                                onPressed: () => Navigator.pop(context),
-                                                icon: const Icon(Icons.arrow_back_ios_new)
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 40,
+                              child: TextButton(
+                                onPressed: () {
+                                  showModalBottomSheet<void>(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30)),
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return SizedBox(
+                                        height: MediaQuery.of(context).size.height / 2,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 15),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () => Navigator.pop(context),
+                                                    icon: const Icon(Icons.arrow_back_ios_new)
+                                                  ),
+                                                  const Text(
+                                                    '댓글',
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.w700),
+                                                  ),
+                                                ],
                                               ),
-                                              const Text(
-                                                '댓글',
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w700),
+                                              Expanded(
+                                                child: NestedCommentList(
+                                                  postId: widget.postId,
+                                                  commentId: widget.commentId,
+                                                ),
+                                              ),
+                                              BottomNestedCommentField(
+                                                postId: widget.postId,
+                                                commentId: widget.commentId,
+                                                likes: widget.likes,
                                               ),
                                             ],
                                           ),
-                                          const Expanded(
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.vertical,
-                                              child: Text(
-                                                  style: TextStyle(
-                                                      fontSize: 15, fontWeight: FontWeight.w500),
-                                                  '서비스 이용약관 내용은 이렇습니당구리구리구리구 니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구'),
-                                            ),
-                                          ),
-                                          BottomNestedCommentField(
-                                            postId: widget.postId,
-                                            commentId: widget.commentId,
-                                            likes: widget.likes,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
-                              );
-                            },
-                            child: const Text(
-                              '답글 0개',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
+                                style: TextButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: EdgeInsets.zero,
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                child: const Text(
+                                  '답글 0개',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       }

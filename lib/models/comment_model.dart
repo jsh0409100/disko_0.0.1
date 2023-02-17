@@ -29,7 +29,6 @@ class CommentModel {
     );
   }
 
-
   Map<String, dynamic> toJson() => {
     'userName': userName,
     'text': text,

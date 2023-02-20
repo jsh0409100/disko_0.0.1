@@ -165,6 +165,9 @@ class AuthRepository {
         photoUrl = await ref
             .read(commonFirebaseStorageRepositoryProvider)
             .storeFileToFirebase('profilePic/$uid', profilePic);
+      } else{
+        DocumentSnapshot doc = await firestore.collection('users').doc(auth.currentUser!.uid).get();
+        photoUrl = (doc.data() as Map <String, dynamic>)['profilePic'];
       }
 
       var user = UserModel(

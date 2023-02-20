@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:disko_001/common/utils/utils.dart';
 import 'package:disko_001/features/auth/controller/auth_controller.dart';
 import 'package:disko_001/features/profile/screens/profile_edit_page.dart';
+import 'package:disko_001/features/profile/screens/tag_edit_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -138,22 +139,30 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     return Wrap(
                       spacing: MediaQuery.of(context).size.width * 0.03,
                       runSpacing: MediaQuery.of(context).size.width * 0.001,
-                      children:
-                        List.generate(widget.tag.length,(index){
-                          if(index + 1 == widget.tag.length){
-                            return Row(
-                              children: [
-                                mChip(widget.tag[index]),
-                                IconButton(
-                                    onPressed: (){},
+                      children: List.generate(widget.tag.length, (index) {
+                        return index + 1 == widget.tag.length
+                            ? Wrap(
+                                children: [
+                                  mChip(widget.tag[index]),
+                                  IconButton(
+                                    onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TagEditPage(
+                                          displayName: widget.displayName,
+                                          country: widget.country,
+                                          description: widget.description,
+                                          imageURL: widget.imageURL,
+                                          tag: widget.tag,
+                                        ),
+                                      ),
+                                    ),
                                     icon: const Icon(Icons.add_circle_outline),
-                                ),
-                              ],
-                            );
-                          } else {
-                            return mChip(widget.tag[index]);
-                          }
-                        }),
+                                  ),
+                                ],
+                              )
+                            : mChip(widget.tag[index]);
+                      }),
                     );
                   }
                   return size();

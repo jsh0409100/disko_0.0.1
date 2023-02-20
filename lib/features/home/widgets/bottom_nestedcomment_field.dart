@@ -5,34 +5,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/utils/utils.dart';
 import '../controller/post_controller.dart';
 
-class BottomCommentField extends ConsumerStatefulWidget {
-  BottomCommentField({
+class BottomNestedCommentField extends ConsumerStatefulWidget {
+  BottomNestedCommentField({
     Key? key,
     required this.postId,
-    required this.commentCount,
+    required this.commentId,
     required this.likes,
-    required this.imagesUrl,
   }) : super(key: key);
-  final String postId;
-  final List<String> likes, imagesUrl;
-  int commentCount = 0;
+  final String postId, commentId;
+  final List<String> likes;
 
   @override
-  ConsumerState<BottomCommentField> createState() => _BottomCommentFieldState();
+  ConsumerState<BottomNestedCommentField> createState() => _BottomNestedCommentFieldState();
 }
 
-class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
+class _BottomNestedCommentFieldState extends ConsumerState<BottomNestedCommentField> {
   final controller = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
 
   var _userEnterMessage = '';
 
   void uploadComment() {
-    ref.read(postControllerProvider).uploadComment(
+    ref.read(postControllerProvider).uploadNestedComment(
           context,
           _userEnterMessage,
           widget.postId,
-          widget.imagesUrl,
+          widget.commentId,
           widget.likes,
         );
     setState(() {
@@ -80,7 +78,7 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
                   ),
                   filled: true,
                   fillColor: const Color(0xffD9D9D9),
-                  hintText: "댓글 쓰기",
+                  hintText: " 대댓글 쓰기",
                 ),
                 onChanged: (value) {
                   setState(() {

@@ -9,13 +9,22 @@ import '../../../src/providers.dart';
 import '../../write_post/screens/write_post_page.dart';
 import '../widgets/post.dart';
 
-class HomeFeedPage extends ConsumerWidget {
+class HomeFeedPage extends ConsumerStatefulWidget {
   HomeFeedPage({Key? key}) : super(key: key);
 
+  @override
+  _HomeFeedPageState createState() => _HomeFeedPageState();
+}
+
+class _HomeFeedPageState extends ConsumerState<HomeFeedPage> {
   final ScrollController scrollController = ScrollController();
 
+  Future<void> reloadPage() async {
+    setState(() {});
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     scrollController.addListener(() {
       double maxScroll = scrollController.position.maxScrollExtent;
       double currentScroll = scrollController.position.pixels;
@@ -30,16 +39,19 @@ class HomeFeedPage extends ConsumerWidget {
         appBar: AppBar(),
       ),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 11.0),
-        child: CustomScrollView(
-          controller: scrollController,
-          restorationId: "posts List",
-          slivers: const [
-            PostsList(),
-            NoMorePosts(),
-            OnGoingBottomWidget(),
-          ],
+      body: RefreshIndicator(
+        onRefresh: () => ref.read(postsProvider.notifier).reloadPage(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 11.0),
+          child: CustomScrollView(
+            controller: scrollController,
+            restorationId: "posts List",
+            slivers: const [
+              PostsList(),
+              NoMorePosts(),
+              OnGoingBottomWidget(),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -187,8 +199,7 @@ class OnGoingBottomWidget extends StatelessWidget {
           final state = ref.watch(postsProvider);
           return state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
-            onGoingLoading: (posts) =>
-                const Center(child: CircularProgressIndicator()),
+            onGoingLoading: (posts) => const Center(child: CircularProgressIndicator()),
             onGoingError: (posts, e, stk) => Center(
               child: Column(
                 children: const [

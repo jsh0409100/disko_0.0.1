@@ -64,34 +64,6 @@ class _CallScreenState extends ConsumerState<CallScreen> {
             _remoteUid = remoteUid;
             _isJoined = true;
           });
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
-          print(_isJoined);
         },
         onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
           showMessage("Remote user uid:$remoteUid left the channel");
@@ -165,60 +137,6 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       // If the server returns an OK response, then parse the JSON.
       Map<String, dynamic> json = jsonDecode(response.body);
       String newToken = json['rtcToken'];
-      print(newToken);
-      print('');
-      print('');
-      print('');
-      print('');
-      print('');
-      print(newToken);
-      print('');
-      print('');
-      print('');
-      print('');
-      print('');
-      print(newToken);
-      print('');
-      print('');
-      print('');
-      print('');
-      print('');
-      print(newToken);
-      print('');
-      print('');
-      print('');
-      print('');
-      print('');
-      print(newToken);
-      print('');
-      print('');
-      print('');
-      print('');
-      print('');
-      print(newToken);
-      print('');
-      print('');
-      print('');
-      print('');
-      print('');
-      print(newToken);
-      print('');
-      print('');
-      print('');
-      print('');
-      print('');
-      print(newToken);
-      print('');
-      print('');
-      print('');
-      print('');
-      print('');
-      print(newToken);
-      print('');
-      print('');
-      print('');
-      print('');
-      print('');
       // Use the token to join a channel or renew an expiring token
       setToken(newToken);
     } else {
@@ -268,6 +186,10 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     });
   }
 
+  void switchCam() {
+    agoraEngine.switchCamera();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -303,7 +225,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                     icon: isMuted ? const Icon(Icons.mic_off_outlined) : const Icon(Icons.mic),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: switchCam,
                     icon: const Icon(Icons.cached_outlined),
                   ),
                 ],

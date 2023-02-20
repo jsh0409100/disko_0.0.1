@@ -27,6 +27,10 @@ class PostController {
     return postRepository.getCommentStream(postId);
   }
 
+  Stream<List<CommentModel>> nestedcommentStream(String postId, String commentId) {
+    return postRepository.getNestedCommentStream(postId, commentId);
+  }
+
   void uploadComment(
     BuildContext context,
     String text,
@@ -44,6 +48,25 @@ class PostController {
             postId: postId,
           ),
         );
+  }
+
+  void uploadNestedComment(
+      BuildContext context,
+      String text,
+      postId,
+      commentId,
+      likes,
+      ) {
+    ref.read(userDataAuthProvider).whenData(
+          (value) => postRepository.uploadNestedComment(
+        context: context,
+        text: text,
+        senderUser: value!,
+        likes: likes,
+        postId: postId,
+        commentId: commentId,
+      ),
+    );
   }
 
   void saveNotification({

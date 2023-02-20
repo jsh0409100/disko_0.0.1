@@ -6,15 +6,15 @@ import '../../../models/comment_model.dart';
 import '../controller/post_controller.dart';
 import 'comment.dart';
 
-class CommentList extends ConsumerStatefulWidget {
+class NestedCommentList extends ConsumerStatefulWidget {
   final String postId;
-  const CommentList({super.key, required this.postId});
+  const NestedCommentList({super.key, required this.postId});
 
   @override
-  ConsumerState<CommentList> createState() => _CommentListState();
+  ConsumerState<NestedCommentList> createState() => _NestedCommentListState();
 }
 
-class _CommentListState extends ConsumerState<CommentList> {
+class _NestedCommentListState extends ConsumerState<NestedCommentList> {
   final ScrollController messageController = ScrollController();
 
   @override

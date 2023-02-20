@@ -1,19 +1,33 @@
-import 'package:disko_001/common/enums/notification_enum.dart';
-import 'package:disko_001/common/widgets/loading_screen.dart';
-import 'package:disko_001/features/notification/widgets/custom_comment_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
+import '../../../common/widgets/loading_screen.dart';
 import '../../../models/notification_model.dart';
 import '../controller/notification_controller.dart';
+import '../widgets/custom_comment_notification.dart';
 import '../widgets/custom_liked_notification.dart';
 
-class NotificationTap extends ConsumerWidget {
-  const NotificationTap({Key? key}) : super(key: key);
+class NotificationScreen extends ConsumerStatefulWidget {
+  const NotificationScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends ConsumerState<NotificationScreen> {
+  var notificationList;
+
+  Future<void> refreshList(BuildContext context) async {
+    var tempList = await ref.read(notificationControllerProvider).notifications();
+    setState(() {
+      notificationList = tempList;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: 0,
       length: 1,
@@ -47,7 +61,7 @@ class NotificationTap extends ConsumerWidget {
           // body: TabBarView(
           //   children: <Widget>[
           body: RefreshIndicator(
-            onRefresh: ref.read(notificationControllerProvider).notifications,
+            onRefresh: () => refreshList(context),
             child: FutureBuilder<List<NotificationModel>>(
                 future: ref.read(notificationControllerProvider).notifications(),
                 builder: (context, snapshot) {
@@ -57,7 +71,7 @@ class NotificationTap extends ConsumerWidget {
                   return ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        final notificationList = snapshot.data!;
+                        notificationList = snapshot.data!;
                         return FutureBuilder(
                             future: getPostByPostId(snapshot.data![index].postId),
                             builder: (BuildContext context, AsyncSnapshot snapshot) {

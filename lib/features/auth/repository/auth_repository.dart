@@ -195,4 +195,5 @@ class AuthRepository {
       showSnackBar(context: context, content: e.toString());
     }
   }
+
 }

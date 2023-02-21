@@ -28,8 +28,7 @@ class AuthRepository {
   });
 
   Future<UserModel?> getCurrentUserData() async {
-    var userData =
-        await firestore.collection('users').doc(auth.currentUser?.uid).get();
+    var userData = await firestore.collection('users').doc(auth.currentUser?.uid).get();
 
     UserModel? user;
     if (userData.data() != null) {
@@ -102,7 +101,7 @@ class AuthRepository {
         photoUrl = await ref
             .read(commonFirebaseStorageRepositoryProvider)
             .storeFileToFirebase('profilePic/$uid', profilePic);
-      } else{
+      } else {
         photoUrl = auth.currentUser!.photoURL!;
       }
 
@@ -171,11 +170,11 @@ class AuthRepository {
       }
 
       var user = UserModel(
-          phoneNum: auth.currentUser!.phoneNumber!,
-          displayName: name,
-          countryCode: countryCode,
-          profilePic: photoUrl,
-          tag : tag,
+        phoneNum: auth.currentUser!.phoneNumber!,
+        displayName: name,
+        countryCode: countryCode,
+        profilePic: photoUrl,
+        tag: tag,
       );
 
       await firestore.collection('users').doc(uid).set(user.toJson());
@@ -189,12 +188,11 @@ class AuthRepository {
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppLayoutScreen.routeName,
-              (route) => false,
+          (route) => false,
         );
       }
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
   }
-
 }

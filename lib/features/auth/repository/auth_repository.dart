@@ -104,7 +104,6 @@ class AuthRepository {
       } else {
         photoUrl = auth.currentUser!.photoURL!;
       }
-
       var user = UserModel(
         phoneNum: auth.currentUser!.phoneNumber!,
         displayName: name,
@@ -112,7 +111,6 @@ class AuthRepository {
         profilePic: photoUrl,
         tag: [],
       );
-
       await firestore.collection('users').doc(uid).set(user.toJson());
 
       if (isUserCreated) {
@@ -164,9 +162,9 @@ class AuthRepository {
         photoUrl = await ref
             .read(commonFirebaseStorageRepositoryProvider)
             .storeFileToFirebase('profilePic/$uid', profilePic);
-      } else{
+      } else {
         DocumentSnapshot doc = await firestore.collection('users').doc(auth.currentUser!.uid).get();
-        photoUrl = (doc.data() as Map <String, dynamic>)['profilePic'];
+        photoUrl = (doc.data() as Map<String, dynamic>)['profilePic'];
       }
 
       var user = UserModel(
@@ -195,5 +193,4 @@ class AuthRepository {
       showSnackBar(context: context, content: e.toString());
     }
   }
-
 }

@@ -9,6 +9,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:get/get.dart';
 
+import '../../../models/user_model.dart';
+import '../cotroller/profile_controller.dart';
+
 
 class TagEditPage extends ConsumerStatefulWidget {
   final String displayName, country, description, imageURL;
@@ -60,8 +63,11 @@ class _TagEditPageState extends ConsumerState<TagEditPage> {
      return Future.value(false);
   }
 
+
   void storeUserData() async {
+
     File? image;
+
     if (widget.displayName.isNotEmpty) {
       ref.read(authControllerProvider).saveProfileDataToFirebase(
         context,
@@ -134,20 +140,24 @@ class _TagEditPageState extends ConsumerState<TagEditPage> {
                 SizedBox(height : 50),
                 Text("현재 키워드"),
                 SizedBox(height : 20),
-                FutureBuilder(
-                    future:getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return Wrap(
-                          spacing: MediaQuery.of(context).size.width * 0.03,
-                          runSpacing: MediaQuery.of(context).size.width * 0.001,
-                          children: List.generate(widget.tag.length, (index) {
-                            return mChip(widget.tag[index]);
-                          }),
-                        );
-                      }
-                      return SizedBox(height:1);
-                    }),
+                StreamBuilder<UserModel>(
+                  stream: getUserStreamByUid(auth.currentUser!.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Wrap(
+                        key: UniqueKey(),
+                        spacing: MediaQuery.of(context).size.width * 0.03,
+                        runSpacing: MediaQuery.of(context).size.width * 0.001,
+                        children: List.generate(widget.tag.length, (index) {
+                          return mChip(widget.tag[index]);
+                        }),
+                      );
+                    } else {
+                      return SizedBox(height: 1);
+                    }
+                  },
+                ),
+
                 (isShowSticker ? buildSticker() : Container()),
               ],
             ),

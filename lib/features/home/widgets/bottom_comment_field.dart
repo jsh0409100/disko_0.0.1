@@ -53,8 +53,10 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
     return FutureBuilder(
         future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Container(
-              child: Row(children: [
+            if(!snapshot.hasData){
+              return Container();
+            }
+            return Row(children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: Image(
@@ -105,7 +107,7 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
                 ),
               ),
             ),
-          ]));
+          ]);
         });
   }
 }

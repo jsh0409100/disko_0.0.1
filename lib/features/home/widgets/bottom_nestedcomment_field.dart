@@ -51,6 +51,9 @@ class _BottomNestedCommentFieldState extends ConsumerState<BottomNestedCommentFi
     return FutureBuilder(
         future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if(!snapshot.hasData){
+            return Container();
+          }
           return Container(
               child: Row(children: [
             ClipRRect(

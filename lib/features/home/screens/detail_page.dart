@@ -43,7 +43,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
         peerUid: peerUid,
         postTitle: postTitle,
         time: time,
-        notificationType: notificationType);
+        notificationType: notificationType
+    );
   }
 
   @override

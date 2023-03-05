@@ -255,11 +255,10 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                         child: const MessageCategoryCard(
                             categoryIcon: Icons.location_on_outlined, categoryName: '위치 보내기'),
                       ),
-                      GestureDetector(
-                        onTap: makeAppointment,
-                        child: const MessageCategoryCard(
-                            categoryIcon: Icons.calendar_month_outlined, categoryName: '약속하기'),
-                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        height: MediaQuery.of(context).size.width * 0.25,
+                      )
                     ],
                   ),
                   const SizedBox(height: 10),

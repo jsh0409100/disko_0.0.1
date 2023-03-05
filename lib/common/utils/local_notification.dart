@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -140,23 +141,31 @@ class NotificationService {
   void cancelAllNotifications() => _localNotifications.cancelAll();
 
   Future<bool> sendNotification({
-    required String ownerToken,
+    required String receiverId,
     required String postTitle,
   }) async {
-    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('sendNotification');
+    final receiverTokenRef = FirebaseFirestore.instance.collection('userTokens').doc(receiverId);
+    final doc = await receiverTokenRef.get();
 
-    try {
-      final response = await callable.call(<String, dynamic>{
-        'ownerToken': ownerToken,
-        'postTitle': postTitle,
-      });
+    if (doc.exists) {
+      final ownerToken = doc.get('token');
 
-      debugPrint('result is ${response.data ?? 'No data came back'}');
+      HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'asia-northeast3')
+          .httpsCallable('sendNotification');
+      try {
+        final response = await callable.call({
+          'ownerToken': ownerToken,
+          'postTitle': postTitle,
+        });
+        debugPrint('result is ${response.data ?? 'No data came back'}');
 
-      if (response.data == null) return false;
-      return true;
-    } catch (e) {
-      debugPrint('There was an error $e');
+        if (response.data == null) return false;
+        return true;
+      } catch (e) {
+        debugPrint('There was an error $e');
+        return false;
+      }
+    } else {
       return false;
     }
   }

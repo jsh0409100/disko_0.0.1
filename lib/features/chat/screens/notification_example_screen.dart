@@ -44,7 +44,7 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
                     await notificationService.showLocalNotification(
                         id: 0, title: "바로 알림 기능", body: "어플 알림 테스트", payload: "방금 알림을 받으셨습니다");
                   },
-                  child: const Text("Drink Now")),
+                  child: const Text("Notify Now")),
               ElevatedButton(
                   onPressed: () async {
                     await notificationService.showScheduledLocalNotification(
@@ -54,13 +54,12 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
                       payload: "예약된 알림이 보내졌습니다",
                     );
                   },
-                  child: const Text("Schedule Drink ")),
+                  child: const Text("Notify later")),
               ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     notificationService.sendNotification(
-                      ownerToken:
-                          'dHiUc7w1QKaHNaG568as8g:APA91bFL63YSL4KPMN6WkxIMhemJ1WUi7q4VthfQyk3G793DfmmqjHDMns4fHLYEfDZgutMVtF6jxI-G1P6dX_27c4WLPPPYH4tC-8sQSeee5cpcNg6ZW0icClnTyFzkpLynB-Zfb-G6',
                       postTitle: '글글글',
+                      receiverId: 'TDelCo3VBhXc3wVKeTLXN733rnX2',
                     );
                   },
                   child: const Text("토큰으로 메세지"))
@@ -74,7 +73,7 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
                   notificationService.cancelAllNotifications();
                 },
                 child: const Text(
-                  "Cancel All Drinks",
+                  "Cancel All Notification",
                 ),
               )
             ],

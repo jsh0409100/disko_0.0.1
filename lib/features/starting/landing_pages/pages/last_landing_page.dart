@@ -32,10 +32,10 @@ class _LastLandingPageState extends State<LastLandingPage> {
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 38),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Image.asset('assets/dancing.gif'),
-                const SizedBox(height: 45),
+                const SizedBox(height: 25),
               ],
             ),
             Column(

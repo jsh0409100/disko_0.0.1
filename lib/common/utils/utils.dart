@@ -17,6 +17,15 @@ Future<UserModel> getUserDataByUid(String uid) async {
   return UserModel.fromJson(userDataMap.data()!);
 }
 
+Stream<UserModel> getUserStreamByUid(String uid) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .snapshots()
+      .map((snapshot) => UserModel.fromJson(snapshot.data()!));
+}
+
+
 Future<PostCardModel> getPostByPostId(String postId) async {
   var postDataMap = await FirebaseFirestore.instance.collection('posts').doc(postId).get();
   return PostCardModel.fromJson(postDataMap.data()!);

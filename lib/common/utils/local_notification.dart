@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:rxdart/subjects.dart';
@@ -9,23 +12,23 @@ import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   NotificationService();
+
   final text = Platform.isIOS;
   final BehaviorSubject<String?> behaviorSubject = BehaviorSubject();
 
   final _localNotifications = FlutterLocalNotificationsPlugin();
+
   Future<void> initializePlatformNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('mipmap/launcher_icon');
 
-    final DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-            requestSoundPermission: true,
-            requestBadgePermission: true,
-            requestAlertPermission: true,
-            onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    final DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
+        requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestAlertPermission: true,
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
+    final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
@@ -40,8 +43,7 @@ class NotificationService {
   }
 
   Future<NotificationDetails> _notificationDetails() async {
-    AndroidNotificationDetails androidPlatformChannelSpecifics =
-        const AndroidNotificationDetails(
+    AndroidNotificationDetails androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'channel id',
       'channel name',
       groupKey: 'com.example.flutter_push_notifications',
@@ -53,8 +55,7 @@ class NotificationService {
       color: Color(0xff2196f3),
     );
 
-    DarwinNotificationDetails iosNotificationDetails =
-        const DarwinNotificationDetails(
+    DarwinNotificationDetails iosNotificationDetails = const DarwinNotificationDetails(
       threadIdentifier: "thread1",
     );
 
@@ -63,8 +64,8 @@ class NotificationService {
       behaviorSubject.add(details.notificationResponse?.payload);
     }
 
-    NotificationDetails platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics, iOS: iosNotificationDetails);
+    NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iosNotificationDetails);
 
     return platformChannelSpecifics;
   }
@@ -83,8 +84,7 @@ class NotificationService {
       tz.TZDateTime(tz.local, 2023, 2, 8, 18, 22, 40),
       platformChannelSpecifics,
       payload: payload,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
     );
   }
@@ -139,4 +139,34 @@ class NotificationService {
   }
 
   void cancelAllNotifications() => _localNotifications.cancelAll();
+
+  Future<bool> sendNotification({
+    required String receiverId,
+    required String postTitle,
+  }) async {
+    final receiverTokenRef = FirebaseFirestore.instance.collection('userTokens').doc(receiverId);
+    final doc = await receiverTokenRef.get();
+
+    if (doc.exists) {
+      final ownerToken = doc.get('token');
+
+      HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'asia-northeast3')
+          .httpsCallable('sendNotification');
+      try {
+        final response = await callable.call({
+          'ownerToken': ownerToken,
+          'postTitle': postTitle,
+        });
+        debugPrint('result is ${response.data ?? 'No data came back'}');
+
+        if (response.data == null) return false;
+        return true;
+      } catch (e) {
+        debugPrint('There was an error $e');
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 }

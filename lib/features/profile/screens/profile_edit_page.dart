@@ -107,9 +107,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                   textField("   2~8자 이내여야 합니다.", "사용자 이름", 1, nameController),
                   textField("   나라 선택.", "국가", 1, countryController),
                   textField(
-                      "   2~8자 이내여야 합니다.", "키워드 선택", 1, keywordController),
-                  textField(
-                      "   40자 이내여야 합니다.", "자기소개", 10, descriptionController)
+                      "   40자 이내여야 합니다.", "자기소개", 10, descriptionController),
                 ],
               ),
             ],

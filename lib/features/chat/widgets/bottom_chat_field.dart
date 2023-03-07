@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../common/enums/message_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../call/controller/call_controller.dart';
-import '../../call/screens/call_practice.dart';
 import '../controller/chat_controller.dart';
 import '../screens/make_appointment_screen.dart';
 import 'message_category_card.dart';
@@ -124,16 +123,6 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
       context,
       MaterialPageRoute(
         builder: (context) => const MakeAppointmentScreen(),
-        fullscreenDialog: true,
-      ),
-    );
-  }
-
-  void practiceCall() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const CallPracticeScreen(),
         fullscreenDialog: true,
       ),
     );
@@ -266,11 +255,10 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                         child: const MessageCategoryCard(
                             categoryIcon: Icons.location_on_outlined, categoryName: '위치 보내기'),
                       ),
-                      GestureDetector(
-                        onTap: makeAppointment,
-                        child: const MessageCategoryCard(
-                            categoryIcon: Icons.calendar_month_outlined, categoryName: '약속하기'),
-                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        height: MediaQuery.of(context).size.width * 0.25,
+                      )
                     ],
                   ),
                   const SizedBox(height: 10),

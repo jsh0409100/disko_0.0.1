@@ -6,8 +6,7 @@ class NotificationExamplePage extends StatefulWidget {
   const NotificationExamplePage({Key? key}) : super(key: key);
 
   @override
-  State<NotificationExamplePage> createState() =>
-      _NotificationExamplePageState();
+  State<NotificationExamplePage> createState() => _NotificationExamplePageState();
 }
 
 class _NotificationExamplePageState extends State<NotificationExamplePage> {
@@ -20,10 +19,8 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
     super.initState();
   }
 
-  void listenToNotificationStream() =>
-      notificationService.behaviorSubject.listen((payload) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => SecondPage(payload)));
+  void listenToNotificationStream() => notificationService.behaviorSubject.listen((payload) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SecondPage(payload)));
       });
   @override
   Widget build(BuildContext context) {
@@ -45,12 +42,9 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
               ElevatedButton(
                   onPressed: () async {
                     await notificationService.showLocalNotification(
-                        id: 0,
-                        title: "바로 알림 기능",
-                        body: "어플 알림 테스트",
-                        payload: "방금 알림을 받으셨습니다");
+                        id: 0, title: "바로 알림 기능", body: "어플 알림 테스트", payload: "방금 알림을 받으셨습니다");
                   },
-                  child: const Text("Drink Now")),
+                  child: const Text("Notify Now")),
               ElevatedButton(
                   onPressed: () async {
                     await notificationService.showScheduledLocalNotification(
@@ -60,7 +54,15 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
                       payload: "예약된 알림이 보내졌습니다",
                     );
                   },
-                  child: const Text("Schedule Drink "))
+                  child: const Text("Notify later")),
+              ElevatedButton(
+                  onPressed: () async {
+                    notificationService.sendNotification(
+                      postTitle: '글글글',
+                      receiverId: 'TDelCo3VBhXc3wVKeTLXN733rnX2',
+                    );
+                  },
+                  child: const Text("토큰으로 메세지"))
             ],
           ),
           Row(
@@ -71,7 +73,7 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
                   notificationService.cancelAllNotifications();
                 },
                 child: const Text(
-                  "Cancel All Drinks",
+                  "Cancel All Notification",
                 ),
               )
             ],

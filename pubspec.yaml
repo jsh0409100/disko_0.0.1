@@ -72,6 +72,8 @@ dependencies:
   flutter_timezone: ^1.0.4
   http: ^0.13.5
   firebase_messaging: ^14.2.2
+  emoji_picker_flutter: ^1.5.2
+  cloud_functions: ^4.0.10
 
 
 dev_dependencies:

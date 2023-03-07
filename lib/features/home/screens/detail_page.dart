@@ -149,6 +149,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                         ],
                                       ),
                                     ),
+                                    const Spacer(),
                                     IconButton(
                                       onPressed: () {},
                                       icon: const Icon(Icons.more_vert),
@@ -317,6 +318,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                             imagesUrl: _PostCard.imagesUrl,
                           ),
                         ),
+
                       ],
                     ),
                   );

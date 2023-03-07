@@ -1,34 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CommentModel {
-  final String userName, text, uid, commentId;
+class NestedCommentModel {
+  final String userName, text, uid, commentId, nestedcommentId;
   final List<String> likes;
   final Timestamp time;
-  final int commentCount;
 
-  CommentModel({
+  NestedCommentModel({
     required this.uid,
     required this.time,
     required this.userName,
     required this.text,
     required this.likes,
     required this.commentId,
-    required this.commentCount,
+    required this.nestedcommentId,
   });
 
-  factory CommentModel.fromJson(Map<String, dynamic> json) {
+  factory NestedCommentModel.fromJson(Map<String, dynamic> json) {
     var likesFromJson = json['likes'];
 
     List<String> parsedLikes = likesFromJson.cast<String>();
 
-    return CommentModel(
+    return NestedCommentModel(
         time: json['time'],
         userName: json['userName'],
         text: json['text'],
         likes: parsedLikes,
         uid: json['uid'],
         commentId: json['commentId'],
-        commentCount: json['commentCount'],
+        nestedcommentId: json['nestedcommentId'],
     );
   }
 
@@ -39,6 +38,6 @@ class CommentModel {
     'likes': likes,
     'uid': uid,
     'commentId': commentId,
-    'commentCount': commentCount,
+    'nestedcommentId': nestedcommentId,
   };
 }

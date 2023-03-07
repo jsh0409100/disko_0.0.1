@@ -9,7 +9,7 @@ import '../controller/post_controller.dart';
 import 'bottom_nestedcomment_field.dart';
 
 class NestedComment extends StatefulWidget {
-  final String userName, text, uid, postId, commentId;
+  final String userName, text, uid, postId, commentId, nestedcommentId;
   final List<String> likes;
   final Timestamp time;
 
@@ -22,6 +22,7 @@ class NestedComment extends StatefulWidget {
     required this.time,
     required this.postId,
     required this.commentId,
+    required this.nestedcommentId,
   }) : super(key: key);
 
   @override
@@ -63,7 +64,7 @@ class _NestedCommentState extends State<NestedComment> {
           );
         }
         return SizedBox(
-          height: 150,
+          height: 100,
           child: Row(
             children: [
               const SizedBox(width: 10),
@@ -107,7 +108,7 @@ class _NestedCommentState extends State<NestedComment> {
                             ],
                           ),
                           Container(
-                            width: 300,
+                            width: 200,
                             child: Text(
                               widget.text,
                               style: const TextStyle(
@@ -127,6 +128,8 @@ class _NestedCommentState extends State<NestedComment> {
                                           .doc(widget.postId)
                                           .collection('comment')
                                           .doc(widget.commentId)
+                                          .collection('nestedcomment')
+                                          .doc(widget.nestedcommentId)
                                           .get();
                                       if (widget.likes.contains(user!.uid)) {
                                         widget.likes.remove(user!.uid);
@@ -143,12 +146,19 @@ class _NestedCommentState extends State<NestedComment> {
                                           .doc(widget.postId)
                                           .collection('comment')
                                           .doc(widget.commentId)
+                                          .collection('nestedcomment')
+                                          .doc(widget.nestedcommentId)
                                           .update({
                                         'likes': widget.likes,
                                       });
                                     },
                                     icon: likeIcon,
                                     color: likeColor,
+                                    style: IconButton.styleFrom(
+                                      minimumSize: Size.zero,
+                                      padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    ),
                                   ),
                                   Text(
                                     widget.likes.length.toString(),
@@ -160,72 +170,7 @@ class _NestedCommentState extends State<NestedComment> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(width: 5),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                    },
-                                    icon: const Icon(Icons.chat_outlined),
-                                    iconSize: 20,
-                                  ),
-                                ],
-                              ),
                             ],
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              showModalBottomSheet<void>(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return SizedBox(
-                                    height: MediaQuery.of(context).size.height / 2,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 15),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Row(
-                                            children: [
-                                              IconButton(
-                                                onPressed: () => Navigator.pop(context),
-                                                icon: const Icon(Icons.arrow_back_ios_new)
-                                              ),
-                                              const Text(
-                                                '댓글',
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w700),
-                                              ),
-                                            ],
-                                          ),
-                                          const Expanded(
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.vertical,
-                                              child: Text(
-                                                  style: TextStyle(
-                                                      fontSize: 15, fontWeight: FontWeight.w500),
-                                                  '서비스 이용약관 내용은 이렇습니당구리구리구리구 니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구 서비스 이용약관 내용은 이렇습니당구리구리구리구 부리부리부리부리부립루비리부리부부뤼구리구리구'),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: const Text(
-                              '답글 0개',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
                           ),
                         ],
                       ),

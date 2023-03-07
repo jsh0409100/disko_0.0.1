@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/enums/notification_enum.dart';
 import '../../../models/comment_model.dart';
+import '../../../models/nestedcomment_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../repository/post_repository.dart';
 
@@ -27,7 +28,7 @@ class PostController {
     return postRepository.getCommentStream(postId);
   }
 
-  Stream<List<CommentModel>> nestedcommentStream(String postId, String commentId) {
+  Stream<List<NestedCommentModel>> nestedcommentStream(String postId, String commentId) {
     return postRepository.getNestedCommentStream(postId, commentId);
   }
 

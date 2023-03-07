@@ -28,8 +28,19 @@ class _CommentListState extends ConsumerState<CommentList> {
     return StreamBuilder<List<CommentModel>>(
         stream: ref.read(postControllerProvider).commentStream(widget.postId),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingScreen();
+          if (snapshot.hasData == false) {
+            return Card(
+              color: Colors.grey.shade300,
+              child: Column(children: [
+                SizedBox(
+                  height: 70,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                ),
+                const SizedBox(
+                  height: 11,
+                )
+              ]),
+            );
           }
           return ListView.builder(
             controller: messageController,
@@ -44,6 +55,7 @@ class _CommentListState extends ConsumerState<CommentList> {
                 time: commentDocs.time,
                 postId: widget.postId,
                 commentId: commentDocs.commentId,
+                commentCount: commentDocs.commentCount,
               );
             },
           );

@@ -72,7 +72,7 @@ class AuthRepository {
       );
       await auth.signInWithCredential(credential);
       saveUserDataToFirebase(
-        name: 'guest',
+        name: '신규 유저',
         profilePic: null,
         context: context,
         countryCode: countryCode,
@@ -97,13 +97,6 @@ class AuthRepository {
       String photoUrl =
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
 
-      if (profilePic != null) {
-        photoUrl = await ref
-            .read(commonFirebaseStorageRepositoryProvider)
-            .storeFileToFirebase('profilePic/$uid', profilePic);
-      } else {
-        photoUrl = auth.currentUser!.photoURL!;
-      }
       var user = UserModel(
         phoneNum: auth.currentUser!.phoneNumber!,
         displayName: name,
@@ -193,5 +186,4 @@ class AuthRepository {
       showSnackBar(context: context, content: e.toString());
     }
   }
-
 }

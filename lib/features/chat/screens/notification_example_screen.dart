@@ -49,8 +49,8 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
                   onPressed: () async {
                     await notificationService.showScheduledLocalNotification(
                       id: 1,
-                      title: "알림 예약 기능",
-                      body: "알림 예약 테스트!",
+                      title: "디스코",
+                      body: "Mr.뺑 님이 고춧가루 공구해요 글에 댓글을 게시했습니다!",
                       payload: "예약된 알림이 보내졌습니다",
                     );
                   },

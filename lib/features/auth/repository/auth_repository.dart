@@ -42,7 +42,6 @@ class AuthRepository {
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
-          //TODO 여기서 visibility 바꾸는거 생각해보기
           await auth.signInWithCredential(credential);
         },
         verificationFailed: (e) {

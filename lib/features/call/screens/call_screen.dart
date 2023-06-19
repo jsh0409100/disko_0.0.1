@@ -30,7 +30,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   String serverUrl = "https://agora-token-service-production-b53a.up.railway.app";
   int tokenExpireTime = 45; // Expire time in Seconds.
   bool isTokenExpiring = false; // Set to true when the token is about to expire
-  String channelName = "test-call";
+  String channelName = "disko-call";
   int uid = 0; // uid of the local user
   bool isMuted = false;
   bool isVideoHide = false;

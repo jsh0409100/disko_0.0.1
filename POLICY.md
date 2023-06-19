@@ -57,6 +57,9 @@ I may update our Privacy Policy from time to time. Thus, you are advised to revi
 
 This policy is effective as of 2023-03-07
 
+**Location Information**
+This app provides location sharing feature. Your location will only be shared if you agree to do so. This feature is mainly used to share location with other users in Chat and will not be shared with 3rd party.
+
 **Contact Us**
 
 If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at letsdisko2023@gmail.com.

@@ -46,7 +46,7 @@ class NotificationService {
     AndroidNotificationDetails androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'channel id',
       'channel name',
-      groupKey: 'com.ehad.flutter_push_notifications',
+      groupKey: 'com.example.flutter_push_notifications',
       channelDescription: 'channel description',
       importance: Importance.max,
       priority: Priority.max,

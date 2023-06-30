@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:986845963221:android:7752f3b7a410038a17d35c",
         "android_client_info": {
-          "package_name": "com.ehad.disko_001"
+          "package_name": "com.example.disko_001"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "986845963221-p9f0fippgofqnilrhdvihrp2nqcjj250.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.ehad.disko_001",
+            "package_name": "com.example.disko_001",
             "certificate_hash": "a902b4af050bb17fee7aec5ec000781bd8658776"
           }
         },

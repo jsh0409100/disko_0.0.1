@@ -64,6 +64,6 @@ class DefaultFirebaseOptions {
     projectId: 'disko001',
     storageBucket: 'disko001.appspot.com',
     iosClientId: '986845963221-rgebgmrchk44ok3oldlcjgi74h29247d.apps.googleusercontent.com',
-    iosBundleId: 'com.ehad.disko001',
+    iosBundleId: 'com.example.disko001',
   );
 }

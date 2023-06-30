@@ -1,4 +1,4 @@
-package com.ehad.disko_001
+package com.example.disko_001
 
 import io.flutter.embedding.android.FlutterActivity
 

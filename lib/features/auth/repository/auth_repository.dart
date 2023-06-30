@@ -42,14 +42,14 @@ class AuthRepository {
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
-          await auth.signInWithCredential(credential);
+          //await auth.signInWithCredential(credential);
         },
+        codeSent: ((String verificationId, int? forceResendingToken) async {
+          SignUpScreen.verificationId = verificationId;
+        }),
         verificationFailed: (e) {
           throw Exception(e.message);
         },
-        codeSent: ((String verificationId, int? resendToken) async {
-          SignUpScreen.verificationId = verificationId;
-        }),
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
     } on FirebaseAuthException catch (e) {

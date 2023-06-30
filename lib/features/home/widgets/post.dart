@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/home/widgets/post_card.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../common/utils/utils.dart';
 import '../../../models/post_card_model.dart';
@@ -57,19 +56,12 @@ class _PostState extends State<Post> {
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.92),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(
-                    () => const DetailPage(),
-                    arguments: PostCard(
-                      postCategory: widget.postCategory,
-                      postTitle: widget.postTitle,
-                      postText: widget.postText,
-                      uid: widget.uid,
-                      likes: widget.likes,
-                      imagesUrl: widget.imagesUrl,
-                      postId: widget.postId,
-                      time: widget.time,
-                      commentCount: widget.commentCount,
-                    ),
+                  Navigator.pushNamed(
+                    context,
+                    DetailPage.routeName,
+                    arguments: {
+                      'postId': widget.postId,
+                    },
                   );
                 },
                 child: PostCard(

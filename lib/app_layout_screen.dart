@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/utils/local_notification.dart';
+import 'features/home/screens/detail_page.dart';
 import 'features/home/screens/home_feed_page.dart';
 import 'features/profile/screens/my_profile_page.dart';
 
@@ -15,6 +17,7 @@ class AppLayoutScreen extends StatefulWidget {
 }
 
 class MyHomeState extends State<AppLayoutScreen> {
+  late final NotificationService notificationService;
   String? mtoken = '';
   FirebaseAuth auth = FirebaseAuth.instance;
   int _selectedIndex = 0;
@@ -29,7 +32,19 @@ class MyHomeState extends State<AppLayoutScreen> {
     super.initState();
     requestPermission();
     getToken();
+    notificationService = NotificationService();
+    pushToPost();
   }
+
+  void pushToPost() => notificationService.behaviorSubject.listen((payload) {
+        Navigator.pushNamed(
+          context,
+          DetailPage.routeName,
+          arguments: {
+            'postID': payload,
+          },
+        );
+      });
 
   void _onItemTapped(int index) {
     setState(() {

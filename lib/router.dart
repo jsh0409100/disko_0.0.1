@@ -1,4 +1,5 @@
 import 'package:disko_001/app_layout_screen.dart';
+import 'package:disko_001/features/home/screens/detail_page.dart';
 import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +25,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case AppLayoutScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const AppLayoutScreen(),
+      );
+    case DetailPage.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final postId = arguments['postId'];
+      return MaterialPageRoute(
+        builder: (context) => DetailPage(postId: postId),
       );
     case ChatScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;

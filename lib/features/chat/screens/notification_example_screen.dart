@@ -19,6 +19,7 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
     super.initState();
   }
 
+  //푸쉬 알림을 눌렀을때 페이지 넘기는 부분
   void listenToNotificationStream() => notificationService.behaviorSubject.listen((payload) {
         Navigator.push(context, MaterialPageRoute(builder: (context) => SecondPage(payload)));
       });
@@ -59,7 +60,7 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
                   onPressed: () async {
                     notificationService.sendNotification(
                       postTitle: '글글글',
-                      receiverId: 'TDelCo3VBhXc3wVKeTLXN733rnX2',
+                      receiverId: 'F0yY7GlYKRguqD1enKvqpyAylXX2',
                     );
                   },
                   child: const Text("토큰으로 메세지"))

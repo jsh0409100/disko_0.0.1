@@ -3,11 +3,9 @@ import 'package:disko_001/features/notification/controller/notification_controll
 import 'package:disko_001/models/post_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
 import '../../../models/notification_model.dart';
 import '../../home/screens/detail_page.dart';
-import '../../home/widgets/post_card.dart';
 
 class CustomCommentNotification extends ConsumerWidget {
   final NotificationModel notification;
@@ -15,20 +13,13 @@ class CustomCommentNotification extends ConsumerWidget {
   const CustomCommentNotification({Key? key, required this.notification, required this.post})
       : super(key: key);
 
-  void checkNotification(PostCardModel post, WidgetRef ref) {
-    Get.to(
-      () => const DetailPage(),
-      arguments: PostCard(
-        postCategory: post.postCategory,
-        postTitle: post.postTitle,
-        postText: post.postText,
-        uid: post.uid,
-        likes: post.likes,
-        imagesUrl: post.imagesUrl,
-        postId: post.postId,
-        time: post.time,
-        commentCount: post.commentCount,
-      ),
+  void checkNotification(String postId, WidgetRef ref, BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      DetailPage.routeName,
+      arguments: {
+        'postId': postId,
+      },
     );
   }
 
@@ -38,7 +29,7 @@ class CustomCommentNotification extends ConsumerWidget {
       ref.read(notificationControllerProvider).markNotificationAsSeen(notification);
     }
     return GestureDetector(
-      onTap: () => checkNotification(post, ref),
+      onTap: () => checkNotification(post.postId, ref, context),
       child: FutureBuilder(
           future: getUserDataByUid(notification.peerUid),
           builder: (BuildContext context, AsyncSnapshot snapshot) {

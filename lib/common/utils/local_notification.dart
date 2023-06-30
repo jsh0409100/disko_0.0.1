@@ -151,7 +151,7 @@ class NotificationService {
       final ownerToken = doc.get('token');
 
       HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'asia-northeast3')
-          .httpsCallable('sendNotification');
+          .httpsCallable('sendNotifications');
       try {
         final response = await callable.call({
           'ownerToken': ownerToken,

@@ -16,7 +16,7 @@ class HomeFeedPage extends ConsumerStatefulWidget {
   _HomeFeedPageState createState() => _HomeFeedPageState();
 }
 
-class _HomeFeedPageState extends ConsumerState<HomeFeedPage> {
+class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
 
   Future<void> reloadPage() async {
@@ -24,7 +24,11 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     scrollController.addListener(() {
       double maxScroll = scrollController.position.maxScrollExtent;
       double currentScroll = scrollController.position.pixels;

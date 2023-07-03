@@ -46,12 +46,6 @@ class MyHomeState extends State<AppLayoutScreen> {
         );
       });
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   void requestPermission() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
@@ -93,30 +87,44 @@ class MyHomeState extends State<AppLayoutScreen> {
     });
   }
 
+  final PageController pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home_rounded),
-            label: '홈',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_outlined),
-            label: '채팅',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: '내정보',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        onTap: _onItemTapped,
-      ),
-    );
+        body: PageView(
+          controller: pageController,
+          children: pages,
+          onPageChanged: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          onTap: (index) {
+            pageController.jumpToPage(index);
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home_rounded),
+              label: '홈',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_outlined),
+              label: '채팅',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              label: '내정보',
+            ),
+          ],
+        ));
   }
 }

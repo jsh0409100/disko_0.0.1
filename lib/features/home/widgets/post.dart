@@ -7,10 +7,6 @@ import '../../../models/post_card_model.dart';
 import '../screens/detail_page.dart';
 
 class Post extends StatefulWidget {
-  // final String userName, postCategory, postTitle, postText, uid, profilePic, postId;
-  // final List<String> likes, imagesUrl;
-  // final Timestamp time;
-  // final int commentCount;
   final PostCardModel post;
 
   const Post({Key? key, required this.post}) : super(key: key);

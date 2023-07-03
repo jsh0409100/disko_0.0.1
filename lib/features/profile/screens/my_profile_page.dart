@@ -12,9 +12,13 @@ class MyProfilePage extends StatefulWidget {
   State<MyProfilePage> createState() => _MyProfilePageState();
 }
 
-class _MyProfilePageState extends State<MyProfilePage> {
+class _MyProfilePageState extends State<MyProfilePage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder(
         future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {

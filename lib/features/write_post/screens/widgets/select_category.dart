@@ -31,9 +31,8 @@ class _CategoryCardsState extends State<CategoryCards> {
         child: Card(
           shape: RoundedRectangleBorder(
             side: BorderSide(
-              color: (widget.selected == index)
-                  ? Theme.of(context).colorScheme.primary
-                  : Colors.white, //<-- SEE HERE
+              color:
+                  (widget.selected == index) ? Theme.of(context).colorScheme.primary : Colors.white,
             ),
             borderRadius: BorderRadius.circular(13.0),
           ),
@@ -46,8 +45,7 @@ class _CategoryCardsState extends State<CategoryCards> {
                 children: [
                   Text(
                     categoryIcon,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 17),
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
                   ),
                   const SizedBox(
                     height: 10,
@@ -73,59 +71,44 @@ class _CategoryCardsState extends State<CategoryCards> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          CategoryCardRadioButton(
-              categoryIcon: "🔥",
-              categoryName: CategoryList.categories[1],
-              index: 1),
-          CategoryCardRadioButton(
-              categoryIcon: "🛍️",
-              categoryName: CategoryList.categories[2],
-              index: 2),
-          CategoryCardRadioButton(
-              categoryIcon: "👩🏻‍💻",
-              categoryName: CategoryList.categories[3],
-              index: 3),
-        ]),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 11.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             CategoryCardRadioButton(
-                categoryIcon: "✈️",
-                categoryName: CategoryList.categories[4],
-                index: 4),
+                categoryIcon: "🔥", categoryName: CategoryList.categories[1], index: 1),
             CategoryCardRadioButton(
-                categoryIcon: "🏠",
-                categoryName: CategoryList.categories[5],
-                index: 5),
+                categoryIcon: "🛍️", categoryName: CategoryList.categories[2], index: 2),
             CategoryCardRadioButton(
-                categoryIcon: "🍳",
-                categoryName: CategoryList.categories[6],
-                index: 6),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CategoryCardRadioButton(
-                categoryIcon: "😀",
-                categoryName: CategoryList.categories[7],
-                index: 7),
-            CategoryCardRadioButton(
-                categoryIcon: "🚖 🌤️",
-                categoryName: CategoryList.categories[8],
-                index: 8),
-            CategoryCardRadioButton(
-                categoryIcon: "🎓",
-                categoryName: CategoryList.categories[9],
-                index: 9),
-          ],
-        ),
-      ],
+                categoryIcon: "👩🏻‍💻", categoryName: CategoryList.categories[3], index: 3),
+          ]),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CategoryCardRadioButton(
+                  categoryIcon: "✈️", categoryName: CategoryList.categories[4], index: 4),
+              CategoryCardRadioButton(
+                  categoryIcon: "🏠", categoryName: CategoryList.categories[5], index: 5),
+              CategoryCardRadioButton(
+                  categoryIcon: "🍳", categoryName: CategoryList.categories[6], index: 6),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CategoryCardRadioButton(
+                  categoryIcon: "😀", categoryName: CategoryList.categories[7], index: 7),
+              CategoryCardRadioButton(
+                  categoryIcon: "🚖 🌤️", categoryName: CategoryList.categories[8], index: 8),
+              CategoryCardRadioButton(
+                  categoryIcon: "🎓", categoryName: CategoryList.categories[9], index: 9),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

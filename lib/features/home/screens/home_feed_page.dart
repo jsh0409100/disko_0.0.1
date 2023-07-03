@@ -28,8 +28,8 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> {
     scrollController.addListener(() {
       double maxScroll = scrollController.position.maxScrollExtent;
       double currentScroll = scrollController.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.80;
-      if (maxScroll - currentScroll <= delta) {
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll < delta) {
         ref.read(postsProvider.notifier).fetchNextBatch();
       }
     });
@@ -56,7 +56,6 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
           Get.to(() => const WritePostPage());
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -101,10 +100,10 @@ class PostsList extends StatelessWidget {
         },
         loading: () => SliverToBoxAdapter(child: Center(child: Container())),
         error: (e, stk) {
-          return SliverToBoxAdapter(
+          return const SliverToBoxAdapter(
             child: Center(
               child: Column(
-                children: const [
+                children: [
                   Icon(Icons.info),
                   SizedBox(
                     height: 20,
@@ -147,6 +146,7 @@ class PostsListBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
+        addAutomaticKeepAlives: true,
         (context, index) {
           return FutureBuilder(
               future: getUserDataByUid(posts[index].uid),
@@ -165,18 +165,19 @@ class PostsListBuilder extends StatelessWidget {
                     ]),
                   );
                 } else {
+                  PostCardModel post = PostCardModel(
+                      userName: snapshot.data.displayName,
+                      postTitle: posts[index].postTitle,
+                      postCategory: posts[index].postCategory,
+                      postText: posts[index].postText,
+                      uid: posts[index].uid,
+                      postId: posts[index].postId,
+                      likes: posts[index].likes,
+                      imagesUrl: posts[index].imagesUrl,
+                      time: posts[index].time,
+                      commentCount: posts[index].commentCount);
                   return Post(
-                    userName: snapshot.data.displayName,
-                    postTitle: posts[index].postTitle,
-                    postCategory: posts[index].postCategory,
-                    postText: posts[index].postText,
-                    uid: posts[index].uid,
-                    postId: posts[index].postId,
-                    likes: posts[index].likes,
-                    imagesUrl: posts[index].imagesUrl,
-                    profilePic: snapshot.data.profilePic,
-                    time: posts[index].time,
-                    commentCount: posts[index].commentCount,
+                    post: post,
                   );
                 }
               });
@@ -200,9 +201,9 @@ class OnGoingBottomWidget extends StatelessWidget {
           return state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
             onGoingLoading: (posts) => const Center(child: CircularProgressIndicator()),
-            onGoingError: (posts, e, stk) => Center(
+            onGoingError: (posts, e, stk) => const Center(
               child: Column(
-                children: const [
+                children: [
                   Icon(Icons.info),
                   SizedBox(
                     height: 20,

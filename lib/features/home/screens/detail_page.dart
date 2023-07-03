@@ -26,7 +26,7 @@ class DetailPage extends ConsumerStatefulWidget {
 }
 
 class _DetailPageState extends ConsumerState<DetailPage> {
-  late final PostCardModel _PostCard;
+  late final PostCardModel post;
   final replyController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
@@ -58,8 +58,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
           }
-          _PostCard = snapshot.data!;
-          if (_PostCard.likes.contains(user!.uid)) {
+          post = snapshot.data!;
+          if (post.likes.contains(user!.uid)) {
             likeColor = Theme.of(context).colorScheme.primary;
             likeIcon = const Icon(
               Icons.favorite,
@@ -73,7 +73,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
             );
           }
 
-          final DateTime date = _PostCard.time.toDate();
+          final DateTime date = post.time.toDate();
           final timeFormat = DateFormat('MM월 dd일', 'ko');
           final showTime = timeFormat.format(date);
 
@@ -89,14 +89,14 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                     height: 0.5,
                   )),
               title: Text(
-                _PostCard.postCategory,
+                post.postCategory,
                 style:
                     const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 17),
               ),
               centerTitle: true,
             ),
             body: FutureBuilder(
-                future: getUserDataByUid(_PostCard.uid),
+                future: getUserDataByUid(post.uid),
                 builder: (context, snapshot) {
                   if (snapshot.hasData == false) {
                     return const Center(child: CircularProgressIndicator());
@@ -112,38 +112,36 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      ClipRRect(
-                                          borderRadius: BorderRadius.circular(100),
-                                          child: Image(
-                                            image: NetworkImage(snapshot.data!.profilePic),
-                                            height: 43,
-                                            width: 43,
-                                            fit: BoxFit.scaleDown,
-                                          )),
-                                      const SizedBox(
-                                        width: 12,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            snapshot.data!.displayName,
-                                            style: const TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                Row(
+                                  children: [
+                                    ClipRRect(
+                                        borderRadius: BorderRadius.circular(100),
+                                        child: Image(
+                                          image: NetworkImage(snapshot.data!.profilePic),
+                                          height: 43,
+                                          width: 43,
+                                          fit: BoxFit.scaleDown,
+                                        )),
+                                    const SizedBox(
+                                      width: 12,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          snapshot.data!.displayName,
+                                          style: const TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w600,
                                           ),
-                                          Text(_PostCard.postCategory,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                              )),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                        Text(post.postCategory,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            )),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                                 const Spacer(),
                                 IconButton(
@@ -161,7 +159,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                   fit: BoxFit.contain,
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    _PostCard.postTitle,
+                                    post.postTitle,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
@@ -171,28 +169,28 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 SizedBox(height: MediaQuery.of(context).size.height / 100),
                                 SizedBox(
                                   child: Text(
-                                    _PostCard.postText,
+                                    post.postText,
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
-                                _PostCard.imagesUrl.isEmpty
+                                post.imagesUrl.isEmpty
                                     ? Container()
                                     : Padding(
                                         padding: const EdgeInsets.all(3),
-                                        child: Container(
+                                        child: SizedBox(
                                           height: MediaQuery.of(context).size.height / 3,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
-                                            itemCount: _PostCard.imagesUrl.length,
+                                            itemCount: post.imagesUrl.length,
                                             dragStartBehavior: DragStartBehavior.start,
                                             itemBuilder: (BuildContext context, int index) {
                                               return Padding(
                                                 padding: const EdgeInsets.all(2),
                                                 child: Image.network(
-                                                  _PostCard.imagesUrl[index],
+                                                  post.imagesUrl[index],
                                                 ),
                                               );
                                             },
@@ -226,27 +224,27 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 onPressed: () async {
                                   FirebaseFirestore.instance
                                       .collection('posts')
-                                      .doc(_PostCard.postId)
+                                      .doc(post.postId)
                                       .get();
-                                  if (_PostCard.likes.contains(user!.uid)) {
-                                    _PostCard.likes.remove(user!.uid);
+                                  if (post.likes.contains(user!.uid)) {
+                                    post.likes.remove(user!.uid);
                                     setState(() {
                                       _isLiked = false;
                                     });
                                   } else {
-                                    _PostCard.likes.add(user!.uid);
+                                    post.likes.add(user!.uid);
                                     setState(() {
                                       _isLiked = true;
                                     });
                                   }
-                                  await postsCollection.doc(_PostCard.postId).update({
-                                    'likes': _PostCard.likes,
+                                  await postsCollection.doc(post.postId).update({
+                                    'likes': post.likes,
                                   });
-                                  if (_PostCard.uid != user!.uid) {
+                                  if (post.uid != user!.uid) {
                                     saveNotification(
-                                      peerUid: _PostCard.uid,
-                                      postId: _PostCard.postId,
-                                      postTitle: _PostCard.postTitle,
+                                      peerUid: post.uid,
+                                      postId: post.postId,
+                                      postTitle: post.postTitle,
                                       time: Timestamp.now(),
                                       notificationType: NotificationEnum.like,
                                     );
@@ -256,7 +254,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 color: likeColor,
                               ),
                               Text(
-                                _PostCard.likes.length.toString(),
+                                post.likes.length.toString(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.black,
@@ -272,7 +270,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 ),
                               ),
                               Text(
-                                _PostCard.commentCount.toString(),
+                                post.commentCount.toString(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.black,
@@ -284,16 +282,13 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                         ),
                         Expanded(
                           child: CommentList(
-                            postId: _PostCard.postId,
+                            postId: post.postId,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: BottomCommentField(
-                            postId: _PostCard.postId,
-                            commentCount: _PostCard.commentCount,
-                            likes: _PostCard.likes,
-                            imagesUrl: _PostCard.imagesUrl,
+                            post: post,
                           ),
                         ),
                       ],

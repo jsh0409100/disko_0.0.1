@@ -5,7 +5,7 @@ admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 
-exports.sendNotification = functions.region("asia-northeast3").https.onCall(async (data, context) => {
+exports.sendNotifications = functions.region("asia-northeast3").https.onCall(async (data, context) => {
   const {ownerToken, postTitle} = data;
 
   const payload = {

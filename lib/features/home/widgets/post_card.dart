@@ -8,27 +8,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import '../../../common/enums/notification_enum.dart';
+import '../../../models/post_card_model.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../profile/screens/other_user_profile_page.dart';
 
 class PostCard extends ConsumerStatefulWidget {
-  final String uid, postCategory, postTitle, postText, postId;
-  final List<String> likes, imagesUrl;
-  final Timestamp time;
-  final int commentCount;
+  // final String uid, postCategory, postTitle, postText, postId;
+  // final List<String> likes, imagesUrl;
+  // final Timestamp time;
+  // final int commentCount;
+  final PostCardModel post;
 
-  const PostCard({
-    Key? key,
-    required this.uid,
-    required this.postCategory,
-    required this.postTitle,
-    required this.postText,
-    required this.likes,
-    required this.imagesUrl,
-    required this.postId,
-    required this.time,
-    required this.commentCount,
-  }) : super(key: key);
+  const PostCard({Key? key, required this.post}) : super(key: key);
 
   @override
   ConsumerState<PostCard> createState() => _PostCardState();
@@ -43,7 +34,7 @@ class _PostCardState extends ConsumerState<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.likes.contains(user!.uid)) {
+    if (widget.post.likes.contains(user!.uid)) {
       likeColor = Theme.of(context).colorScheme.primary;
       likeIcon = const Icon(Icons.favorite);
     } else {
@@ -58,7 +49,7 @@ class _PostCardState extends ConsumerState<PostCard> {
             context,
             ChatScreen.routeName,
             arguments: {
-              'peerUid': widget.uid,
+              'peerUid': widget.post.uid,
             },
           );
           break;
@@ -86,7 +77,7 @@ class _PostCardState extends ConsumerState<PostCard> {
     return Column(
       children: [
         FutureBuilder(
-            future: getUserDataByUid(widget.uid),
+            future: getUserDataByUid(widget.post.uid),
             builder: (context, snapshot) {
               if (snapshot.hasData == false) {
                 return Card(
@@ -142,7 +133,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                                     snapshot.data!.displayName,
                                     style: const TextStyle(fontSize: 16),
                                   ),
-                                  Text(widget.postCategory,
+                                  Text(widget.post.postCategory,
                                       style: const TextStyle(
                                           fontSize: 12, fontWeight: FontWeight.w800)),
                                 ],
@@ -150,15 +141,16 @@ class _PostCardState extends ConsumerState<PostCard> {
                             ],
                           ),
                           onTap: () {
-                            if (widget.uid != user!.uid) {
-                              Get.to(() => const OtherUserProfilePage(), arguments: widget.uid);
+                            if (widget.post.uid != user!.uid) {
+                              Get.to(() => const OtherUserProfilePage(),
+                                  arguments: widget.post.uid);
                             }
                           },
                         ),
                         PopupMenuButton<String>(
                           onSelected: handleClick,
                           itemBuilder: (BuildContext context) {
-                            return (widget.uid != user!.uid)
+                            return (widget.post.uid != user!.uid)
                                 ? {'메세지 보내기', '신고하기'}.map((String choice) {
                                     return PopupMenuItem<String>(
                                       value: choice,
@@ -191,7 +183,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                       ),
                       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(
-                          widget.postTitle,
+                          widget.post.postTitle,
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                         ),
                         const SizedBox(
@@ -199,23 +191,23 @@ class _PostCardState extends ConsumerState<PostCard> {
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.92 - 29,
-                          child: Text(widget.postText),
+                          child: Text(widget.post.postText),
                         ),
-                        widget.imagesUrl.isEmpty
+                        widget.post.imagesUrl.isEmpty
                             ? Container()
                             : Padding(
                                 padding: const EdgeInsets.all(3),
-                                child: Container(
+                                child: SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.92 - 29,
                                   height: MediaQuery.of(context).size.height / 10,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: widget.imagesUrl.length,
+                                    itemCount: widget.post.imagesUrl.length,
                                     dragStartBehavior: DragStartBehavior.start,
                                     itemBuilder: (BuildContext context, int index) {
                                       return Padding(
                                         padding: const EdgeInsets.all(2),
-                                        child: Image.network(widget.imagesUrl[index],
+                                        child: Image.network(widget.post.imagesUrl[index],
                                             fit: BoxFit.cover),
                                       );
                                     },
@@ -231,27 +223,27 @@ class _PostCardState extends ConsumerState<PostCard> {
                             onPressed: () async {
                               FirebaseFirestore.instance
                                   .collection('posts')
-                                  .doc(widget.postId)
+                                  .doc(widget.post.postId)
                                   .get();
-                              if (widget.likes.contains(user!.uid)) {
-                                widget.likes.remove(user!.uid);
+                              if (widget.post.likes.contains(user!.uid)) {
+                                widget.post.likes.remove(user!.uid);
                                 setState(() {
                                   _isLiked = false;
                                 });
                               } else {
-                                widget.likes.add(user!.uid);
+                                widget.post.likes.add(user!.uid);
                                 setState(() {
                                   _isLiked = true;
                                 });
                               }
-                              await postsCollection.doc(widget.postId).update({
-                                'likes': widget.likes,
+                              await postsCollection.doc(widget.post.postId).update({
+                                'likes': widget.post.likes,
                               });
 
                               saveNotification(
-                                peerUid: widget.uid,
-                                postId: widget.postId,
-                                postTitle: widget.postTitle,
+                                peerUid: widget.post.uid,
+                                postId: widget.post.postId,
+                                postTitle: widget.post.postTitle,
                                 time: Timestamp.now(),
                                 notificationType: NotificationEnum.like,
                               );
@@ -264,7 +256,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                           ),
-                          Text(widget.likes.length.toString()),
+                          Text(widget.post.likes.length.toString()),
                           const SizedBox(width: 8),
                           IconButton(
                             onPressed: () {},
@@ -278,7 +270,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                           ),
-                          Text(widget.commentCount.toString()),
+                          Text(widget.post.commentCount.toString()),
                           const SizedBox(width: 8),
                         ],
                       ),

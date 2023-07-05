@@ -37,6 +37,7 @@ class MyHomeState extends State<AppLayoutScreen> {
   }
 
   void pushToPost() => notificationService.behaviorSubject.listen((payload) {
+        print('Here');
         Navigator.pushNamed(
           context,
           TestScreen.routeName,

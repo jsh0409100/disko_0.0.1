@@ -1,4 +1,3 @@
-import 'package:disko_001/features/call/screens/call_pickup_screen.dart';
 import 'package:disko_001/features/chat/controller/chat_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -39,54 +38,52 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
           if (!snapshot.hasData) {
             return const LoadingScreen();
           }
-          return CallPickupScreen(
-            scaffold: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: Scaffold(
-                  appBar: AppBar(
-                    centerTitle: true,
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(snapshot.data!.profilePic),
-                          radius: 20,
-                        ),
-                        const SizedBox(
-                          width: 6,
-                        ),
-                        Text(
-                          snapshot.data!.displayName,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.more_vert,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                    backgroundColor: Colors.white,
-                    elevation: 0,
-                  ),
-                  body: Column(
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                          child: ChatMessage(
-                        receiverUid: widget.peerUid,
-                      )),
-                      BottomChatField(
-                        receiverUid: widget.peerUid,
-                        profilePic: snapshot.data!.profilePic,
-                        receiverDisplayName: snapshot.data!.displayName,
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(snapshot.data!.profilePic),
+                        radius: 20,
+                      ),
+                      const SizedBox(
+                        width: 6,
+                      ),
+                      Text(
+                        snapshot.data!.displayName,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                       ),
                     ],
-                  )),
-            ),
+                  ),
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.more_vert,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                ),
+                body: Column(
+                  children: [
+                    Expanded(
+                        child: ChatMessage(
+                      receiverUid: widget.peerUid,
+                    )),
+                    BottomChatField(
+                      receiverUid: widget.peerUid,
+                      profilePic: snapshot.data!.profilePic,
+                      receiverDisplayName: snapshot.data!.displayName,
+                    ),
+                  ],
+                )),
           );
         });
   }

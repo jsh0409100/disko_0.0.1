@@ -22,6 +22,8 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
   late VideoPlayerController _videoPlayerController;
   late ChewieController _chewieController;
 
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -42,12 +44,14 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
     }
 
     _videoPlayerController.initialize().then(
-          (_) => setState(
-            () => _chewieController = ChewieController(
+          (_) => setState(() {
+            _isLoading = false;
+            _chewieController = ChewieController(
               videoPlayerController: _videoPlayerController,
-              aspectRatio: 16 / 9,
-            ),
-          ),
+              aspectRatio: _videoPlayerController.value.aspectRatio,
+              showControlsOnInitialize: false,
+            );
+          }),
         );
   }
 
@@ -60,9 +64,6 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: Chewie(controller: _chewieController),
-    );
+    return _isLoading ? const CircularProgressIndicator() : Chewie(controller: _chewieController);
   }
 }

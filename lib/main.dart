@@ -12,6 +12,7 @@ import 'color_schemes.g.dart';
 import 'common/widgets/error_screen.dart';
 import 'common/widgets/loading_screen.dart';
 import 'features/auth/controller/auth_controller.dart';
+import 'features/call/screens/call_pickup_screen.dart';
 import 'features/starting/start_page.dart';
 import 'firebase_options.dart';
 
@@ -82,9 +83,7 @@ class MyApp extends ConsumerWidget {
       ],
       locale: const Locale('ko'),
       theme: ThemeData(
-        backgroundColor: Colors.white,
         useMaterial3: true,
-        colorScheme: lightColorScheme,
         primaryColor: const Color(0xFF5E38EB),
         cardColor: Colors.white,
         fontFamily: 'Pretendard',
@@ -93,12 +92,13 @@ class MyApp extends ConsumerWidget {
           headlineMedium:
               TextStyle(fontSize: 17.0, fontWeight: FontWeight.w700, color: Colors.black),
         ),
+        colorScheme: lightColorScheme.copyWith(background: Colors.white),
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
       home: ref.watch(userDataAuthProvider).when(
             data: (user) {
               if (user == null) {
-                return const StartPage();
+                return const CallPickupScreen(scaffold: StartPage());
               }
               return const AppLayoutScreen();
             },

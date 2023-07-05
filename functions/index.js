@@ -6,22 +6,22 @@ admin.initializeApp({
 });
 
 exports.sendNotifications = functions.region("asia-northeast3").https.onCall(async (data, context) => {
-  const {ownerToken, postTitle} = data;
+  const {ownerToken, postTitle, notificationBody, postId, senderDisplayName} = data;
 
   const payload = {
     notification: {
-      title: postTitle,
-        body: "this is test body",
+      title: `${senderDisplayName}님이 ${postTitle}글의 댓글을 남겼습니다!`,
+      body: notificationBody,
       },
       data: {
-        title: postTitle,
+        title: notificationTitle,
         body: "this is test data body",
-        postId: "none",
+        postId: postId,
         click_action: "FLUTTER_NOTIFICATION_CLICK",
         id: "1",
         status: "done",
         sound: "default",
-        route: '/chat-screen'
+        screen:'/chat-screen',
       },
   };
   try {

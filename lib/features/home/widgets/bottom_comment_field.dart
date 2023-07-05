@@ -42,8 +42,11 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
           widget.post.likes,
         );
     notificationService.sendNotification(
-      postTitle: "${user!.displayName}님이 ${widget.post.postTitle}글의 댓글을 남겼습니다!",
+      postTitle: widget.post.postTitle,
+      postId: widget.post.postId,
+      senderDisplayName: user!.displayName,
       receiverId: widget.post.uid,
+      notificationBody: _userEnterMessage,
     );
     setState(() {
       controller.clear();

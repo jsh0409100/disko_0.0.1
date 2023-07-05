@@ -41,7 +41,7 @@ class MyHomeState extends State<AppLayoutScreen> {
           context,
           TestScreen.routeName,
           arguments: {
-            'postID': payload,
+            'postId': payload,
           },
         );
       });

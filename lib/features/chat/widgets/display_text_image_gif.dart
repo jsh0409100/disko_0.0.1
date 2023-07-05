@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:disko_001/features/chat/widgets/video_player_item.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../common/enums/message_enum.dart';
 
@@ -29,6 +30,7 @@ class DisplayTextImageGIF extends StatelessWidget {
         : type == MessageEnum.video
             ? VideoPlayerItem(
                 videoUrl: message,
+                dataSourceType: DataSourceType.network,
               )
             : CachedNetworkImage(
                 imageUrl: message,

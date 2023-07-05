@@ -4,9 +4,14 @@ import 'package:disko_001/common/utils/utils.dart';
 import 'package:disko_001/features/auth/controller/auth_controller.dart';
 import 'package:disko_001/features/profile/screens/profile_edit_page.dart';
 import 'package:disko_001/features/profile/screens/tag_edit_page.dart';
+import 'package:disko_001/features/write_post/controller/write_post_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../common/widgets/error_text.dart';
+import '../../../common/widgets/loading_screen.dart';
+import '../../home/widgets/post.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   final String displayName, country, description, imageURL;
@@ -58,6 +63,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
       padding: const EdgeInsets.all(20),
       children: [
         Column(
@@ -131,43 +138,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ],
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            FutureBuilder(
-                future:
-                    getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return Wrap(
-                      spacing: MediaQuery.of(context).size.width * 0.03,
-                      runSpacing: MediaQuery.of(context).size.width * 0.001,
-                      children: List.generate(widget.tag.length, (index) {
-                        return index + 1 == widget.tag.length
-                            ? Wrap(
-                                children: [
-                                  mChip(widget.tag[index]),
-                                  IconButton(
-                                    onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => TagEditPage(
-                                          displayName: widget.displayName,
-                                          country: widget.country,
-                                          description: widget.description,
-                                          imageURL: widget.imageURL,
-                                          tag: widget.tag,
-                                        ),
-                                      ),
-                                    ),
-                                    icon: const Icon(Icons.add_circle_outline),
-                                  ),
-                                ],
-                              )
-                            : mChip(widget.tag[index]);
-                      }),
-                    );
-                  }
-                  return size();
-                }),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Text(
               widget.description,
               style: TextStyle(
@@ -177,27 +147,68 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+
+            Container(
+              child: myPost(context),
+            )
           ],
         ),
       ],
     );
   }
 
-  Widget mChip(String text) {
-    return Chip(
-      label: Text(text),
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(
-          color: Colors.black,
-          width: 1,
-        ),
-      ),
-    );
-  }
 
   Widget size() {
     return SizedBox(width: MediaQuery.of(context).size.width * 0.03);
+  }
+
+  Widget myPost(BuildContext context){
+    return ref.watch(searchPostProvider(widget.displayName)).when(
+      data: (posts) => ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: posts.length,
+        itemBuilder: (context, index){
+          return FutureBuilder(
+            future: getUserDataByUid(posts[index].uid),
+              builder: (BuildContext context, AsyncSnapshot snapshot){
+                if(snapshot.hasData == false){
+                  return Card(
+                    color: Colors.grey.shade300,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 180,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                        ),
+                        SizedBox(
+                          height: 11,
+                        )
+                      ],
+                    ),
+                  );
+                } else {
+                  return Post(
+                    userName: snapshot.data.displayName,
+                    postTitle: posts[index].postTitle,
+                    postCategory: posts[index].postCategory,
+                    postText: posts[index].postText,
+                    uid: posts[index].uid,
+                    postId: posts[index].postId,
+                    likes: posts[index].likes,
+                    imagesUrl: posts[index].imagesUrl,
+                    profilePic: snapshot.data.profilePic,
+                    time: posts[index].time,
+                    commentCount: posts[index].commentCount,
+                  );
+                }
+              }
+          );
+        }
+      ), error:(error, stackTrace) => ErrorText(
+      error: error.toString(),
+    ),
+      loading: () => const LoadingScreen(),
+    );
   }
 }

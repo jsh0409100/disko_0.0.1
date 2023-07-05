@@ -26,12 +26,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
               title: '내 프로필',
               appBar: AppBar(),
             ),
-            body: ProfilePage(
-              displayName: snapshot.data.displayName,
-              country: '한국',
-              description: '안녕하세요! 반가워요!',
-              imageURL: snapshot.data.profilePic,
-              tag: snapshot.data.tag,
+            body: SingleChildScrollView(
+              child: ProfilePage(
+                displayName: snapshot.data.displayName,
+                country: '한국',
+                description: '안녕하세요! 반가워요!',
+                imageURL: snapshot.data.profilePic,
+                tag: snapshot.data.tag,
+              ),
             ),
           );
         });

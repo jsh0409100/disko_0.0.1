@@ -83,7 +83,7 @@ class WritePostRepository {
   Stream<List<PostCardModel>> searchPost(String query) {
     return _posts
         .where(
-          'postTitle',
+          'userName',
           isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
           isLessThan: query.isEmpty
               ? null

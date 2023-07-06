@@ -49,6 +49,13 @@ class WritePostRepository {
     await firestore.collection('posts').doc(postId).set(
           message.toJson(),
         );
+    await firestore.collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('postID')
+        .doc('postIDs')
+        .set(
+          message.toUser(),
+        );
   }
 
   void uploadPost({
@@ -83,7 +90,7 @@ class WritePostRepository {
   Stream<List<PostCardModel>> searchPost(String query) {
     return _posts
         .where(
-          'postTitle',
+          'displayName',
           isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
           isLessThan: query.isEmpty
               ? null
@@ -102,5 +109,5 @@ class WritePostRepository {
     });
   }
 
-  CollectionReference get _posts => firestore.collection('posts');
+  CollectionReference get _posts => firestore.collection('users');
 }

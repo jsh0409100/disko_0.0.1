@@ -58,10 +58,10 @@ class _NotificationExamplePageState extends State<NotificationExamplePage> {
                   child: const Text("Notify later")),
               ElevatedButton(
                   onPressed: () async {
-                    notificationService.sendNotification(
-                      postTitle: '글글글',
-                      receiverId: 'F0yY7GlYKRguqD1enKvqpyAylXX2',
-                    );
+                    // notificationService.sendNotification(
+                    //   postTitle: '글글글',
+                    //   receiverId: 'F0yY7GlYKRguqD1enKvqpyAylXX2',
+                    // );
                   },
                   child: const Text("토큰으로 메세지"))
             ],

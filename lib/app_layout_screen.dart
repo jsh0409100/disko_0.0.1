@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/chat/screens/chat_list_screen.dart';
+import 'package:disko_001/test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/utils/local_notification.dart';
-import 'features/home/screens/detail_page.dart';
 import 'features/home/screens/home_feed_page.dart';
 import 'features/profile/screens/my_profile_page.dart';
 
@@ -37,11 +37,12 @@ class MyHomeState extends State<AppLayoutScreen> {
   }
 
   void pushToPost() => notificationService.behaviorSubject.listen((payload) {
+        print('Here');
         Navigator.pushNamed(
           context,
-          DetailPage.routeName,
+          TestScreen.routeName,
           arguments: {
-            'postID': payload,
+            'postId': payload,
           },
         );
       });

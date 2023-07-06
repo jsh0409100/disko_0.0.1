@@ -98,9 +98,9 @@ class MyApp extends ConsumerWidget {
       home: ref.watch(userDataAuthProvider).when(
             data: (user) {
               if (user == null) {
-                return const CallPickupScreen(scaffold: StartPage());
+                return const StartPage();
               }
-              return const AppLayoutScreen();
+              return const CallPickupScreen(scaffold: AppLayoutScreen());
             },
             error: (err, trace) {
               return ErrorScreen(

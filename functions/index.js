@@ -15,7 +15,7 @@ exports.sendNotifications = functions.region("asia-northeast3").https.onCall(asy
       },
       data: {
         title: postTitle,
-        body: "this is test data body",
+        body: notificationBody,
         postId: postId,
         click_action: "FLUTTER_NOTIFICATION_CLICK",
         id: "1",

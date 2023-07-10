@@ -39,16 +39,25 @@ class _PostCardState extends ConsumerState<PostCard> {
   CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
   bool _isLiked = false;
   Color likeColor = Colors.black;
-  Icon likeIcon = const Icon(Icons.favorite_border);
+  Icon likeIcon = const Icon(
+    Icons.favorite_border,
+    size: 24,
+  );
 
   @override
   Widget build(BuildContext context) {
     if (widget.likes.contains(user!.uid)) {
       likeColor = Theme.of(context).colorScheme.primary;
-      likeIcon = const Icon(Icons.favorite);
+      likeIcon = const Icon(
+        Icons.favorite,
+        size: 24,
+      );
     } else {
       likeColor = Colors.black;
-      likeIcon = const Icon(Icons.favorite_border);
+      likeIcon = const Icon(
+        Icons.favorite_border,
+        size: 24,
+      );
     }
 
     void handleClick(String value) {
@@ -105,182 +114,180 @@ class _PostCardState extends ConsumerState<PostCard> {
               return Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
+                  border: Border.all(
+                    width: 1,
+                    color: Color(0xffE7E0EC)
+                  ),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: const [
                     BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.2),
+                      color: Color.fromRGBO(0, 0, 0, 0.05),
                       offset: Offset(0, 2), //(x,y)
-                      blurRadius: 5.0,
+                      blurRadius: 1.0,
                     ),
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 11),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                        GestureDetector(
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image(
-                                    image: NetworkImage(snapshot.data!.profilePic),
-                                    height: 43,
-                                    width: 43,
-                                    fit: BoxFit.scaleDown,
-                                  )),
-                              const SizedBox(
-                                width: 12,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    snapshot.data!.displayName,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  Text(widget.postCategory,
-                                      style: const TextStyle(
-                                          fontSize: 12, fontWeight: FontWeight.w800)),
-                                ],
-                              )
-                            ],
-                          ),
-                          onTap: () {
-                            if (widget.uid != user!.uid) {
-                              Get.to(() => const OtherUserProfilePage(), arguments: widget.uid);
-                            }
-                          },
-                        ),
-                        PopupMenuButton<String>(
-                          onSelected: handleClick,
-                          itemBuilder: (BuildContext context) {
-                            return (widget.uid != user!.uid)
-                                ? {'메세지 보내기', '신고하기'}.map((String choice) {
-                                    return PopupMenuItem<String>(
-                                      value: choice,
-                                      child: choice == '신고하기'
-                                          ? Text(
-                                              choice,
-                                              style: TextStyle(
-                                                  color: Theme.of(context).colorScheme.error),
-                                            )
-                                          : Text(choice),
-                                    );
-                                  }).toList()
-                                : {'글 수정', '글 삭제'}.map((String choice) {
-                                    return PopupMenuItem<String>(
-                                      value: choice,
-                                      child: choice == '글 삭제'
-                                          ? Text(
-                                              choice,
-                                              style: TextStyle(
-                                                  color: Theme.of(context).colorScheme.error),
-                                            )
-                                          : Text(choice),
-                                    );
-                                  }).toList();
-                          },
-                        ),
-                      ]),
-                      const SizedBox(
-                        height: 10,
-                      ),
                       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(
-                          widget.postTitle,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.92 - 29,
-                          child: Text(widget.postText),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Text(
+                            widget.postTitle,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Color(0xff191919),
+                            ),
+                          ),
                         ),
                         widget.imagesUrl.isEmpty
                             ? Container()
                             : Padding(
-                                padding: const EdgeInsets.all(3),
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.92 - 29,
-                                  height: MediaQuery.of(context).size.height / 10,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: widget.imagesUrl.length,
-                                    dragStartBehavior: DragStartBehavior.start,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(2),
-                                        child: Image.network(widget.imagesUrl[index],
-                                            fit: BoxFit.cover),
-                                      );
-                                    },
+                                padding: const EdgeInsets.fromLTRB(0,3,0,5),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 250,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: widget.imagesUrl.length,
+                                      dragStartBehavior: DragStartBehavior.start,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(2),
+                                          child: Image.network(widget.imagesUrl[index],
+                                              fit: BoxFit.cover),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                              )
+                              ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.92 - 29,
+                            child: Text(
+                              widget.postText,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Color(0xff191919),
+                              ),
+                            ),
+                          ),
+                        ),
                       ]),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            onPressed: () async {
-                              FirebaseFirestore.instance
-                                  .collection('posts')
-                                  .doc(widget.postId)
-                                  .get();
-                              if (widget.likes.contains(user!.uid)) {
-                                widget.likes.remove(user!.uid);
-                                setState(() {
-                                  _isLiked = false;
-                                });
-                              } else {
-                                widget.likes.add(user!.uid);
-                                setState(() {
-                                  _isLiked = true;
-                                });
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                          GestureDetector(
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: Image(
+                                      image: NetworkImage(snapshot.data!.profilePic),
+                                      height: 19,
+                                      width: 19,
+                                      fit: BoxFit.scaleDown,
+                                    )),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.data!.displayName,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xff191919),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            onTap: () {
+                              if (widget.uid != user!.uid) {
+                                Get.to(() => const OtherUserProfilePage(), arguments: widget.uid);
                               }
-                              await postsCollection.doc(widget.postId).update({
-                                'likes': widget.likes,
-                              });
-
-                              saveNotification(
-                                peerUid: widget.uid,
-                                postId: widget.postId,
-                                postTitle: widget.postTitle,
-                                time: Timestamp.now(),
-                                notificationType: NotificationEnum.like,
-                              );
                             },
-                            icon: likeIcon,
-                            color: likeColor,
-                            style: IconButton.styleFrom(
-                              minimumSize: Size.zero,
-                              padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
                           ),
-                          Text(widget.likes.length.toString()),
-                          const SizedBox(width: 8),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.chat_outlined,
-                              color: Colors.black,
-                            ),
-                            style: IconButton.styleFrom(
-                              minimumSize: Size.zero,
-                              padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                onPressed: () async {
+                                  FirebaseFirestore.instance
+                                      .collection('posts')
+                                      .doc(widget.postId)
+                                      .get();
+                                  if (widget.likes.contains(user!.uid)) {
+                                    widget.likes.remove(user!.uid);
+                                    setState(() {
+                                      _isLiked = false;
+                                    });
+                                  } else {
+                                    widget.likes.add(user!.uid);
+                                    setState(() {
+                                      _isLiked = true;
+                                    });
+                                  }
+                                  await postsCollection.doc(widget.postId).update({
+                                    'likes': widget.likes,
+                                  });
+
+                                  saveNotification(
+                                    peerUid: widget.uid,
+                                    postId: widget.postId,
+                                    postTitle: widget.postTitle,
+                                    time: Timestamp.now(),
+                                    notificationType: NotificationEnum.like,
+                                  );
+                                },
+                                icon: likeIcon,
+                                color: likeColor,
+                                style: IconButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              ),
+                              Text(widget.likes.length.toString(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.chat_outlined,
+                                  color: Colors.black,
+                                  size: 24,
+                                ),
+                                style: IconButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              ),
+                              Text(widget.commentCount.toString(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
                           ),
-                          Text(widget.commentCount.toString()),
-                          const SizedBox(width: 8),
-                        ],
+                        ]),
                       ),
                     ],
                   ),

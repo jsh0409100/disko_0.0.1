@@ -55,7 +55,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     ),
                     title: Text('Log out'),
                     onTap: () async{
-                      await FirebaseAuth.instance.signOut();
+                      await signOut();
                       Navigator.pushAndRemoveUntil(
                           context, MaterialPageRoute(
                           builder: (BuildContext context) =>

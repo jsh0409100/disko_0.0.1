@@ -35,7 +35,7 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> {
     });
     return Scaffold(
       appBar: CommonAppBar(
-        title: '호주',
+        title: '',
         appBar: AppBar(),
       ),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,

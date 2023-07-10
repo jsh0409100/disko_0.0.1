@@ -34,6 +34,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
               description: '안녕하세요! 반가워요!',
               imageURL: snapshot.data.profilePic,
               tag: snapshot.data.tag,
+              uid: uid,
             ),
           );
         });

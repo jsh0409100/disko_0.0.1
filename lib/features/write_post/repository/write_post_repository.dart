@@ -49,13 +49,6 @@ class WritePostRepository {
     await firestore.collection('posts').doc(postId).set(
           message.toJson(),
         );
-    await firestore.collection('users')
-        .doc(auth.currentUser!.uid)
-        .collection('postID')
-        .doc('postIDs')
-        .set(
-          message.toUser(),
-        );
   }
 
   void uploadPost({
@@ -90,15 +83,15 @@ class WritePostRepository {
   Stream<List<PostCardModel>> searchPost(String query) {
     return _posts
         .where(
-          'displayName',
-          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
-          isLessThan: query.isEmpty
-              ? null
-              : query.substring(0, query.length - 1) +
-                  String.fromCharCode(
-                    query.codeUnitAt(query.length - 1) + 1,
-                  ),
-        )
+      'postTitle',
+      isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+      isLessThan: query.isEmpty
+          ? null
+          : query.substring(0, query.length - 1) +
+          String.fromCharCode(
+            query.codeUnitAt(query.length - 1) + 1,
+          ),
+    )
         .snapshots()
         .map((event) {
       List<PostCardModel> postcard = [];
@@ -109,5 +102,28 @@ class WritePostRepository {
     });
   }
 
-  CollectionReference get _posts => firestore.collection('users');
+  Stream<List<PostCardModel>> searchMyPost(String query) {
+    return _posts
+        .where(
+      'uid',
+      isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+      isLessThan: query.isEmpty
+          ? null
+          : query.substring(0, query.length - 1) +
+          String.fromCharCode(
+            query.codeUnitAt(query.length - 1) + 1,
+          ),
+    )
+        .snapshots()
+        .map((event) {
+      List<PostCardModel> postcard = [];
+      for (var post in event.docs) {
+        postcard.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+      }
+      return postcard;
+    });
+  }
+
+
+  CollectionReference get _posts => firestore.collection('posts');
 }

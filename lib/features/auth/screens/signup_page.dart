@@ -172,7 +172,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
                         ),
-                        labelText: '휴대폰 번호를 입력해주세요.',
+                        hintText: '휴대폰 번호를 입력해주세요.',
                       ),
                     ),
                   ),
@@ -211,7 +211,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
                     ),
-                    labelText: '인증번호를 입력해 주세요.',
+                    hintText: '인증번호를 입력해 주세요.',
                   ),
                 ),
               ),

@@ -57,6 +57,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             image,
             widget.country,
             widget.tag,
+            widget.description,
           );
     }
   }
@@ -70,71 +71,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 130,
-              child: GestureDetector(
-                child: Stack(children: [
-                  image == null
-                      ? CircleAvatar(
-                          radius: 60,
-                          backgroundImage: NetworkImage(widget.imageURL),
-                        )
-                      : CircleAvatar(
-                          radius: 60,
-                          backgroundImage: FileImage(
-                            image!,
-                          ),
-                        ),
-                  Positioned(
-                    left: 80,
-                    top: 95,
-                    child: CircleAvatar(
-                      backgroundColor: Color(0xffEFEFEF),
-                      radius: 15,
-                      child: IconButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProfileEditPage(
-                              displayName: widget.displayName,
-                              country: widget.country,
-                              description: widget.description,
-                              imageURL: widget.imageURL,
-                              tag: widget.tag,
-                            ),
-                          ),
-                        ),
-                        icon: const Icon(
-                          Icons.add_a_photo,
-                        ),
-                        color: Colors.black,
-                      ),
-                    ),
-                  )
-                ]),
-                onTap: () {},
-              ),
-            ),
+            topWidget(),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.displayName,
-                  style: const TextStyle(
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                  ),
-                ),
-                Text(
-                  widget.country,
-                  style: const TextStyle(
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                  ),
-                ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Text(
                   widget.description,
@@ -146,7 +87,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 Container(
-                  height: MediaQuery.of(context).size.height/1.8,
+                  height: MediaQuery.of(context).size.height / 1.8,
                   child: myPost(context),
                 ),
               ],
@@ -157,45 +98,93 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     );
   }
 
-  Widget myPost(BuildContext context){
+  Widget myPost(BuildContext context) {
     return ref.watch(searchMyPostProvider(widget.uid)).when(
-      data: (posts) => ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: posts.length,
-          itemBuilder: (context, index) {
-            return FutureBuilder(
-                future: getUserDataByUid(posts[index].uid),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData == false) {
-                    return Card(
-                      color: Colors.grey.shade300,
-                      child: Column(children: [
-                        SizedBox(
-                          height: 180,
-                          width: MediaQuery.of(context).size.width * 0.9,
-                        ),
-                        const SizedBox(
-                          height: 11,
-                        )
-                      ]),
-                    );
-                  } else {
-                    return Post(
-                      post: posts[index],
-                    );
-                  }
-                }
-            );
-          }
-      ), error:(error, stackTrace) => ErrorText(
-      error: error.toString(),
-    ),
-      loading: () => const LoadingScreen(),
-    );
+          data: (posts) => ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                return FutureBuilder(
+                    future: getUserDataByUid(posts[index].uid),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData == false) {
+                        return Card(
+                          color: Colors.grey.shade300,
+                          child: Column(children: [
+                            SizedBox(
+                              height: 180,
+                              width: MediaQuery.of(context).size.width * 0.9,
+                            ),
+                            const SizedBox(
+                              height: 11,
+                            )
+                          ]),
+                        );
+                      } else {
+                        return Post(
+                          post: posts[index],
+                        );
+                      }
+                    });
+              }),
+          error: (error, stackTrace) => ErrorText(
+            error: error.toString(),
+          ),
+          loading: () => const LoadingScreen(),
+        );
   }
 
   Widget size() {
     return SizedBox(width: MediaQuery.of(context).size.width * 0.03);
+  }
+
+  Widget topWidget(){
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          image == null
+              ? CircleAvatar(
+            radius: 35,
+            backgroundImage: NetworkImage(widget.imageURL),
+          )
+              : CircleAvatar(
+            radius: 35,
+            backgroundImage: FileImage(
+              image!,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: MediaQuery.of(context).size.width*0.3, left: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                profileText(widget.displayName),
+                profileText('개인정보인증 완료'),
+              ],
+            ),
+          ),
+          InputChip(
+            onPressed: (){},
+            label: Semantics(
+              button: true,
+              child: const Text('수정'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget profileText(String name){
+    return Text(
+      name,
+      style: const TextStyle(
+        fontStyle: FontStyle.normal,
+        fontWeight: FontWeight.w500,
+        fontSize: 12,
+      ),
+    );
   }
 }

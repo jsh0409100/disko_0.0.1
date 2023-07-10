@@ -77,6 +77,7 @@ class AuthRepository {
         countryCode: countryCode,
         ref: ref,
         isUserCreated: true,
+        description: ' ',
       );
     } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: e.message!);
@@ -90,6 +91,7 @@ class AuthRepository {
     required ProviderRef ref,
     required BuildContext context,
     required bool isUserCreated,
+    required String description,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
@@ -102,6 +104,7 @@ class AuthRepository {
         countryCode: countryCode,
         profilePic: photoUrl,
         tag: [],
+        description: description,
       );
       await firestore.collection('users').doc(uid).set(user.toJson());
 
@@ -144,6 +147,7 @@ class AuthRepository {
     required BuildContext context,
     required bool isUserCreated,
     required List<String> tag,
+    required String description,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
@@ -165,6 +169,7 @@ class AuthRepository {
         countryCode: countryCode,
         profilePic: photoUrl,
         tag: tag,
+        description: description,
       );
 
       await firestore.collection('users').doc(uid).set(user.toJson());

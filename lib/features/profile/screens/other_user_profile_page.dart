@@ -31,7 +31,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
             body: ProfilePage(
               displayName: snapshot.data.displayName,
               country: '한국',
-              description: '안녕하세요! 반가워요!',
+              description: snapshot.data.description,
               imageURL: snapshot.data.profilePic,
               tag: snapshot.data.tag,
               uid: uid,

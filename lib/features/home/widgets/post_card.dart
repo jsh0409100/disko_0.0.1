@@ -108,7 +108,7 @@ class _PostCardState extends ConsumerState<PostCard> {
       );
     }
 
-    void handleClick(String value) {
+    void showMenu(String value) {
       switch (value) {
         case '메세지 보내기':
           Navigator.pushNamed(
@@ -219,7 +219,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                           },
                         ),
                         PopupMenuButton<String>(
-                          onSelected: handleClick,
+                          onSelected: showMenu,
                           itemBuilder: (BuildContext context) {
                             return (widget.post.uid != user!.uid)
                                 ? {'메세지 보내기', '신고하기'}.map((String choice) {

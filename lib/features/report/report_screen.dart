@@ -36,6 +36,20 @@ class ReportScreen extends ConsumerWidget {
         AppLayoutScreen.routeName,
         (route) => false,
       );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(seconds: 1), () {
+              Navigator.of(context).pop(true);
+            });
+            return AlertDialog(
+              title: Text(
+                '신고가 접수되었습니다.',
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+            );
+          });
     }
 
     return Scaffold(

@@ -14,10 +14,6 @@ import '../../chat/screens/chat_screen.dart';
 import '../../profile/screens/other_user_profile_page.dart';
 
 class PostCard extends ConsumerStatefulWidget {
-  // final String uid, postCategory, postTitle, postText, postId;
-  // final List<String> likes, imagesUrl;
-  // final Timestamp time;
-  // final int commentCount;
   final PostCardModel post;
 
   const PostCard({Key? key, required this.post}) : super(key: key);

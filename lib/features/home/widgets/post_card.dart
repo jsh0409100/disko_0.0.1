@@ -149,7 +149,6 @@ class _PostCardState extends ConsumerState<PostCard> {
             notificationType: notificationType,
           );
     }
-
     return Column(
       children: [
         FutureBuilder(
@@ -345,7 +344,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                               const SizedBox(width: 8),
                             ],
                           ),
-                        ]),
+                        ]),  
                       ),
                     ],
                   ),

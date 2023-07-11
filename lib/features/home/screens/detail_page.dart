@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 
 import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
+import '../../../common/widgets/common_app_bar.dart';
 import '../../../models/post_card_model.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../report/report_screen.dart';
@@ -165,21 +166,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
 
           return Scaffold(
             resizeToAvoidBottomInset: true,
-            appBar: AppBar(
-              elevation: 0,
-              backgroundColor: Colors.grey[50],
-              bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(4.0),
-                  child: Container(
-                    color: Colors.grey,
-                    height: 0.5,
-                  )),
-              title: Text(
-                post.postCategory,
-                style:
-                    const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 17),
-              ),
-              centerTitle: true,
+            appBar: CommonAppBar(
+              title: '',
+              appBar: AppBar(),
             ),
             body: FutureBuilder(
                 future: getUserDataByUid(post.uid),
@@ -221,10 +210,6 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        Text(post.postCategory,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            )),
                                       ],
                                     ),
                                   ],

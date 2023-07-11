@@ -204,9 +204,6 @@ class _PostCardState extends ConsumerState<PostCard> {
                                     snapshot.data!.displayName,
                                     style: const TextStyle(fontSize: 16),
                                   ),
-                                  Text(widget.post.postCategory,
-                                      style: const TextStyle(
-                                          fontSize: 12, fontWeight: FontWeight.w800)),
                                 ],
                               )
                             ],

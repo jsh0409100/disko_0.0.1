@@ -172,7 +172,6 @@ class PostsListBuilder extends StatelessWidget {
                   PostCardModel post = PostCardModel(
                       userName: snapshot.data.displayName,
                       postTitle: posts[index].postTitle,
-                      postCategory: posts[index].postCategory,
                       postText: posts[index].postText,
                       uid: posts[index].uid,
                       postId: posts[index].postId,

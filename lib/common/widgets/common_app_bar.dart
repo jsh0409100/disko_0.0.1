@@ -16,7 +16,6 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool unseenNotification = false;
     return AppBar(
       title: Text(title),
       centerTitle: true,

@@ -34,16 +34,24 @@ class _MyProfilePageState extends State<MyProfilePage> {
             return const Center(child: CircularProgressIndicator());
           }
           return Scaffold(
-            appBar: CommonAppBar(
-              title: '내 프로필',
-              appBar: AppBar(),
+            appBar: AppBar(
+              actions: [
+                IconButton(
+                    onPressed:(){},
+                    icon: const Icon(
+                      Icons.settings_outlined,
+                      color: Colors.black,
+                    )
+                ),
+              ],
             ),
             body: ProfilePage(
               displayName: snapshot.data.displayName,
               country: '한국',
-              description: '안녕하세요! 반가워요!',
+              description: snapshot.data.description,
               imageURL: snapshot.data.profilePic,
               tag: snapshot.data.tag,
+              uid: FirebaseAuth.instance.currentUser!.uid,
             ),
             drawer: Drawer(
               child: ListView(

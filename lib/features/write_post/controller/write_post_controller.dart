@@ -18,6 +18,11 @@ final searchPostProvider = StreamProvider.family((ref, String query) {
   //Todo 나중에 검증하기
 });
 
+final searchMyPostProvider = StreamProvider.family((ref, String query){
+  return ref.watch(writePostRepositoryProvider).searchMyPost(query);
+});
+
+
 class WritePostController {
   final WritePostRepository writePostRepository;
   final ProviderRef ref;
@@ -40,8 +45,11 @@ class WritePostController {
           ),
         );
   }
-
   Stream<List<PostCardModel>> searchPost(String query) {
     return writePostRepository.searchPost(query);
+  }
+
+  Stream<List<PostCardModel>> searchMyPost(String query) {
+    return writePostRepository.searchMyPost(query);
   }
 }

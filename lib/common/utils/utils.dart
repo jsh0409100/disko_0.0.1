@@ -17,6 +17,8 @@ Future<UserModel> getUserDataByUid(String uid) async {
   return UserModel.fromJson(userDataMap.data()!);
 }
 
+
+
 Stream<UserModel> getUserStreamByUid(String uid) {
   return FirebaseFirestore.instance
       .collection('users')

@@ -49,4 +49,7 @@ class PostCardModel {
         'postId': postId,
         'commentCount': commentCount,
       };
+  Map<String, dynamic> toUser() => {
+    'postId': postId,
+  };
 }

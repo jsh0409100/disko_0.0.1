@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/common/utils/utils.dart';
 import 'package:disko_001/features/home/controller/post_controller.dart';
+import 'package:disko_001/features/report/report_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,6 @@ import '../../chat/screens/chat_screen.dart';
 import '../../profile/screens/other_user_profile_page.dart';
 
 class PostCard extends ConsumerStatefulWidget {
-  // final String uid, postCategory, postTitle, postText, postId;
-  // final List<String> likes, imagesUrl;
-  // final Timestamp time;
-  // final int commentCount;
   final PostCardModel post;
 
   const PostCard({Key? key, required this.post}) : super(key: key);
@@ -42,7 +39,72 @@ class _PostCardState extends ConsumerState<PostCard> {
       likeIcon = const Icon(Icons.favorite_border);
     }
 
-    void handleClick(String value) {
+    Future<void> _showMyDialog() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (context) {
+          return Builder(builder: (context) {
+            final customTheme = Theme.of(context).copyWith(
+              dialogTheme: const DialogTheme(
+                backgroundColor: Color(0xFFFFFBFF),
+              ),
+            );
+
+            return Theme(
+              data: customTheme,
+              child: AlertDialog(
+                title: Text(
+                  '정말로 이 사용자를 신고하시겠습니까?',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  maxLines: 2,
+                ),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: TextButton.styleFrom(
+                          elevation: 2,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                        ),
+                        child: Text('아니요',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(color: Colors.white)),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(ReportScreen.routeName, arguments: {
+                              'reportedUid': widget.post.uid,
+                              'reportedDisplayName': widget.post.userName
+                            });
+                          },
+                          style: TextButton.styleFrom(
+                            elevation: 2,
+                            backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                          child: Text(
+                            '예, 신고할게요',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(color: Colors.white),
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+        },
+      );
+    }
+
+    void showMenu(String value) {
       switch (value) {
         case '메세지 보내기':
           Navigator.pushNamed(
@@ -54,6 +116,11 @@ class _PostCardState extends ConsumerState<PostCard> {
           );
           break;
         case '신고하기':
+          _showMyDialog();
+          break;
+        case '글 수정':
+          break;
+        case '글 삭제':
           break;
       }
     }
@@ -133,9 +200,6 @@ class _PostCardState extends ConsumerState<PostCard> {
                                     snapshot.data!.displayName,
                                     style: const TextStyle(fontSize: 16),
                                   ),
-                                  Text(widget.post.postCategory,
-                                      style: const TextStyle(
-                                          fontSize: 12, fontWeight: FontWeight.w800)),
                                 ],
                               )
                             ],
@@ -148,7 +212,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                           },
                         ),
                         PopupMenuButton<String>(
-                          onSelected: handleClick,
+                          onSelected: showMenu,
                           itemBuilder: (BuildContext context) {
                             return (widget.post.uid != user!.uid)
                                 ? {'메세지 보내기', '신고하기'}.map((String choice) {

@@ -12,6 +12,7 @@ import 'color_schemes.g.dart';
 import 'common/widgets/error_screen.dart';
 import 'common/widgets/loading_screen.dart';
 import 'features/auth/controller/auth_controller.dart';
+import 'features/call/screens/call_pickup_screen.dart';
 import 'features/starting/start_page.dart';
 import 'firebase_options.dart';
 
@@ -67,7 +68,8 @@ void main() async {
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  // This widget is the root of yo
+  // ur application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GetMaterialApp(
@@ -82,9 +84,7 @@ class MyApp extends ConsumerWidget {
       ],
       locale: const Locale('ko'),
       theme: ThemeData(
-        backgroundColor: Colors.white,
         useMaterial3: true,
-        colorScheme: lightColorScheme,
         primaryColor: const Color(0xFF5E38EB),
         cardColor: Colors.white,
         fontFamily: 'Pretendard',
@@ -93,6 +93,10 @@ class MyApp extends ConsumerWidget {
           headlineMedium:
               TextStyle(fontSize: 17.0, fontWeight: FontWeight.w700, color: Colors.black),
         ),
+        dialogTheme: DialogTheme(
+          backgroundColor: lightColorScheme.background,
+        ),
+        colorScheme: lightColorScheme.copyWith(background: Colors.white),
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
       home: ref.watch(userDataAuthProvider).when(
@@ -100,7 +104,7 @@ class MyApp extends ConsumerWidget {
               if (user == null) {
                 return const StartPage();
               }
-              return const AppLayoutScreen();
+              return const CallPickupScreen(scaffold: AppLayoutScreen());
             },
             error: (err, trace) {
               return ErrorScreen(

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/utils/local_notification.dart';
 import '../../../common/utils/utils.dart';
 import '../../../models/post_card_model.dart';
+import '../../../test.dart';
 import '../controller/post_controller.dart';
 
 class BottomCommentField extends ConsumerStatefulWidget {
@@ -13,21 +14,33 @@ class BottomCommentField extends ConsumerStatefulWidget {
     required this.post,
   }) : super(key: key);
   final PostCardModel post;
-  int commentCount = 0;
 
   @override
   ConsumerState<BottomCommentField> createState() => _BottomCommentFieldState();
 }
 
 class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
+  int commentCount = 0;
+
   late final NotificationService notificationService;
   @override
   void initState() {
     notificationService = NotificationService();
+    pushToPost();
     notificationService.initializePlatformNotifications();
     super.initState();
   }
 
+  void pushToPost() => notificationService.behaviorSubject.listen((payload) {
+        print('Here');
+        Navigator.pushNamed(
+          context,
+          TestScreen.routeName,
+          arguments: {
+            'postId': payload,
+          },
+        );
+      });
   final controller = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
 
@@ -42,8 +55,11 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
           widget.post.likes,
         );
     notificationService.sendNotification(
-      postTitle: "${user!.displayName}님이 ${widget.post.postTitle}글의 댓글을 남겼습니다!",
+      postTitle: widget.post.postTitle,
+      postId: widget.post.postId,
+      senderDisplayName: user!.displayName,
       receiverId: widget.post.uid,
+      notificationBody: _userEnterMessage,
     );
     setState(() {
       controller.clear();

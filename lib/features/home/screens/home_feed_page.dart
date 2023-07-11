@@ -39,7 +39,7 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
     });
     return Scaffold(
       appBar: CommonAppBar(
-        title: '호주',
+        title: '',
         appBar: AppBar(),
       ),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -104,10 +104,10 @@ class PostsList extends StatelessWidget {
         },
         loading: () => SliverToBoxAdapter(child: Center(child: Container())),
         error: (e, stk) {
-          return const SliverToBoxAdapter(
+          return SliverToBoxAdapter(
             child: Center(
               child: Column(
-                children: [
+                children: const [
                   Icon(Icons.info),
                   SizedBox(
                     height: 20,
@@ -172,7 +172,6 @@ class PostsListBuilder extends StatelessWidget {
                   PostCardModel post = PostCardModel(
                       userName: snapshot.data.displayName,
                       postTitle: posts[index].postTitle,
-                      postCategory: posts[index].postCategory,
                       postText: posts[index].postText,
                       uid: posts[index].uid,
                       postId: posts[index].postId,
@@ -205,9 +204,9 @@ class OnGoingBottomWidget extends StatelessWidget {
           return state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
             onGoingLoading: (posts) => const Center(child: CircularProgressIndicator()),
-            onGoingError: (posts, e, stk) => const Center(
+            onGoingError: (posts, e, stk) => Center(
               child: Column(
-                children: [
+                children: const [
                   Icon(Icons.info),
                   SizedBox(
                     height: 20,
@@ -242,12 +241,12 @@ class NoMorePosts extends ConsumerWidget {
             final nomorePosts = ref.read(postsProvider.notifier).noMoreItems;
             return nomorePosts
                 ? const Padding(
-                    padding: EdgeInsets.only(bottom: 0),
-                    child: Text(
-                      "더이상 게시글이 없습니다",
-                      textAlign: TextAlign.center,
-                    ),
-                  )
+              padding: EdgeInsets.only(bottom: 0),
+              child: Text(
+                "더이상 게시글이 없습니다",
+                textAlign: TextAlign.center,
+              ),
+            )
                 : const SizedBox.shrink();
           }),
     );

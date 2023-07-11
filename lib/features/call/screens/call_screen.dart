@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -34,6 +35,8 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   int uid = 0; // uid of the local user
   bool isMuted = false;
   bool isVideoHide = false;
+  final user = FirebaseAuth.instance.currentUser;
+  bool isCaller = true;
 
   int? _remoteUid; // uid of the remote user
   bool _isJoined = false; // Indicates if the local user has joined the channel
@@ -242,6 +245,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   }
 
   Widget _localPreview() {
+    isCaller = (user!.uid == widget.call.callerId);
     if (_isJoined) {
       return AgoraVideoView(
         controller: VideoViewController(
@@ -256,14 +260,16 @@ class _CallScreenState extends ConsumerState<CallScreen> {
           children: [
             CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage(widget.call.receiverPic),
+              backgroundImage: isCaller
+                  ? NetworkImage(widget.call.receiverPic)
+                  : NetworkImage(widget.call.callerPic),
             ),
             Text(
-              widget.call.receiverName,
+              isCaller ? widget.call.receiverName : widget.call.callerName,
               textAlign: TextAlign.center,
             ),
             const Text(
-              "전화 거는 중...",
+              "전화 연결 중",
               textAlign: TextAlign.center,
             ),
           ],

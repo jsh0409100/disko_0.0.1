@@ -27,7 +27,6 @@ class PostRepository {
     required this.auth,
   });
 
-
   Stream<List<CommentModel>> getCommentStream(String postId) {
     final String collectionPath = 'posts/$postId/comment';
 
@@ -80,7 +79,6 @@ class PostRepository {
     required Timestamp time,
     required String postId,
     required String username,
-    required String postCategory,
     required String postTitle,
     required List<String> imagesUrl,
     required List<String> likes,
@@ -88,7 +86,6 @@ class PostRepository {
     final comment = PostCardModel(
       time: time,
       userName: username,
-      postCategory: postCategory,
       postTitle: postTitle,
       postText: text,
       uid: auth.currentUser!.uid,
@@ -140,16 +137,21 @@ class PostRepository {
         .collection('nestedcomment')
         .doc(nestedcommentId)
         .set(
-      comment.toJson(),
-    );
+          comment.toJson(),
+        );
   }
+
+  // void deletePost(postId) async {
+  //   //   await firestore.runTransaction((Transaction myTransaction) async {
+  //   //     await myTransaction.delete(firestore.collection('posts').doc(postId).reference);
+  //   //   });
+  //   // }
 
   void _saveNestedCommentCount({
     required String text,
     required Timestamp time,
     required String postId,
     required String username,
-    required String postCategory,
     required String postTitle,
     required List<String> likes,
     required String commentId,
@@ -157,7 +159,6 @@ class PostRepository {
     final comment = PostCardModel(
       time: time,
       userName: username,
-      postCategory: postCategory,
       postTitle: postTitle,
       postText: text,
       uid: auth.currentUser!.uid,
@@ -167,19 +168,16 @@ class PostRepository {
       commentCount: 0,
     );
 
-    final currentComment = firestore
-        .collection('posts')
-        .doc(postId)
-        .collection('comment')
-        .doc(commentId);
+    final currentComment =
+        firestore.collection('posts').doc(postId).collection('comment').doc(commentId);
     final doc = await currentComment.get();
 
     if (doc.exists) {
       final data = doc.get('commentId');
       (data == commentId)
           ? currentComment.update({
-        'commentCount': FieldValue.increment(1),
-      })
+              'commentCount': FieldValue.increment(1),
+            })
           : currentComment.set(comment.toJson());
     } else {
       currentComment.set(comment.toJson());
@@ -213,7 +211,6 @@ class PostRepository {
         time: time,
         postId: postId,
         username: senderUser.displayName,
-        postCategory: post.postCategory,
         postTitle: post.postTitle,
         imagesUrl: imagesUrl,
         likes: likes,
@@ -225,8 +222,7 @@ class PostRepository {
           postTitle: post.postTitle,
           time: time,
           notificationType: NotificationEnum.comment,
-          commentId: commentId
-      );
+          commentId: commentId);
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
@@ -242,7 +238,7 @@ class PostRepository {
   }) async {
     try {
       var time = Timestamp.now();
-      var nestedcommentId= const Uuid().v1();
+      var nestedcommentId = const Uuid().v1();
       var post = await getPostByPostId(postId);
       _saveNestedComment(
         userName: senderUser.displayName,
@@ -260,7 +256,6 @@ class PostRepository {
         time: time,
         postId: postId,
         username: senderUser.displayName,
-        postCategory: post.postCategory,
         postTitle: post.postTitle,
         likes: likes,
         commentId: commentId,
@@ -272,8 +267,7 @@ class PostRepository {
           postTitle: post.postTitle,
           time: time,
           notificationType: NotificationEnum.comment,
-          commentId: commentId
-      );
+          commentId: commentId);
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }

@@ -143,6 +143,9 @@ class NotificationService {
   Future<bool> sendNotification({
     required String receiverId,
     required String postTitle,
+    required String postId,
+    required String notificationBody,
+    required String? senderDisplayName,
   }) async {
     final receiverTokenRef = FirebaseFirestore.instance.collection('userTokens').doc(receiverId);
     final doc = await receiverTokenRef.get();
@@ -156,6 +159,9 @@ class NotificationService {
         final response = await callable.call({
           'ownerToken': ownerToken,
           'postTitle': postTitle,
+          'notificationBody': notificationBody,
+          'postId': postId,
+          'senderDisplayName': senderDisplayName,
         });
         debugPrint('result is ${response.data ?? 'No data came back'}');
 

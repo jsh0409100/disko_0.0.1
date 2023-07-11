@@ -1,6 +1,6 @@
 class AgoraConfig {
   static String token =
-      '007eJxTYLg3+cy63QyvPiT75jFqLtbd9sxYe0ljSMSNbD2puSLq5ysUGAzMkyyNk41MDS1TUkySks0tDU2TjUzM08wNkowtUxJNJlvopjQEMjI8v9rBxMgAgSA+M0N+XioDAwAMix5x';
-  static String appId = 'ce928cd311314778adda7a105f576ac3';
-  static String appcertificate = 'e10421313fab465ea17449b9f021e68b';
+      '007eJxTYLh//tfbzxc2T7Q/nhr4pTpwadlrh/p6vqiyN1l3klNjPI4rMBgnmRhamiQlmZoap5ikmBkkppmaG6QlG6eam5mam5sltmc8SG4IZGQ4sdmFlZEBAkF8ToaS1OIS3eTEnBwGBgAiVCSl';
+  static String appId = '07b93c2519dd4bc7915c247f70b39da4';
+  static String appcertificate = '17d9f71b8204456aa75ca08805b6083f';
 }

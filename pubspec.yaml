@@ -52,7 +52,7 @@ dependencies:
   flutter_riverpod: ^2.1.3
   firebase_storage: ^11.0.10
   image_picker: ^0.8.6
-  intl: 0.18.0
+  intl: ^0.18.0  # Change from 0.17 -> 0.18
   flutter_localizations:
     sdk: flutter
   permission_handler: ^10.2.0

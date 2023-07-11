@@ -27,7 +27,6 @@ class WritePostRepository {
     required Timestamp time,
     required String postId,
     required String username,
-    required String postCategory,
     required String postTitle,
     required List<String> imagesUrl,
     required List<String> likes,
@@ -38,7 +37,6 @@ class WritePostRepository {
       postText: text,
       time: time,
       userName: username,
-      postCategory: postCategory,
       postTitle: postTitle,
       likes: likes,
       imagesUrl: imagesUrl,
@@ -55,7 +53,6 @@ class WritePostRepository {
     required BuildContext context,
     required String text,
     required UserModel userData,
-    required String postCategory,
     required String postTitle,
     required List<String> imagesUrl,
     required String postId,
@@ -66,7 +63,6 @@ class WritePostRepository {
 
       _savePost(
         postId: postId,
-        postCategory: postCategory,
         postTitle: postTitle,
         imagesUrl: imagesUrl,
         likes: [],

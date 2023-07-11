@@ -92,6 +92,9 @@ class MyApp extends ConsumerWidget {
           headlineMedium:
               TextStyle(fontSize: 17.0, fontWeight: FontWeight.w700, color: Colors.black),
         ),
+        dialogTheme: DialogTheme(
+          backgroundColor: lightColorScheme.background,
+        ),
         colorScheme: lightColorScheme.copyWith(background: Colors.white),
       ),
       onGenerateRoute: (settings) => generateRoute(settings),

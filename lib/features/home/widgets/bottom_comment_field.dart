@@ -14,13 +14,14 @@ class BottomCommentField extends ConsumerStatefulWidget {
     required this.post,
   }) : super(key: key);
   final PostCardModel post;
-  int commentCount = 0;
 
   @override
   ConsumerState<BottomCommentField> createState() => _BottomCommentFieldState();
 }
 
 class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
+  int commentCount = 0;
+
   late final NotificationService notificationService;
   @override
   void initState() {

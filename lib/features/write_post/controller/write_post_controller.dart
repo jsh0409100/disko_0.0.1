@@ -26,15 +26,14 @@ class WritePostController {
     required this.ref,
   });
 
-  void uploadPost(BuildContext context, String text, String postCategory, String postTitle,
-      List<String> imagesUrl, String postId, int commentCount) {
+  void uploadPost(BuildContext context, String text, String postTitle, List<String> imagesUrl,
+      String postId, int commentCount) {
     ref.read(userDataAuthProvider).whenData(
           (value) => writePostRepository.uploadPost(
             context: context,
             text: text,
             userData: value!,
             postId: postId,
-            postCategory: postCategory,
             postTitle: postTitle,
             imagesUrl: imagesUrl,
             commentCount: commentCount,

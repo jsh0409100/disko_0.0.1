@@ -16,7 +16,7 @@ class HomeFeedPage extends ConsumerStatefulWidget {
   _HomeFeedPageState createState() => _HomeFeedPageState();
 }
 
-class _HomeFeedPageState extends ConsumerState<HomeFeedPage> {
+class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
 
   Future<void> reloadPage() async {
@@ -24,18 +24,22 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     scrollController.addListener(() {
       double maxScroll = scrollController.position.maxScrollExtent;
       double currentScroll = scrollController.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.80;
-      if (maxScroll - currentScroll <= delta) {
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll < delta) {
         ref.read(postsProvider.notifier).fetchNextBatch();
       }
     });
     return Scaffold(
       appBar: CommonAppBar(
-        title: '호주',
+        title: '',
         appBar: AppBar(),
       ),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -56,7 +60,6 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
           Get.to(() => const WritePostPage());
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -147,6 +150,7 @@ class PostsListBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
+        addAutomaticKeepAlives: true,
         (context, index) {
           return FutureBuilder(
               future: getUserDataByUid(posts[index].uid),
@@ -165,18 +169,18 @@ class PostsListBuilder extends StatelessWidget {
                     ]),
                   );
                 } else {
+                  PostCardModel post = PostCardModel(
+                      userName: snapshot.data.displayName,
+                      postTitle: posts[index].postTitle,
+                      postText: posts[index].postText,
+                      uid: posts[index].uid,
+                      postId: posts[index].postId,
+                      likes: posts[index].likes,
+                      imagesUrl: posts[index].imagesUrl,
+                      time: posts[index].time,
+                      commentCount: posts[index].commentCount);
                   return Post(
-                    userName: snapshot.data.displayName,
-                    postTitle: posts[index].postTitle,
-                    postCategory: posts[index].postCategory,
-                    postText: posts[index].postText,
-                    uid: posts[index].uid,
-                    postId: posts[index].postId,
-                    likes: posts[index].likes,
-                    imagesUrl: posts[index].imagesUrl,
-                    profilePic: snapshot.data.profilePic,
-                    time: posts[index].time,
-                    commentCount: posts[index].commentCount,
+                    post: post,
                   );
                 }
               });
@@ -237,12 +241,12 @@ class NoMorePosts extends ConsumerWidget {
             final nomorePosts = ref.read(postsProvider.notifier).noMoreItems;
             return nomorePosts
                 ? const Padding(
-                    padding: EdgeInsets.only(bottom: 0),
-                    child: Text(
-                      "더이상 게시글이 없습니다",
-                      textAlign: TextAlign.center,
-                    ),
-                  )
+              padding: EdgeInsets.only(bottom: 0),
+              child: Text(
+                "더이상 게시글이 없습니다",
+                textAlign: TextAlign.center,
+              ),
+            )
                 : const SizedBox.shrink();
           }),
     );

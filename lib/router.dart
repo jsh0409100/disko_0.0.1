@@ -1,11 +1,14 @@
 import 'package:disko_001/app_layout_screen.dart';
+import 'package:disko_001/features/home/screens/detail_page.dart';
 import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
+import 'package:disko_001/test.dart';
 import 'package:flutter/material.dart';
 
 import 'common/widgets/error_screen.dart';
 import 'features/auth/screens/login_page.dart';
 import 'features/auth/screens/signup_page.dart';
 import 'features/chat/screens/chat_screen.dart';
+import 'features/report/report_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -25,37 +28,36 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const AppLayoutScreen(),
       );
+    case DetailPage.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final postId = arguments['postId'];
+      return MaterialPageRoute(
+        builder: (context) => DetailPage(postId: postId),
+      );
+    case TestScreen.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final payload = arguments['postId'];
+      return MaterialPageRoute(
+        builder: (context) => TestScreen(payload: payload),
+      );
     case ChatScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
       final peerUid = arguments['peerUid'];
-      final peerDisplayName = arguments['peerDisplayName'];
-      final profilePic = arguments['profilePic'];
       return MaterialPageRoute(
         builder: (context) => ChatScreen(
           peerUid: peerUid,
-          peerDisplayName: peerDisplayName,
-          profilePic: profilePic,
         ),
       );
-
-    // case ConfirmStatusScreen.routeName:
-    //   final file = settings.arguments as File;
-    //   return MaterialPageRoute(
-    //     builder: (context) => ConfirmStatusScreen(
-    //       file: file,
-    //     ),
-    //   );
-    // case StatusScreen.routeName:
-    //   final status = settings.arguments as Status;
-    //   return MaterialPageRoute(
-    //     builder: (context) => StatusScreen(
-    //       status: status,
-    //     ),
-    //   );
-    // case CreateGroupScreen.routeName:
-    //   return MaterialPageRoute(
-    //     builder: (context) => const CreateGroupScreen(),
-    //   );
+    case ReportScreen.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final reportedUid = arguments['reportedUid'];
+      final reportedDisplayName = arguments['reportedDisplayName'];
+      return MaterialPageRoute(
+        builder: (context) => ReportScreen(
+          reportedUid: reportedUid,
+          reportedDisplayName: reportedDisplayName,
+        ),
+      );
     default:
       return MaterialPageRoute(
         builder: (context) => const Scaffold(

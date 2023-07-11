@@ -1,4 +1,5 @@
 import 'package:disko_001/features/profile/screens/profile_page.dart';
+import 'package:disko_001/features/starting/start_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,17 @@ class MyProfilePage extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<MyProfilePage> {
+  Future signOut() async{
+    try {
+      print('sign out complete!');
+      return await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print('sign out failed');
+      print(e.toString());
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -22,16 +34,49 @@ class _MyProfilePageState extends State<MyProfilePage> {
             return const Center(child: CircularProgressIndicator());
           }
           return Scaffold(
-            appBar: CommonAppBar(
-              title: '내 프로필',
-              appBar: AppBar(),
+            appBar: AppBar(
+              actions: [
+                IconButton(
+                    onPressed:(){},
+                    icon: const Icon(
+                      Icons.settings_outlined,
+                      color: Colors.black,
+                    )
+                ),
+              ],
             ),
             body: ProfilePage(
               displayName: snapshot.data.displayName,
-              country: '이스라엘',
-              description: '안녕하세요! 이스라엘 거주중 엥뿌삐 올리비아 입니다',
+              country: '한국',
+              description: snapshot.data.description,
               imageURL: snapshot.data.profilePic,
               tag: snapshot.data.tag,
+              uid: FirebaseAuth.instance.currentUser!.uid,
+            ),
+            drawer: Drawer(
+              child: ListView(
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.logout,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: Text('Log out'),
+                    onTap: () async{
+                      await signOut();
+                      Navigator.pushAndRemoveUntil(
+                          context, MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              StartPage()), (route) => false
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_sharp,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });

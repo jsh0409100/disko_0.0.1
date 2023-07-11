@@ -1,20 +1,19 @@
-import 'package:disko_001/features/call/screens/call_pickup_screen.dart';
 import 'package:disko_001/features/chat/controller/chat_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/utils/utils.dart';
+import '../../../common/widgets/loading_screen.dart';
 import '../widgets/bottom_chat_field.dart';
 import '../widgets/message_list.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   static const String routeName = '/chat-screen';
-  final String peerUid, peerDisplayName, profilePic;
+  final String peerUid;
   const ChatScreen({
     Key? key,
-    required this.peerDisplayName,
     required this.peerUid,
-    required this.profilePic,
   }) : super(key: key);
 
   @override
@@ -32,58 +31,60 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref
-        .read(chatControllerProvider)
-        .setChatMessageSeen(context, widget.peerUid);
-    return CallPickupScreen(
-      scaffold: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-            appBar: AppBar(
-              centerTitle: true,
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(widget.profilePic),
-                    radius: 20,
+    ref.read(chatControllerProvider).setChatMessageSeen(context, widget.peerUid);
+    return FutureBuilder(
+        future: getUserDataByUid(widget.peerUid),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const LoadingScreen();
+          }
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(snapshot.data!.profilePic),
+                        radius: 20,
+                      ),
+                      const SizedBox(
+                        width: 6,
+                      ),
+                      Text(
+                        snapshot.data!.displayName,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    width: 6,
-                  ),
-                  Text(
-                    widget.peerDisplayName,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w700),
-                  ),
-                ],
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.more_vert,
-                    color: Colors.black,
-                  ),
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.more_vert,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                  backgroundColor: Colors.white,
+                  elevation: 0,
                 ),
-              ],
-              backgroundColor: Colors.white,
-              elevation: 0,
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                    child: ChatMessage(
-                  receiverUid: widget.peerUid,
+                body: Column(
+                  children: [
+                    Expanded(
+                        child: ChatMessage(
+                      receiverUid: widget.peerUid,
+                    )),
+                    BottomChatField(
+                      receiverUid: widget.peerUid,
+                      profilePic: snapshot.data!.profilePic,
+                      receiverDisplayName: snapshot.data!.displayName,
+                    ),
+                  ],
                 )),
-                BottomChatField(
-                  receiverUid: widget.peerUid,
-                  profilePic: widget.profilePic,
-                  receiverDisplayName: widget.peerDisplayName,
-                ),
-              ],
-            )),
-      ),
-    );
+          );
+        });
   }
 }

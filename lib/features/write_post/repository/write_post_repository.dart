@@ -27,7 +27,6 @@ class WritePostRepository {
     required Timestamp time,
     required String postId,
     required String username,
-    required String postCategory,
     required String postTitle,
     required List<String> imagesUrl,
     required List<String> likes,
@@ -38,7 +37,6 @@ class WritePostRepository {
       postText: text,
       time: time,
       userName: username,
-      postCategory: postCategory,
       postTitle: postTitle,
       likes: likes,
       imagesUrl: imagesUrl,
@@ -55,7 +53,6 @@ class WritePostRepository {
     required BuildContext context,
     required String text,
     required UserModel userData,
-    required String postCategory,
     required String postTitle,
     required List<String> imagesUrl,
     required String postId,
@@ -66,7 +63,6 @@ class WritePostRepository {
 
       _savePost(
         postId: postId,
-        postCategory: postCategory,
         postTitle: postTitle,
         imagesUrl: imagesUrl,
         likes: [],
@@ -83,15 +79,15 @@ class WritePostRepository {
   Stream<List<PostCardModel>> searchPost(String query) {
     return _posts
         .where(
-          'postTitle',
-          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
-          isLessThan: query.isEmpty
-              ? null
-              : query.substring(0, query.length - 1) +
-                  String.fromCharCode(
-                    query.codeUnitAt(query.length - 1) + 1,
-                  ),
-        )
+      'postTitle',
+      isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+      isLessThan: query.isEmpty
+          ? null
+          : query.substring(0, query.length - 1) +
+          String.fromCharCode(
+            query.codeUnitAt(query.length - 1) + 1,
+          ),
+    )
         .snapshots()
         .map((event) {
       List<PostCardModel> postcard = [];
@@ -101,6 +97,29 @@ class WritePostRepository {
       return postcard;
     });
   }
+
+  Stream<List<PostCardModel>> searchMyPost(String query) {
+    return _posts
+        .where(
+      'uid',
+      isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+      isLessThan: query.isEmpty
+          ? null
+          : query.substring(0, query.length - 1) +
+          String.fromCharCode(
+            query.codeUnitAt(query.length - 1) + 1,
+          ),
+    )
+        .snapshots()
+        .map((event) {
+      List<PostCardModel> postcard = [];
+      for (var post in event.docs) {
+        postcard.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+      }
+      return postcard;
+    });
+  }
+
 
   CollectionReference get _posts => firestore.collection('posts');
 }

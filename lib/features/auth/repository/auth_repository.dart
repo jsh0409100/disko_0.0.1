@@ -28,8 +28,7 @@ class AuthRepository {
   });
 
   Future<UserModel?> getCurrentUserData() async {
-    var userData =
-        await firestore.collection('users').doc(auth.currentUser?.uid).get();
+    var userData = await firestore.collection('users').doc(auth.currentUser?.uid).get();
 
     UserModel? user;
     if (userData.data() != null) {
@@ -43,8 +42,7 @@ class AuthRepository {
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
-          //TODO 여기서 visibility 바꾸는거 생각해보기
-          await auth.signInWithCredential(credential);
+         // await auth.signInWithCredential(credential);
         },
         verificationFailed: (e) {
           throw Exception(e.message);
@@ -73,12 +71,13 @@ class AuthRepository {
       );
       await auth.signInWithCredential(credential);
       saveUserDataToFirebase(
-        name: 'guest',
+        name: '신규 유저',
         profilePic: null,
         context: context,
         countryCode: countryCode,
         ref: ref,
         isUserCreated: true,
+        description: ' ',
       );
     } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: e.message!);
@@ -92,19 +91,12 @@ class AuthRepository {
     required ProviderRef ref,
     required BuildContext context,
     required bool isUserCreated,
+    required String description,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
       String photoUrl =
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
-
-      if (profilePic != null) {
-        photoUrl = await ref
-            .read(commonFirebaseStorageRepositoryProvider)
-            .storeFileToFirebase('profilePic/$uid', profilePic);
-      } else{
-        photoUrl = auth.currentUser!.photoURL!;
-      }
 
       var user = UserModel(
         phoneNum: auth.currentUser!.phoneNumber!,
@@ -112,8 +104,8 @@ class AuthRepository {
         countryCode: countryCode,
         profilePic: photoUrl,
         tag: [],
+        description: description,
       );
-
       await firestore.collection('users').doc(uid).set(user.toJson());
 
       if (isUserCreated) {
@@ -155,6 +147,7 @@ class AuthRepository {
     required BuildContext context,
     required bool isUserCreated,
     required List<String> tag,
+    required String description,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
@@ -165,14 +158,18 @@ class AuthRepository {
         photoUrl = await ref
             .read(commonFirebaseStorageRepositoryProvider)
             .storeFileToFirebase('profilePic/$uid', profilePic);
+      } else {
+        DocumentSnapshot doc = await firestore.collection('users').doc(auth.currentUser!.uid).get();
+        photoUrl = (doc.data() as Map<String, dynamic>)['profilePic'];
       }
 
       var user = UserModel(
-          phoneNum: auth.currentUser!.phoneNumber!,
-          displayName: name,
-          countryCode: countryCode,
-          profilePic: photoUrl,
-          tag : tag,
+        phoneNum: auth.currentUser!.phoneNumber!,
+        displayName: name,
+        countryCode: countryCode,
+        profilePic: photoUrl,
+        tag: tag,
+        description: description,
       );
 
       await firestore.collection('users').doc(uid).set(user.toJson());
@@ -186,12 +183,11 @@ class AuthRepository {
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppLayoutScreen.routeName,
-              (route) => false,
+          (route) => false,
         );
       }
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
   }
-
 }

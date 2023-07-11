@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../app_layout_screen.dart';
-import '../../../models/category_list.dart';
 import '../controller/write_post_controller.dart';
 
 class WritePostPage extends ConsumerStatefulWidget {
@@ -27,6 +26,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   final FirebaseStorage _storageRef = FirebaseStorage.instance;
   late String postId;
   int commentCount = 0;
+  bool isQuestion = false;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController postTitleController = TextEditingController();
@@ -66,11 +66,10 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
     setState(() {});
   }
 
-  void _uploadPost(String category) async {
+  void _uploadPost() async {
     ref.read(writePostControllerProvider).uploadPost(
           context,
           postTextController.text,
-          category,
           postTitleController.text,
           _arrImageUrls,
           postId,
@@ -134,11 +133,14 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
             ),
             actions: [
               TextButton(
-                  onPressed: () {
-                    categoryDialogBuilder(context);
+                  onPressed: () async {
+                    postId = const Uuid().v1();
+                    Navigator.of(context).pop();
+                    await uploadFunction(_imageFileList!);
+                    _uploadPost();
                   },
                   child: const Text(
-                    '다음',
+                    '완료',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 17,
@@ -161,7 +163,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                       style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
                     ),
                     Expanded(
-                      flex: 75,
+                      flex: 70,
                       child: TextField(
                         controller: postTextController,
                         expands: true,
@@ -197,29 +199,51 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                             ),
                           ),
                     Expanded(
-                      flex: 10,
-                      child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    top: BorderSide(
-                              color: Colors.black,
-                              width: 0.5,
-                            ))),
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.photo_camera_outlined),
-                                  onPressed: selectImageFromCamera,
+                      flex: 15,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Checkbox(
+                                  value: isQuestion,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isQuestion = value!;
+                                    });
+                                  }),
+                              Text(
+                                '질문할래요!',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(color: Colors.black),
+                              )
+                            ],
+                          ),
+                          Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    border: Border(
+                                        top: BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
+                                ))),
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.photo_camera_outlined),
+                                      onPressed: selectImageFromCamera,
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.image_outlined),
+                                      onPressed: selectImageFromGallery,
+                                    ),
+                                  ],
                                 ),
-                                IconButton(
-                                  icon: const Icon(Icons.image_outlined),
-                                  onPressed: selectImageFromGallery,
-                                ),
-                              ],
-                            ),
-                          )),
+                              )),
+                        ],
+                      ),
                     )
                   ]);
           },
@@ -256,7 +280,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                     postId = const Uuid().v1();
                     Navigator.of(context).pop();
                     await uploadFunction(_imageFileList!);
-                    _uploadPost(CategoryList.categories[_CategoryCards.selected]);
+                    _uploadPost();
                   },
                 ),
               ],

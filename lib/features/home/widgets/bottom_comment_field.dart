@@ -2,26 +2,45 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/utils/local_notification.dart';
 import '../../../common/utils/utils.dart';
+import '../../../models/post_card_model.dart';
+import '../../../test.dart';
 import '../controller/post_controller.dart';
 
 class BottomCommentField extends ConsumerStatefulWidget {
   BottomCommentField({
     Key? key,
-    required this.postId,
-    required this.commentCount,
-    required this.likes,
-    required this.imagesUrl,
+    required this.post,
   }) : super(key: key);
-  final String postId;
-  final List<String> likes, imagesUrl;
-  int commentCount = 0;
+  final PostCardModel post;
 
   @override
   ConsumerState<BottomCommentField> createState() => _BottomCommentFieldState();
 }
 
 class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
+  int commentCount = 0;
+
+  late final NotificationService notificationService;
+  @override
+  void initState() {
+    notificationService = NotificationService();
+    pushToPost();
+    notificationService.initializePlatformNotifications();
+    super.initState();
+  }
+
+  void pushToPost() => notificationService.behaviorSubject.listen((payload) {
+        print('Here');
+        Navigator.pushNamed(
+          context,
+          TestScreen.routeName,
+          arguments: {
+            'postId': payload,
+          },
+        );
+      });
   final controller = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
 
@@ -31,10 +50,17 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
     ref.read(postControllerProvider).uploadComment(
           context,
           _userEnterMessage,
-          widget.postId,
-          widget.imagesUrl,
-          widget.likes,
+          widget.post.postId,
+          widget.post.imagesUrl,
+          widget.post.likes,
         );
+    notificationService.sendNotification(
+      postTitle: widget.post.postTitle,
+      postId: widget.post.postId,
+      senderDisplayName: user!.displayName,
+      receiverId: widget.post.uid,
+      notificationBody: _userEnterMessage,
+    );
     setState(() {
       controller.clear();
       _userEnterMessage = '';
@@ -53,8 +79,10 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
     return FutureBuilder(
         future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Container(
-              child: Row(children: [
+          if (!snapshot.hasData) {
+            return Container();
+          }
+          return Row(children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: Image(
@@ -67,8 +95,7 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
             Expanded(
               child: TextField(
                 autofocus: true,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 controller: controller,
                 maxLines: null,
                 decoration: InputDecoration(
@@ -91,8 +118,7 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
             ),
             TextButton(
               onPressed: () {
-                (_userEnterMessage.trim().isEmpty ||
-                        _userEnterMessage.trim() == '')
+                (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
                     ? null
                     : uploadComment();
               },
@@ -105,7 +131,7 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
                 ),
               ),
             ),
-          ]));
+          ]);
         });
   }
 }

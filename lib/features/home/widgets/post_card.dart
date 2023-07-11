@@ -106,7 +106,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                       width: MediaQuery.of(context).size.width * 0.9,
                     ),
                     const SizedBox(
-                      height: 11,
+                      height: 12,
                     )
                   ]),
                 );

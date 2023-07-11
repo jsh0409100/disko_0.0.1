@@ -239,7 +239,7 @@ class NoMorePosts extends ConsumerWidget {
                 ? const Padding(
                     padding: EdgeInsets.only(bottom: 0),
                     child: Text(
-                      "더이상 게시글이 없습니다",
+                      "더 이상 게시글이 없습니다",
                       textAlign: TextAlign.center,
                     ),
                   )

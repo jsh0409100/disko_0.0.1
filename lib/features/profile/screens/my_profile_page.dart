@@ -57,7 +57,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     onTap: () async{
                       await signOut();
                       Navigator.pushAndRemoveUntil(
-                          context, MaterialPageRoute(
+                          context, MaterialPageRoute (
                           builder: (BuildContext context) =>
                               StartPage()), (route) => false
                       );

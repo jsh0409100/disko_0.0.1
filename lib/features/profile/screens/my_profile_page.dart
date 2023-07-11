@@ -1,4 +1,5 @@
 import 'package:disko_001/features/profile/screens/profile_page.dart';
+import 'package:disko_001/features/starting/start_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,13 +13,20 @@ class MyProfilePage extends StatefulWidget {
   State<MyProfilePage> createState() => _MyProfilePageState();
 }
 
-class _MyProfilePageState extends State<MyProfilePage> with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
+class _MyProfilePageState extends State<MyProfilePage> {
+  Future signOut() async{
+    try {
+      print('sign out complete!');
+      return await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print('sign out failed');
+      print(e.toString());
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return FutureBuilder(
         future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -36,6 +44,31 @@ class _MyProfilePageState extends State<MyProfilePage> with AutomaticKeepAliveCl
               description: '안녕하세요! 반가워요!',
               imageURL: snapshot.data.profilePic,
               tag: snapshot.data.tag,
+            ),
+            drawer: Drawer(
+              child: ListView(
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.logout,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: Text('Log out'),
+                    onTap: () async{
+                      await signOut();
+                      Navigator.pushAndRemoveUntil(
+                          context, MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              StartPage()), (route) => false
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_sharp,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });

@@ -1,6 +1,7 @@
 import 'package:disko_001/app_layout_screen.dart';
 import 'package:disko_001/features/home/screens/detail_page.dart';
 import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
+import 'package:disko_001/features/write_post/screens/edit_post_page.dart';
 import 'package:disko_001/test.dart';
 import 'package:flutter/material.dart';
 
@@ -46,6 +47,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => ChatScreen(
           peerUid: peerUid,
+        ),
+      );
+    case EditPostScreen.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final post = arguments['post'];
+      return MaterialPageRoute(
+        builder: (context) => EditPostScreen(
+          post: post,
         ),
       );
     case ReportScreen.routeName:

@@ -98,20 +98,22 @@ class MyApp extends ConsumerWidget {
         colorScheme: lightColorScheme.copyWith(background: Colors.white),
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: ref.watch(userDataAuthProvider).when(
-            data: (user) {
-              if (user == null) {
-                return const StartPage();
-              }
-              return const CallPickupScreen(scaffold: AppLayoutScreen());
-            },
-            error: (err, trace) {
-              return ErrorScreen(
-                error: err.toString(),
-              );
-            },
-            loading: () => const LoadingScreen(),
-          ),
+      home:
+          // const SettingScreen());
+          ref.watch(userDataAuthProvider).when(
+                data: (user) {
+                  if (user == null) {
+                    return const StartPage();
+                  }
+                  return const CallPickupScreen(scaffold: AppLayoutScreen());
+                },
+                error: (err, trace) {
+                  return ErrorScreen(
+                    error: err.toString(),
+                  );
+                },
+                loading: () => const LoadingScreen(),
+              ),
     );
   }
 }

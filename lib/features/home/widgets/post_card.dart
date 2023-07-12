@@ -10,14 +10,12 @@ import 'package:get/get.dart';
 
 import '../../../common/enums/notification_enum.dart';
 import '../../../models/post_card_model.dart';
+import '../../../src/providers.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../profile/screens/other_user_profile_page.dart';
+import '../../write_post/screens/edit_post_page.dart';
 
 class PostCard extends ConsumerStatefulWidget {
-  // final String uid, postCategory, postTitle, postText, postId;
-  // final List<String> likes, imagesUrl;
-  // final Timestamp time;
-  // final int commentCount;
   final PostCardModel post;
 
   const PostCard({Key? key, required this.post}) : super(key: key);
@@ -123,8 +121,12 @@ class _PostCardState extends ConsumerState<PostCard> {
           _showMyDialog();
           break;
         case '글 수정':
+          Navigator.of(context)
+              .pushNamed(EditPostScreen.routeName, arguments: {'post': widget.post});
           break;
         case '글 삭제':
+          ref.read(postControllerProvider).deletePost(postId: widget.post.postId);
+          ref.read(postsProvider.notifier).reloadPage();
           break;
       }
     }

@@ -76,15 +76,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                Text(
-                  widget.description,
-                  style: TextStyle(
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                  ),
-                ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 Container(
                   height: MediaQuery.of(context).size.height / 1.8,
@@ -141,38 +132,40 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Widget topWidget(){
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          image == null
-              ? CircleAvatar(
-            radius: 35,
-            backgroundImage: NetworkImage(widget.imageURL),
-          )
-              : CircleAvatar(
-            radius: 35,
-            backgroundImage: FileImage(
-              image!,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: MediaQuery.of(context).size.width*0.3, left: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                profileText(widget.displayName),
-                profileText('개인정보인증 완료'),
+                image == null
+                    ? CircleAvatar(
+                  radius: 35,
+                  backgroundImage: NetworkImage(widget.imageURL),
+                )
+                    : CircleAvatar(
+                  radius: 35,
+                  backgroundImage: FileImage(
+                    image!,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: MediaQuery.of(context).size.width*0.2, left: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      profileNameText(widget.displayName),
+                      verEmailText(),
+                    ],
+                  ),
+                ),
+                followChip(),
               ],
             ),
-          ),
-          InputChip(
-            onPressed: (){},
-            label: Semantics(
-              button: true,
-              child: const Text('수정'),
-            ),
-          ),
-        ],
+            descriptionText(),
+          ],
+        ),
       ),
     );
   }
@@ -187,4 +180,64 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       ),
     );
   }
+
+  Widget verEmailText(){
+    return const Text(
+      '개인정보인증 완료',
+      style: TextStyle(
+        color: Color(0xFFC4C4C4),
+        fontSize: 12,
+        fontFamily: 'Pretendard',
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  Widget profileNameText(String name){
+    return Text(
+      name,
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 17,
+        fontFamily: 'Pretendard',
+        fontWeight: FontWeight.w700,
+      ),
+    );
+  }
+
+  Widget descriptionText() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Text(
+        widget.description,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 12,
+          fontFamily: 'Pretendard',
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget followChip(){
+    return ElevatedButton(
+        onPressed: (){
+
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.white54),
+          shape : MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            )
+          )
+        ),
+        child: const Text(
+          '수정',
+          style: TextStyle(color: Colors.black),
+        )
+    );
+  }
+
 }

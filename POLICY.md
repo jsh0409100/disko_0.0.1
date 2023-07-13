@@ -1,6 +1,6 @@
 **Privacy Policy**
 
-Ehad built the DISKO app as a Free app. This SERVICE is provided by Ehad at no cost and is intended for use as is.
+Ehad built the DISKO app as a Free app. This SERVICE is provided by Echad at no cost and is intended for use as is.
 
 This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.
 
@@ -43,9 +43,6 @@ I want to inform users of this Service that these third parties have access to t
 
 I value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
 
-**Links to Other Sites**
-
-This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by me. Therefore, I strongly advise you to review the Privacy Policy of these websites. I have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.
 
 **Children’s Privacy**
 
@@ -57,8 +54,6 @@ I may update our Privacy Policy from time to time. Thus, you are advised to revi
 
 This policy is effective as of 2023-03-07
 
-**Location Information**
-This app provides location sharing feature. Your location will only be shared if you agree to do so. This feature is mainly used to share location with other users in Chat and will not be shared with 3rd party.
 
 **Contact Us**
 

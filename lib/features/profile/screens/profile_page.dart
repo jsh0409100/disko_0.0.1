@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/common/utils/utils.dart';
 import 'package:disko_001/features/auth/controller/auth_controller.dart';
 import 'package:disko_001/features/profile/screens/profile_edit_page.dart';
@@ -8,33 +9,46 @@ import 'package:disko_001/features/write_post/controller/write_post_controller.d
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../common/widgets/error_text.dart';
 import '../../../common/widgets/loading_screen.dart';
 import '../../home/widgets/post.dart';
 
+const List<Widget> follow = <Widget>[
+  Text('활동내역'),
+  Text('팔로우'),
+];
+
 class ProfilePage extends ConsumerStatefulWidget {
   final String displayName, country, description, imageURL, uid;
-  final List<String> tag;
+  final List<String> tag, follow;
 
-  const ProfilePage({
-    Key? key,
-    required this.displayName,
-    required this.country,
-    required this.description,
-    required this.imageURL,
-    required this.tag,
-    required this.uid,
-  }) : super(key: key);
+  const ProfilePage(
+      {Key? key,
+      required this.displayName,
+      required this.country,
+      required this.description,
+      required this.imageURL,
+      required this.tag,
+      required this.uid,
+      required this.follow})
+      : super(key: key);
 
   @override
   ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  CollectionReference user = FirebaseFirestore.instance.collection("users");
   String test = 'test';
   File? image;
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController followController = TextEditingController();
+  final List<bool> _selectedbutton = <bool>[true, false];
+  bool state = true;
+  bool isFollowed = false;
 
   @override
   void dispose() {
@@ -47,21 +61,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     setState(() {});
   }
 
-  void storeUserData() async {
-    String name = nameController.text.trim();
-
-    if (name.isNotEmpty) {
-      ref.read(authControllerProvider).saveProfileDataToFirebase(
-            context,
-            name,
-            image,
-            widget.country,
-            widget.tag,
-            widget.description,
-          );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -72,15 +71,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             topWidget(),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                Container(
-                  height: MediaQuery.of(context).size.height / 1.8,
-                  child: myPost(context),
-                ),
+                state == true
+                    ? Container(
+                        height: MediaQuery.of(context).size.height / 2.3,
+                        child: myPost(context),
+                      )
+                    : Container(
+                        height: MediaQuery.of(context).size.height / 2.3,
+                        child: followList(context),
+                      )
               ],
             ),
           ],
@@ -130,7 +133,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return SizedBox(width: MediaQuery.of(context).size.width * 0.03);
   }
 
-  Widget topWidget(){
+  Widget topWidget() {
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -141,17 +144,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               children: [
                 image == null
                     ? CircleAvatar(
-                  radius: 35,
-                  backgroundImage: NetworkImage(widget.imageURL),
-                )
+                        radius: 35,
+                        backgroundImage: NetworkImage(widget.imageURL),
+                      )
                     : CircleAvatar(
-                  radius: 35,
-                  backgroundImage: FileImage(
-                    image!,
-                  ),
-                ),
+                        radius: 35,
+                        backgroundImage: FileImage(
+                          image!,
+                        ),
+                      ),
                 Padding(
-                  padding: EdgeInsets.only(right: MediaQuery.of(context).size.width*0.2, left: 15),
+                  padding: EdgeInsets.only(
+                      right: MediaQuery.of(context).size.width * 0.15,
+                      left: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -160,17 +165,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     ],
                   ),
                 ),
-                followChip(),
+                widget.uid == FirebaseAuth.instance.currentUser!.uid
+                    ? editChip()
+                    : followChip(checkFollow())
               ],
             ),
             descriptionText(),
+            percentage(),
+            activeFollow(),
           ],
         ),
       ),
     );
   }
 
-  Widget profileText(String name){
+  Widget profileText(String name) {
     return Text(
       name,
       style: const TextStyle(
@@ -181,25 +190,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     );
   }
 
-  Widget verEmailText(){
+  Widget verEmailText() {
     return const Text(
       '개인정보인증 완료',
       style: TextStyle(
         color: Color(0xFFC4C4C4),
         fontSize: 12,
-        fontFamily: 'Pretendard',
         fontWeight: FontWeight.w500,
       ),
     );
   }
 
-  Widget profileNameText(String name){
+  Widget profileNameText(String name) {
     return Text(
       name,
       style: const TextStyle(
         color: Colors.black,
         fontSize: 17,
-        fontFamily: 'Pretendard',
         fontWeight: FontWeight.w700,
       ),
     );
@@ -213,31 +220,198 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         style: const TextStyle(
           color: Colors.black,
           fontSize: 12,
-          fontFamily: 'Pretendard',
           fontWeight: FontWeight.w500,
         ),
       ),
     );
   }
 
-  Widget followChip(){
+  Widget editChip() {
     return ElevatedButton(
-        onPressed: (){
-
-        },
+        onPressed: () {},
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.white54),
-          shape : MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
+            backgroundColor: MaterialStateProperty.all(Colors.white54),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
-            )
-          )
-        ),
+            ))),
         child: const Text(
           '수정',
           style: TextStyle(color: Colors.black),
-        )
+        ));
+  }
+
+  void checkFollow() async {
+    DocumentSnapshot documentSnapshot =
+        await user.doc(auth.currentUser?.uid).get();
+    List<String> currentArray =
+        List.from(documentSnapshot.get("follow") as List<dynamic>);
+    if(mounted){
+      if (currentArray.contains(widget.uid)) {
+        setState(() {
+          isFollowed = true;
+        });
+      } else {
+        setState(() {
+          isFollowed = false;
+        });
+      }
+    }
+  }
+
+  Widget followChip(void checkFollow) {
+    return isFollowed == false
+        ? ElevatedButton(
+            onPressed: () async {
+              DocumentSnapshot documentSnapshot =
+                  await user.doc(auth.currentUser?.uid).get();
+              List<String> currentArray =
+                  List.from(documentSnapshot.get("follow") as List<dynamic>);
+              currentArray.add(widget.uid);
+              await user
+                  .doc(auth.currentUser?.uid)
+                  .update({"follow": currentArray});
+              if(mounted){
+                setState(() {
+                  isFollowed = true;
+                });
+              }
+            },
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(const Color(0xFFE0D9FF)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ))),
+            child: const Text(
+              '팔로우',
+              style: TextStyle(color: Colors.black),
+            ))
+        : ElevatedButton(
+            onPressed: () async {
+              DocumentSnapshot documentSnapshot =
+                  await user.doc(auth.currentUser?.uid).get();
+              List<String> currentArray =
+                  List.from(documentSnapshot.get("follow") as List<dynamic>);
+              currentArray.removeWhere((str) {
+                return str == widget.uid;
+              });
+              await user
+                  .doc(auth.currentUser?.uid)
+                  .update({"follow": currentArray});
+              if(mounted){
+                setState(() {
+                  isFollowed = false;
+                });
+              }
+            },
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(const Color(0xFFE0D9FF)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ))),
+            child: const Text(
+              '언팔로우',
+              style: TextStyle(color: Colors.black),
+            ));
+  }
+
+  Widget percentage() {
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(right: 50),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                'LV1. ',
+                style: TextStyle(
+                  color: Color(0xFF191919),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                '190',
+                style: TextStyle(
+                  color: Color(0xFF191919),
+                  fontSize: 26,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        LinearPercentIndicator(
+          width: MediaQuery.of(context).size.width - 60,
+          lineHeight: 19,
+          percent: 0.2,
+          progressColor: const Color(0xFFE0D9FF),
+          animation: true,
+          barRadius: const Radius.circular(15.0),
+          backgroundColor: const Color(0x3F000000),
+        ),
+      ],
     );
   }
 
+  Widget activeFollow() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: ToggleButtons(
+        direction: Axis.horizontal,
+        onPressed: (int index) {
+          if(mounted){
+            setState(() {
+              for (int i = 0; i < _selectedbutton.length; i++) {
+                _selectedbutton[i] = i == index;
+                if (i == index) {
+                  state = false;
+                } else {
+                  state = true;
+                }
+              }
+            });
+          }
+        },
+        borderRadius: const BorderRadius.all(Radius.circular(3)),
+        selectedColor: Color(0xFF7150FF),
+        fillColor: Colors.white,
+        constraints: BoxConstraints(
+          minHeight: 80,
+          minWidth: MediaQuery.of(context).size.width - 250,
+        ),
+        textStyle: const TextStyle(
+            //fontWeight: FontWeight.w500,
+            fontSize: 14),
+        isSelected: _selectedbutton,
+        children: follow,
+      ),
+    );
+  }
+
+  Widget followList(BuildContext context) {
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: widget.follow.length,
+        itemBuilder: (context, index) {
+          return FutureBuilder(
+              future: getUserDataByUid(widget.uid),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData == false) {
+                  return Text("has error");
+                }
+                else{
+                  return const ListTile(
+                    title: Text("1"),
+                  );
+                }
+              });
+        });
+  }
 }

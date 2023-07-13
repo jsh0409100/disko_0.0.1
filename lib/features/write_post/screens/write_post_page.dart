@@ -86,16 +86,18 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   }
 
   Future<void> uploadFunction(List<XFile> _images) async {
-    setState(() {
-      _isLoading = true;
-    });
-    for (int i = 0; i < _images.length; i++) {
-      var imageUrl = await uploadFile(_images[i]);
-      _arrImageUrls.add(imageUrl.toString());
+    if(mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+      for (int i = 0; i < _images.length; i++) {
+        var imageUrl = await uploadFile(_images[i]);
+        _arrImageUrls.add(imageUrl.toString());
+      }
+      setState(() {
+        _isLoading = false;
+      });
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   Future<String> uploadFile(XFile _image) async {

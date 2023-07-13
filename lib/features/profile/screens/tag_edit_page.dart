@@ -15,7 +15,7 @@ import '../cotroller/profile_controller.dart';
 
 class TagEditPage extends ConsumerStatefulWidget {
   final String displayName, country, description, imageURL;
-  final List<String> tag;
+  final List<String> tag, follow;
 
   const TagEditPage({
     Key? key,
@@ -24,6 +24,7 @@ class TagEditPage extends ConsumerStatefulWidget {
     required this.description,
     required this.imageURL,
     required this.tag,
+    required this.follow,
   }) : super(key: key);
 
   @override
@@ -76,6 +77,7 @@ class _TagEditPageState extends ConsumerState<TagEditPage> {
         widget.country,
         widget.tag,
         widget.description,
+        widget.follow,
       );
     }
   }

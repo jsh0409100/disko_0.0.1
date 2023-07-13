@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ProfileEditPage extends ConsumerStatefulWidget {
   final String displayName, country, description, imageURL;
   final List<String> tag;
+  final List<String> follow;
 
   const ProfileEditPage({
     Key? key,
@@ -16,6 +17,7 @@ class ProfileEditPage extends ConsumerStatefulWidget {
     required this.description,
     required this.imageURL,
     required this.tag,
+    required this.follow,
   }) : super(key: key);
 
   @override
@@ -58,6 +60,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             widget.country,
             widget.tag,
             description,
+            widget.follow,
           );
     }
   }

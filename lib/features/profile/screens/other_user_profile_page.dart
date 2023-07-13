@@ -36,6 +36,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
               imageURL: snapshot.data.profilePic,
               tag: snapshot.data.tag,
               uid: widget.uid,
+              follow: snapshot.data.follow,
             ),
           );
         });

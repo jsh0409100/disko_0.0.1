@@ -34,16 +34,25 @@ class _PostCardState extends ConsumerState<PostCard> {
   CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
   bool _isLiked = false;
   Color likeColor = Colors.black;
-  Icon likeIcon = const Icon(Icons.favorite_border);
+  Icon likeIcon = const Icon(
+    Icons.favorite_border,
+    size: 24,
+  );
 
   @override
   Widget build(BuildContext context) {
     if (widget.post.likes.contains(user!.uid)) {
       likeColor = Theme.of(context).colorScheme.primary;
-      likeIcon = const Icon(Icons.favorite);
+      likeIcon = const Icon(
+        Icons.favorite,
+        size: 24,
+      );
     } else {
       likeColor = Colors.black;
-      likeIcon = const Icon(Icons.favorite_border);
+      likeIcon = const Icon(
+        Icons.favorite_border,
+        size: 24,
+      );
     }
 
     Future<void> _showMyDialog() async {
@@ -151,7 +160,6 @@ class _PostCardState extends ConsumerState<PostCard> {
             notificationType: notificationType,
           );
     }
-
     return Column(
       children: [
         Container(
@@ -269,6 +277,78 @@ class _PostCardState extends ConsumerState<PostCard> {
                                 );
                               },
                             ),
+                            onTap: () {
+                              if (widget.post.uid != user!.uid) {
+                                Get.to(() => const OtherUserProfilePage(), arguments: widget.post.uid);
+                              }
+                            },
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                onPressed: () async {
+                                  FirebaseFirestore.instance
+                                      .collection('posts')
+                                      .doc(widget.post.postId)
+                                      .get();
+                                  if (widget.post.likes.contains(user!.uid)) {
+                                    widget.post.likes.remove(user!.uid);
+                                    setState(() {
+                                      _isLiked = false;
+                                    });
+                                  } else {
+                                    widget.post.likes.add(user!.uid);
+                                    setState(() {
+                                      _isLiked = true;
+                                    });
+                                  }
+                                  await postsCollection.doc(widget.post.postId).update({
+                                    'likes': widget.post.likes,
+                                  });
+
+                                  saveNotification(
+                                    peerUid: widget.post.uid,
+                                    postId: widget.post.postId,
+                                    postTitle: widget.post.postTitle,
+                                    time: Timestamp.now(),
+                                    notificationType: NotificationEnum.like,
+                                  );
+                                },
+                                icon: likeIcon,
+                                color: likeColor,
+                                style: IconButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              ),
+                              Text(widget.post.likes.length.toString(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.chat_outlined,
+                                  color: Colors.black,
+                                  size: 24,
+                                ),
+                                style: IconButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              ),
+                              Text(widget.post.commentCount.toString(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
                           ),
                         )
                 ]),

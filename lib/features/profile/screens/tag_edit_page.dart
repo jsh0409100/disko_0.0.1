@@ -75,6 +75,7 @@ class _TagEditPageState extends ConsumerState<TagEditPage> {
         image,
         widget.country,
         widget.tag,
+        widget.description,
       );
     }
   }

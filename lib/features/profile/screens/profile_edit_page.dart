@@ -48,6 +48,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
 
   void storeUserData() async {
     String name = nameController.text.trim();
+    String description = descriptionController.text.trim();
 
     if (name.isNotEmpty) {
       ref.read(authControllerProvider).saveProfileDataToFirebase(
@@ -56,6 +57,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             image,
             widget.country,
             widget.tag,
+            description,
           );
     }
   }

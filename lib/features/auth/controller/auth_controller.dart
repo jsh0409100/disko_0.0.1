@@ -34,8 +34,20 @@ class AuthController {
   }
 
   void verifyOTP(BuildContext context, String verificationId, String userOTP,
-      String countryCode) {
+      String countryCode, bool itisSignUp) {
     authRepository.verifyOTP(
+      context: context,
+      verificationId: verificationId,
+      userOTP: userOTP,
+      countryCode: countryCode,
+      ref: ref,
+      itis: itisSignUp,
+    );
+  }
+
+  void loginverifyOTP(BuildContext context, String verificationId, String userOTP,
+      String countryCode) {
+    authRepository.loginverifyOTP(
       context: context,
       verificationId: verificationId,
       userOTP: userOTP,
@@ -45,7 +57,7 @@ class AuthController {
   }
 
   void saveUserDataToFirebase(
-      BuildContext context, String name, File? profilePic, String countryCode) {
+      BuildContext context, String name, File? profilePic, String countryCode, String description) {
     authRepository.saveUserDataToFirebase(
       name: name,
       profilePic: profilePic,
@@ -53,11 +65,12 @@ class AuthController {
       ref: ref,
       countryCode: countryCode,
       isUserCreated: false,
+      description: description,
     );
   }
 
   void saveProfileDataToFirebase(
-      BuildContext context, String name, File? profilePic, String countryCode, List<String> tag) {
+      BuildContext context, String name, File? profilePic, String countryCode, List<String> tag, String description) {
     authRepository.saveProfileDataToFirebase(
       name: name,
       profilePic: profilePic,
@@ -66,6 +79,7 @@ class AuthController {
       countryCode: countryCode,
       isUserCreated: false,
       tag: tag,
+      description: description,
     );
   }
 

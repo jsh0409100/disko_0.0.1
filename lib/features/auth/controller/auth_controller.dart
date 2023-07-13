@@ -34,8 +34,20 @@ class AuthController {
   }
 
   void verifyOTP(BuildContext context, String verificationId, String userOTP,
-      String countryCode) {
+      String countryCode, bool itisSignUp) {
     authRepository.verifyOTP(
+      context: context,
+      verificationId: verificationId,
+      userOTP: userOTP,
+      countryCode: countryCode,
+      ref: ref,
+      itis: itisSignUp,
+    );
+  }
+
+  void loginverifyOTP(BuildContext context, String verificationId, String userOTP,
+      String countryCode) {
+    authRepository.loginverifyOTP(
       context: context,
       verificationId: verificationId,
       userOTP: userOTP,

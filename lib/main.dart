@@ -102,7 +102,7 @@ class MyApp extends ConsumerWidget {
       home: ref.watch(userDataAuthProvider).when(
             data: (user) {
               if (user == null) {
-                return const StartPage();
+                return const StartPage(itisSignUp: true,);
               }
               return const CallPickupScreen(scaffold: AppLayoutScreen());
             },

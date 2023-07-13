@@ -165,7 +165,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
           final showTime = timeFormat.format(date);
 
           return Scaffold(
-            resizeToAvoidBottomInset: true,
+            resizeToAvoidBottomInset: false,
             appBar: CommonAppBar(
               title: '',
               appBar: AppBar(),
@@ -389,11 +389,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                             postId: post.postId,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: BottomCommentField(
-                            post: post,
-                          ),
+                        BottomCommentField(
+                          post: post,
                         ),
                       ],
                     ),

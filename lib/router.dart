@@ -18,11 +18,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case SignUpScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => const SignUpScreen(),
+        builder: (context) => const SignUpScreen(itisSignUp: true,),
       );
     case LoginScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => const LoginScreen(),
+        builder: (context) => const LoginScreen(itisSignUp: true),
       );
     case AppLayoutScreen.routeName:
       return MaterialPageRoute(

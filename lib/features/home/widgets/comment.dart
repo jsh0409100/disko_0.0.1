@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/home/widgets/nestedcomment_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../common/utils/utils.dart';
 import 'bottom_nestedcomment_field.dart';
@@ -54,6 +56,53 @@ class _CommentState extends State<Comment> {
       );
     }
 
+    void commentBottomsheet() {
+      showModalBottomSheet<void>(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30)),
+        context: context,
+        builder: (BuildContext context) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height / 2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 20, vertical: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.arrow_back_ios_new)),
+                      const Text(
+                        '댓글',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: NestedCommentList(
+                      postId: widget.postId,
+                      commentId: widget.commentId,
+                    ),
+                  ),
+                  BottomNestedCommentField(
+                    postId: widget.postId,
+                    commentId: widget.commentId,
+                    likes: widget.likes,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     return FutureBuilder(
         future: getUserDataByUid(widget.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -74,7 +123,6 @@ class _CommentState extends State<Comment> {
           return Padding(
             padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: SizedBox(
-              height: 130,
               child: Row(
                 children: [
                   Column(
@@ -96,33 +144,41 @@ class _CommentState extends State<Comment> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    widget.userName,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      widget.userName,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    readTimestamp(widget.time),
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      readTimestamp(widget.time),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                              Container(
-                                width: 300,
-                                child: Text(
-                                  widget.text,
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                child: SizedBox(
+                                  width: 300,
+                                  child: Text(
+                                    widget.text,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -175,8 +231,10 @@ class _CommentState extends State<Comment> {
                                   Row(
                                     children: [
                                       IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(Icons.chat_outlined),
+                                        onPressed: () {
+                                          commentBottomsheet();
+                                        },
+                                        icon: Icon(Symbols.chat_add_on),
                                         iconSize: 20,
                                         style: IconButton.styleFrom(
                                           minimumSize: Size.zero,
@@ -192,50 +250,7 @@ class _CommentState extends State<Comment> {
                                 height: 40,
                                 child: TextButton(
                                   onPressed: () {
-                                    showModalBottomSheet<void>(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30)),
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return SizedBox(
-                                          height: MediaQuery.of(context).size.height / 2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 15),
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Row(
-                                                  children: [
-                                                    IconButton(
-                                                        onPressed: () => Navigator.pop(context),
-                                                        icon: const Icon(Icons.arrow_back_ios_new)),
-                                                    const Text(
-                                                      '댓글',
-                                                      style: TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.w700),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Expanded(
-                                                  child: NestedCommentList(
-                                                    postId: widget.postId,
-                                                    commentId: widget.commentId,
-                                                  ),
-                                                ),
-                                                BottomNestedCommentField(
-                                                  postId: widget.postId,
-                                                  commentId: widget.commentId,
-                                                  likes: widget.likes,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
+                                    commentBottomsheet();
                                   },
                                   style: TextButton.styleFrom(
                                     minimumSize: Size.zero,

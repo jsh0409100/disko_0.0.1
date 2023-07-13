@@ -63,6 +63,42 @@ class AuthRepository {
     required String userOTP,
     required String countryCode,
     required ProviderRef ref,
+    required bool itis,
+  }) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: userOTP,
+      );
+      await auth.signInWithCredential(credential);
+      if(itis == true){
+        saveUserDataToFirebase(
+          name: '신규 유저',
+          profilePic: null,
+          context: context,
+          countryCode: countryCode,
+          ref: ref,
+          isUserCreated: true,
+          description: ' ',
+        );
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppLayoutScreen.routeName,
+              (route) => false,
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context: context, content: e.message!);
+    }
+  }
+
+  void loginverifyOTP({
+    required BuildContext context,
+    required String verificationId,
+    required String userOTP,
+    required String countryCode,
+    required ProviderRef ref,
   }) async {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -118,6 +154,47 @@ class AuthRepository {
           context,
           AppLayoutScreen.routeName,
           (route) => false,
+        );
+      }
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void saveloginUserDataToFirebase({
+    required String name,
+    required File? profilePic,
+    required String countryCode,
+    required ProviderRef ref,
+    required BuildContext context,
+    required bool isUserCreated,
+    required String description,
+  }) async {
+    try {
+      String uid = auth.currentUser!.uid;
+      String photoUrl =
+          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+
+      var user = UserModel(
+        phoneNum: auth.currentUser!.phoneNumber!,
+        displayName: name,
+        countryCode: countryCode,
+        profilePic: photoUrl,
+        tag: [],
+        description: description,
+      );
+      await firestore.collection('users').doc(uid).set(user.toJson());
+
+      if (isUserCreated) {
+        Navigator.pushNamed(
+          context,
+          LandingPage.routeName,
+        );
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppLayoutScreen.routeName,
+              (route) => false,
         );
       }
     } catch (e) {

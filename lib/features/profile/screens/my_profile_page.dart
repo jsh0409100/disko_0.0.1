@@ -17,7 +17,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
   Future signOut() async{
     try {
       print('sign out complete!');
-      return await FirebaseAuth.instance.signOut();
+      return
+        await FirebaseAuth.instance.signOut();
     } catch (e) {
       print('sign out failed');
       print(e.toString());
@@ -67,7 +68,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       Navigator.pushAndRemoveUntil(
                           context, MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              StartPage()), (route) => false
+                              StartPage(itisSignUp: false,)), (route) => false
                       );
                     },
                     trailing: Icon(

@@ -178,6 +178,7 @@ class PostsListBuilder extends StatelessWidget {
                       likes: posts[index].likes,
                       imagesUrl: posts[index].imagesUrl,
                       time: posts[index].time,
+                      isQuestion: posts[index].isQuestion,
                       commentCount: posts[index].commentCount);
                   return Post(
                     post: post,
@@ -241,12 +242,12 @@ class NoMorePosts extends ConsumerWidget {
             final nomorePosts = ref.read(postsProvider.notifier).noMoreItems;
             return nomorePosts
                 ? const Padding(
-              padding: EdgeInsets.only(bottom: 0),
-              child: Text(
-                "더이상 게시글이 없습니다",
-                textAlign: TextAlign.center,
-              ),
-            )
+                    padding: EdgeInsets.only(bottom: 0),
+                    child: Text(
+                      "더이상 게시글이 없습니다",
+                      textAlign: TextAlign.center,
+                    ),
+                  )
                 : const SizedBox.shrink();
           }),
     );

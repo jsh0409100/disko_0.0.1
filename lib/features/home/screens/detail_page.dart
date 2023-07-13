@@ -189,6 +189,12 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                               children: [
                                 Row(
                                   children: [
+                                    post.isQuestion
+                                        ? Text(
+                                            "Q",
+                                            style: Theme.of(context).textTheme.headlineLarge,
+                                          )
+                                        : SizedBox(),
                                     ClipRRect(
                                         borderRadius: BorderRadius.circular(100),
                                         child: Image(

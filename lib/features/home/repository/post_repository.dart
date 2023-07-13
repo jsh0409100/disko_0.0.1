@@ -93,6 +93,7 @@ class PostRepository {
       imagesUrl: [],
       postId: '',
       commentCount: 0,
+      isQuestion: false,
     );
 
     final currentComment = firestore.collection('posts').doc(postId);
@@ -166,6 +167,7 @@ class PostRepository {
       imagesUrl: [],
       postId: '',
       commentCount: 0,
+      isQuestion: false,
     );
 
     final currentComment =

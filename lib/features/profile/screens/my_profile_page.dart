@@ -1,10 +1,10 @@
 import 'package:disko_001/features/profile/screens/profile_page.dart';
+import 'package:disko_001/features/profile/screens/setting_page.dart';
 import 'package:disko_001/features/starting/start_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/utils/utils.dart';
-import '../../../common/widgets/common_app_bar.dart';
 
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class MyProfilePage extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<MyProfilePage> {
-  Future signOut() async{
+  Future signOut() async {
     try {
       print('sign out complete!');
       return await FirebaseAuth.instance.signOut();
@@ -37,12 +37,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
             appBar: AppBar(
               actions: [
                 IconButton(
-                    onPressed:(){},
+                    onPressed: () {
+                      Navigator.pushNamed(context, SettingScreen.routeName);
+                    },
                     icon: const Icon(
                       Icons.settings_outlined,
                       color: Colors.black,
-                    )
-                ),
+                    )),
               ],
             ),
             body: ProfilePage(
@@ -62,13 +63,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     title: Text('Log out'),
-                    onTap: () async{
+                    onTap: () async {
                       await signOut();
                       Navigator.pushAndRemoveUntil(
-                          context, MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              StartPage()), (route) => false
-                      );
+                          context,
+                          MaterialPageRoute(builder: (BuildContext context) => StartPage()),
+                          (route) => false);
                     },
                     trailing: Icon(
                       Icons.arrow_forward_sharp,

@@ -74,6 +74,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
           _arrImageUrls,
           postId,
           commentCount,
+          isQuestion,
         );
     Navigator.pushNamedAndRemoveUntil(
       context,

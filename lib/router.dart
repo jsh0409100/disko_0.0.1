@@ -1,5 +1,6 @@
 import 'package:disko_001/app_layout_screen.dart';
 import 'package:disko_001/features/home/screens/detail_page.dart';
+import 'package:disko_001/features/profile/screens/setting_page.dart';
 import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
 import 'package:disko_001/test.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           reportedUid: reportedUid,
           reportedDisplayName: reportedDisplayName,
         ),
+      );
+    case SettingScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const SettingScreen(),
       );
     default:
       return MaterialPageRoute(

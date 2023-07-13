@@ -32,7 +32,7 @@ class _SecondLandingPageState extends State<SecondLandingPage> {
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 38),
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 100,
                 ),
                 Image.asset(
                   'assets/second_page_img.png',

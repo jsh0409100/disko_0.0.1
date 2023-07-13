@@ -93,6 +93,7 @@ class PostRepository {
       imagesUrl: [],
       postId: '',
       commentCount: 0,
+      isQuestion: false,
     );
 
     final currentComment = firestore.collection('posts').doc(postId);
@@ -141,11 +142,9 @@ class PostRepository {
         );
   }
 
-  // void deletePost(postId) async {
-  //   //   await firestore.runTransaction((Transaction myTransaction) async {
-  //   //     await myTransaction.delete(firestore.collection('posts').doc(postId).reference);
-  //   //   });
-  //   // }
+  void deletePost(postId) async {
+    firestore.collection('posts').doc(postId).delete();
+  }
 
   void _saveNestedCommentCount({
     required String text,
@@ -166,6 +165,7 @@ class PostRepository {
       imagesUrl: [],
       postId: '',
       commentCount: 0,
+      isQuestion: false,
     );
 
     final currentComment =
@@ -224,7 +224,7 @@ class PostRepository {
           notificationType: NotificationEnum.comment,
           commentId: commentId);
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
@@ -269,7 +269,7 @@ class PostRepository {
           notificationType: NotificationEnum.comment,
           commentId: commentId);
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 

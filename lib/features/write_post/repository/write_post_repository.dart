@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/utils/utils.dart';
 import '../../../models/post_card_model.dart';
 import '../../../models/user_model.dart';
 
@@ -31,6 +30,7 @@ class WritePostRepository {
     required List<String> imagesUrl,
     required List<String> likes,
     required int commentCount,
+    required bool isQuestion,
   }) async {
     final message = PostCardModel(
       uid: auth.currentUser!.uid,
@@ -42,6 +42,7 @@ class WritePostRepository {
       imagesUrl: imagesUrl,
       postId: postId,
       commentCount: commentCount,
+      isQuestion: isQuestion,
     );
 
     await firestore.collection('posts').doc(postId).set(
@@ -57,6 +58,7 @@ class WritePostRepository {
     required List<String> imagesUrl,
     required String postId,
     required int commentCount,
+    required bool isQuestion,
   }) async {
     try {
       var time = Timestamp.now();
@@ -70,24 +72,25 @@ class WritePostRepository {
         time: time,
         username: userData.displayName,
         commentCount: commentCount,
+        isQuestion: isQuestion,
       );
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
   Stream<List<PostCardModel>> searchPost(String query) {
     return _posts
         .where(
-      'postTitle',
-      isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
-      isLessThan: query.isEmpty
-          ? null
-          : query.substring(0, query.length - 1) +
-          String.fromCharCode(
-            query.codeUnitAt(query.length - 1) + 1,
-          ),
-    )
+          'postTitle',
+          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+          isLessThan: query.isEmpty
+              ? null
+              : query.substring(0, query.length - 1) +
+                  String.fromCharCode(
+                    query.codeUnitAt(query.length - 1) + 1,
+                  ),
+        )
         .snapshots()
         .map((event) {
       List<PostCardModel> postcard = [];
@@ -101,15 +104,15 @@ class WritePostRepository {
   Stream<List<PostCardModel>> searchMyPost(String query) {
     return _posts
         .where(
-      'uid',
-      isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
-      isLessThan: query.isEmpty
-          ? null
-          : query.substring(0, query.length - 1) +
-          String.fromCharCode(
-            query.codeUnitAt(query.length - 1) + 1,
-          ),
-    )
+          'uid',
+          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+          isLessThan: query.isEmpty
+              ? null
+              : query.substring(0, query.length - 1) +
+                  String.fromCharCode(
+                    query.codeUnitAt(query.length - 1) + 1,
+                  ),
+        )
         .snapshots()
         .map((event) {
       List<PostCardModel> postcard = [];
@@ -119,7 +122,6 @@ class WritePostRepository {
       return postcard;
     });
   }
-
 
   CollectionReference get _posts => firestore.collection('posts');
 }

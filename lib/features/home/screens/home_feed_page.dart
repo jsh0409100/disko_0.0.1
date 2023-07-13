@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/common_app_bar.dart';
@@ -60,7 +59,7 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(() => const WritePostPage());
+          Navigator.pushNamed(context, WritePostPage.routeName);
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
         shape: const CircleBorder(),
@@ -178,6 +177,7 @@ class PostsListBuilder extends StatelessWidget {
                       likes: posts[index].likes,
                       imagesUrl: posts[index].imagesUrl,
                       time: posts[index].time,
+                      isQuestion: posts[index].isQuestion,
                       commentCount: posts[index].commentCount);
                   return Post(
                     post: post,
@@ -241,12 +241,12 @@ class NoMorePosts extends ConsumerWidget {
             final nomorePosts = ref.read(postsProvider.notifier).noMoreItems;
             return nomorePosts
                 ? const Padding(
-              padding: EdgeInsets.only(bottom: 0),
-              child: Text(
-                "더이상 게시글이 없습니다",
-                textAlign: TextAlign.center,
-              ),
-            )
+                    padding: EdgeInsets.only(bottom: 0),
+                    child: Text(
+                      "더이상 게시글이 없습니다",
+                      textAlign: TextAlign.center,
+                    ),
+                  )
                 : const SizedBox.shrink();
           }),
     );

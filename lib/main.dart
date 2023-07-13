@@ -85,7 +85,6 @@ class MyApp extends ConsumerWidget {
       locale: const Locale('ko'),
       theme: ThemeData(
         useMaterial3: true,
-        primaryColor: const Color(0xFF5E38EB),
         cardColor: Colors.white,
         fontFamily: 'Pretendard',
         textTheme: const TextTheme(
@@ -102,7 +101,7 @@ class MyApp extends ConsumerWidget {
       home: ref.watch(userDataAuthProvider).when(
             data: (user) {
               if (user == null) {
-                return const StartPage();
+                return const StartPage(itisSignUp: true,);
               }
               return const CallPickupScreen(scaffold: AppLayoutScreen());
             },

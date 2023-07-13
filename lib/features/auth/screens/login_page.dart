@@ -6,9 +6,10 @@ import '../../../common/utils/utils.dart';
 import '../controller/auth_controller.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  static const routeName = '/login-screen';
+  static const routeName = '/signup-screen';
+  final bool itisSignUp;
 
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({required this.itisSignUp, Key? key, }) : super(key: key);
 
   static String verificationId = "";
 
@@ -18,6 +19,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isVisible = false;
+  String title = '';
   final countryPicker = const FlCountryCodePicker();
 
   TextEditingController verController = TextEditingController();
@@ -34,7 +36,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
           .read(authControllerProvider)
           .signInWithPhone(context, '+${countryCode!.dialCode}$phoneNumber');
     } else {
-      showSnackBar(context: context, content: 'Fill out all the fields');
+      showSnackBar(context: context, content: '핸드폰 번호와 국가 코드를 입력해주세요');
     }
   }
 
@@ -45,13 +47,14 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     verController.dispose();
   }
 
-  void verifyOTP(WidgetRef ref, BuildContext context, String userOTP, String countryCode) {
+  void verifyOTP(WidgetRef ref, BuildContext context, String userOTP, String countryCode, bool itisSignUp) {
     ref.read(authControllerProvider).verifyOTP(
-          context,
-          LoginScreen.verificationId,
-          userOTP,
-          countryCode,
-        );
+      context,
+      LoginScreen.verificationId,
+      userOTP,
+      countryCode,
+      itisSignUp,
+    );
   }
 
   void visibility() {
@@ -60,13 +63,22 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     });
   }
 
+  String whattitle() {
+    if(widget.itisSignUp == true){
+      return "회원가입";
+    } else {
+      return "로그인";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text(
-          "로그인",
+        title: Text(
+          whattitle(),
+          semanticsLabel: title,
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w700,
@@ -75,9 +87,14 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         elevation: 0,
-        leading: const Icon(
-          Icons.close,
-          size: 24,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.close,
+            size: 24,
+          ),
         ),
       ),
       body: Container(
@@ -172,7 +189,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
                         ),
-                        labelText: '휴대폰 번호를 입력해주세요.',
+                        hintText: '휴대폰 번호를 입력해주세요.',
                       ),
                     ),
                   ),
@@ -190,7 +207,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 disabledForegroundColor: Colors.white,
               ),
               onPressed:
-                  phoneNumController.text != "" ? () => {sendPhoneNumber(), visibility()} : null,
+              phoneNumController.text != "" ? () => {sendPhoneNumber(), visibility()} : null,
               child: const Text(
                 '인증문자 받기',
                 style: TextStyle(
@@ -211,7 +228,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
                     ),
-                    labelText: '인증번호를 입력해 주세요.',
+                    hintText: '인증번호를 입력해 주세요.',
                   ),
                 ),
               ),
@@ -262,11 +279,12 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 onPressed: verController.text != ""
                     ? () => verifyOTP(
-                          ref,
-                          context,
-                          verController.text.trim(),
-                          countryCode!.dialCode,
-                        )
+                  ref,
+                  context,
+                  verController.text.trim(),
+                  countryCode!.dialCode,
+                  widget.itisSignUp,
+                )
                     : null,
                 child: const Text(
                   '디스코 시작하기',

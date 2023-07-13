@@ -1,6 +1,9 @@
 import 'package:disko_001/app_layout_screen.dart';
 import 'package:disko_001/features/home/screens/detail_page.dart';
+import 'package:disko_001/features/profile/screens/other_user_profile_page.dart';
+import 'package:disko_001/features/profile/screens/setting_page.dart';
 import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
+import 'package:disko_001/features/write_post/screens/edit_post_page.dart';
 import 'package:disko_001/test.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +12,8 @@ import 'features/auth/screens/login_page.dart';
 import 'features/auth/screens/signup_page.dart';
 import 'features/chat/screens/chat_screen.dart';
 import 'features/report/report_screen.dart';
+import 'features/search/screens/search.dart';
+import 'features/write_post/screens/write_post_page.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -18,11 +23,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case SignUpScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => const SignUpScreen(),
+        builder: (context) => const SignUpScreen(itisSignUp: true,),
       );
     case LoginScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => const LoginScreen(),
+        builder: (context) => const LoginScreen(itisSignUp: true),
       );
     case AppLayoutScreen.routeName:
       return MaterialPageRoute(
@@ -48,6 +53,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           peerUid: peerUid,
         ),
       );
+    case EditPostScreen.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final post = arguments['post'];
+      return MaterialPageRoute(
+        builder: (context) => EditPostScreen(
+          post: post,
+        ),
+      );
     case ReportScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
       final reportedUid = arguments['reportedUid'];
@@ -56,6 +69,26 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => ReportScreen(
           reportedUid: reportedUid,
           reportedDisplayName: reportedDisplayName,
+        ),
+      );
+    case WritePostPage.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const WritePostPage(),
+      );
+    case SearchScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const SearchScreen(),
+      );
+    case SettingScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const SettingScreen(),
+      );
+    case OtherUserProfilePage.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final uid = arguments['uid'];
+      return MaterialPageRoute(
+        builder: (context) => OtherUserProfilePage(
+          uid: uid,
         ),
       );
     default:

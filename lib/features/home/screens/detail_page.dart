@@ -11,8 +11,10 @@ import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/common_app_bar.dart';
 import '../../../models/post_card_model.dart';
+import '../../../src/providers.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../report/report_screen.dart';
+import '../../write_post/screens/edit_post_page.dart';
 import '../controller/post_controller.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
@@ -131,8 +133,12 @@ class _DetailPageState extends ConsumerState<DetailPage> {
         _showMyDialog();
         break;
       case '글 수정':
+        Navigator.of(context).pushNamed(EditPostScreen.routeName, arguments: {'post': post});
         break;
       case '글 삭제':
+        ref.read(postControllerProvider).deletePost(postId: post.postId);
+        Navigator.pop(context);
+        ref.read(postsProvider.notifier).reloadPage();
         break;
     }
   }
@@ -165,7 +171,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
           final showTime = timeFormat.format(date);
 
           return Scaffold(
-            resizeToAvoidBottomInset: true,
+            resizeToAvoidBottomInset: false,
             appBar: CommonAppBar(
               title: '',
               appBar: AppBar(),
@@ -189,6 +195,12 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                               children: [
                                 Row(
                                   children: [
+                                    post.isQuestion
+                                        ? Text(
+                                            "Q",
+                                            style: Theme.of(context).textTheme.headlineLarge,
+                                          )
+                                        : SizedBox(),
                                     ClipRRect(
                                         borderRadius: BorderRadius.circular(100),
                                         child: Image(
@@ -383,11 +395,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                             postId: post.postId,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: BottomCommentField(
-                            post: post,
-                          ),
+                        BottomCommentField(
+                          post: post,
                         ),
                       ],
                     ),

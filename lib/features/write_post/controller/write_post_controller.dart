@@ -18,10 +18,9 @@ final searchPostProvider = StreamProvider.family((ref, String query) {
   //Todo 나중에 검증하기
 });
 
-final searchMyPostProvider = StreamProvider.family((ref, String query){
+final searchMyPostProvider = StreamProvider.family((ref, String query) {
   return ref.watch(writePostRepositoryProvider).searchMyPost(query);
 });
-
 
 class WritePostController {
   final WritePostRepository writePostRepository;
@@ -32,7 +31,7 @@ class WritePostController {
   });
 
   void uploadPost(BuildContext context, String text, String postTitle, List<String> imagesUrl,
-      String postId, int commentCount) {
+      String postId, int commentCount, bool isQuestion) {
     ref.read(userDataAuthProvider).whenData(
           (value) => writePostRepository.uploadPost(
             context: context,
@@ -42,9 +41,11 @@ class WritePostController {
             postTitle: postTitle,
             imagesUrl: imagesUrl,
             commentCount: commentCount,
+            isQuestion: isQuestion,
           ),
         );
   }
+
   Stream<List<PostCardModel>> searchPost(String query) {
     return writePostRepository.searchPost(query);
   }

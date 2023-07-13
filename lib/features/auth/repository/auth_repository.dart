@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app_layout_screen.dart';
-import '../../../common/utils/utils.dart';
 import '../../../models/user_model.dart';
 import '../screens/signup_page.dart';
 
@@ -53,11 +52,47 @@ class AuthRepository {
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context: context, content: e.message!);
+      // showSnackBar(context: context, content: e.message!);
     }
   }
 
   void verifyOTP({
+    required BuildContext context,
+    required String verificationId,
+    required String userOTP,
+    required String countryCode,
+    required ProviderRef ref,
+    required bool itis,
+  }) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: userOTP,
+      );
+      await auth.signInWithCredential(credential);
+      if(itis == true){
+        saveUserDataToFirebase(
+          name: '신규 유저',
+          profilePic: null,
+          context: context,
+          countryCode: countryCode,
+          ref: ref,
+          isUserCreated: true,
+          description: ' ',
+        );
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppLayoutScreen.routeName,
+              (route) => false,
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context: context, content: e.message!);
+    }
+  }
+
+  void loginverifyOTP({
     required BuildContext context,
     required String verificationId,
     required String userOTP,
@@ -81,7 +116,7 @@ class AuthRepository {
         follow : [],
       );
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context: context, content: e.message!);
+      // showSnackBar(context: context, content: e.message!);
     }
   }
 
@@ -121,6 +156,47 @@ class AuthRepository {
           context,
           AppLayoutScreen.routeName,
           (route) => false,
+        );
+      }
+    } catch (e) {
+      // showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void saveloginUserDataToFirebase({
+    required String name,
+    required File? profilePic,
+    required String countryCode,
+    required ProviderRef ref,
+    required BuildContext context,
+    required bool isUserCreated,
+    required String description,
+  }) async {
+    try {
+      String uid = auth.currentUser!.uid;
+      String photoUrl =
+          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+
+      var user = UserModel(
+        phoneNum: auth.currentUser!.phoneNumber!,
+        displayName: name,
+        countryCode: countryCode,
+        profilePic: photoUrl,
+        tag: [],
+        description: description,
+      );
+      await firestore.collection('users').doc(uid).set(user.toJson());
+
+      if (isUserCreated) {
+        Navigator.pushNamed(
+          context,
+          LandingPage.routeName,
+        );
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppLayoutScreen.routeName,
+              (route) => false,
         );
       }
     } catch (e) {
@@ -192,7 +268,7 @@ class AuthRepository {
         );
       }
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 }

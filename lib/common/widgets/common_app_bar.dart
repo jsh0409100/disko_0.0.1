@@ -1,6 +1,5 @@
 import 'package:disko_001/features/notification/screen/notification_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../features/search/screens/search.dart';
 import 'notification_button.dart';
@@ -22,7 +21,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {
-            Get.to(() => const search());
+            Navigator.pushNamed(context, SearchScreen.routeName);
           },
           icon: const Icon(
             Icons.search_outlined,

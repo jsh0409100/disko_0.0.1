@@ -1,24 +1,25 @@
 import 'package:disko_001/common/utils/utils.dart';
 import 'package:disko_001/features/profile/screens/profile_page.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../common/widgets/common_app_bar.dart';
 
 class OtherUserProfilePage extends StatefulWidget {
-  const OtherUserProfilePage({Key? key}) : super(key: key);
+  final String uid;
+
+  const OtherUserProfilePage({Key? key, required this.uid}) : super(key: key);
+
+  static const String routeName = 'other-user-profile-screen';
 
   @override
   State<OtherUserProfilePage> createState() => _OtherUserProfilePageState();
 }
 
 class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
-  String uid = Get.arguments;
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getUserDataByUid(uid),
+        future: getUserDataByUid(widget.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
@@ -34,7 +35,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
               description: snapshot.data.description,
               imageURL: snapshot.data.profilePic,
               tag: snapshot.data.tag,
-              uid: uid,
+              uid: widget.uid,
               follow: snapshot.data.follow,
             ),
           );

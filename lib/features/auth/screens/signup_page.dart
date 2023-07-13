@@ -7,8 +7,9 @@ import '../controller/auth_controller.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   static const routeName = '/signup-screen';
+  final bool itisSignUp;
 
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({required this.itisSignUp, Key? key, }) : super(key: key);
 
   static String verificationId = "";
 
@@ -18,6 +19,7 @@ class SignUpScreen extends ConsumerStatefulWidget {
 
 class SignUpScreenState extends ConsumerState<SignUpScreen> {
   bool _isVisible = false;
+  String title = '';
   final countryPicker = const FlCountryCodePicker();
 
   TextEditingController verController = TextEditingController();
@@ -34,7 +36,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
           .read(authControllerProvider)
           .signInWithPhone(context, '+${countryCode!.dialCode}$phoneNumber');
     } else {
-      showSnackBar(context: context, content: 'Fill out all the fields');
+      showSnackBar(context: context, content: '핸드폰 번호와 국가 코드를 입력해주세요');
     }
   }
 
@@ -45,12 +47,13 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
     verController.dispose();
   }
 
-  void verifyOTP(WidgetRef ref, BuildContext context, String userOTP, String countryCode) {
+  void verifyOTP(WidgetRef ref, BuildContext context, String userOTP, String countryCode, bool itisSignUp) {
     ref.read(authControllerProvider).verifyOTP(
           context,
           SignUpScreen.verificationId,
           userOTP,
           countryCode,
+          itisSignUp,
         );
   }
 
@@ -60,13 +63,22 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
     });
   }
 
+  String whattitle() {
+    if(widget.itisSignUp == true){
+      return "회원가입";
+    } else {
+      return "로그인";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text(
-          "회원가입",
+        title: Text(
+          whattitle(),
+          semanticsLabel: title,
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w700,
@@ -75,9 +87,14 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         elevation: 0,
-        leading: const Icon(
-          Icons.close,
-          size: 24,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.close,
+            size: 24,
+          ),
         ),
       ),
       body: Container(
@@ -266,6 +283,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                           context,
                           verController.text.trim(),
                           countryCode!.dialCode,
+                          widget.itisSignUp,
                         )
                     : null,
                 child: const Text(

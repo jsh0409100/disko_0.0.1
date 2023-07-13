@@ -153,6 +153,21 @@ class _PostCardState extends ConsumerState<PostCard> {
           );
     }
 
+    Text isQuestion() {
+      if(widget.post.isQuestion == true) {
+        return Text(
+          "Q",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Color(0xff7150FF),
+          ),
+        );
+      } else {
+        return Text("");
+      }
+    }
+
     return Column(
       children: [
         Container(
@@ -177,14 +192,19 @@ class _PostCardState extends ConsumerState<PostCard> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Text(
-                      widget.post.postTitle,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Color(0xff191919),
-                      ),
-                    ),
+                    child: Row(
+                      children: [
+                        isQuestion(),
+                        Text(
+                          widget.post.postTitle,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Color(0xff191919),
+                          ),
+                        ),
+                      ],
+                    )
                   ),
                   widget.post.imagesUrl.isEmpty
                       ? Container()

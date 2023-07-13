@@ -171,7 +171,6 @@ class _DetailPageState extends ConsumerState<DetailPage> {
           final showTime = timeFormat.format(date);
 
           return Scaffold(
-            resizeToAvoidBottomInset: false,
             appBar: CommonAppBar(
               title: '',
               appBar: AppBar(),
@@ -198,7 +197,11 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     post.isQuestion
                                         ? Text(
                                             "Q",
-                                            style: Theme.of(context).textTheme.headlineLarge,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Color(0xff7150FF),
+                                            ),
                                           )
                                         : SizedBox(),
                                     ClipRRect(

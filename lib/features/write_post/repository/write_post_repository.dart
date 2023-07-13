@@ -42,8 +42,7 @@ class WritePostRepository {
       postId: postId,
       commentCount: commentCount,
     );
-    print('\n\n\n\n\n ${imagesUrl[1]}\n\n\n\n\n');
-    print('HERE');
+
     await firestore.collection('posts').doc(postId).set(
           message.toJson(),
         );

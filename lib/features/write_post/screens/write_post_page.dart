@@ -120,6 +120,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
             shape: const Border(bottom: BorderSide(color: Colors.black, width: 0.5)),
             centerTitle: true,
@@ -135,8 +136,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
               TextButton(
                   onPressed: () async {
                     postId = const Uuid().v1();
-                    Navigator.of(context).pop();
                     await uploadFunction(_imageFileList!);
+                    Navigator.of(context).pop();
                     _uploadPost();
                   },
                   child: const Text(

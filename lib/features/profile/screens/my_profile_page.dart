@@ -52,6 +52,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               imageURL: snapshot.data.profilePic,
               tag: snapshot.data.tag,
               uid: FirebaseAuth.instance.currentUser!.uid,
+              follow : snapshot.data.follow,
+
             ),
             drawer: Drawer(
               child: ListView(

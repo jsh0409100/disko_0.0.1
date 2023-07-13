@@ -5,6 +5,7 @@ class UserModel {
   final String profilePic;
   final String description;
   final List<String> tag;
+  final List<String> follow;
 
   UserModel({
     required this.profilePic,
@@ -12,7 +13,8 @@ class UserModel {
     required this.phoneNum,
     required this.countryCode,
     required this.tag,
-    required this. description,
+    required this.description,
+    required this.follow,
   });
 
   UserModel.fromJson(Map<String, dynamic> json)
@@ -21,7 +23,8 @@ class UserModel {
         profilePic = json['profilePic'],
         countryCode = json['countryCode'],
         description = json['description'],
-        tag = json['tag'].cast<String>();
+        tag = json['tag'].cast<String>(),
+        follow = json['follow'].cast<String>();
 
   Map<String, dynamic> toJson() => {
     'displayName': displayName,
@@ -30,5 +33,6 @@ class UserModel {
     'profilePic': profilePic,
     'description': description,
     'tag': tag,
+    'follow': follow,
   };
 }

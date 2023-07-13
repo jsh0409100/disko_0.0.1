@@ -78,6 +78,7 @@ class AuthRepository {
         ref: ref,
         isUserCreated: true,
         description: ' ',
+        follow : [],
       );
     } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: e.message!);
@@ -92,6 +93,7 @@ class AuthRepository {
     required BuildContext context,
     required bool isUserCreated,
     required String description,
+    required List<String> follow,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
@@ -105,6 +107,7 @@ class AuthRepository {
         profilePic: photoUrl,
         tag: [],
         description: description,
+        follow: follow,
       );
       await firestore.collection('users').doc(uid).set(user.toJson());
 
@@ -148,6 +151,7 @@ class AuthRepository {
     required bool isUserCreated,
     required List<String> tag,
     required String description,
+    required List<String> follow,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
@@ -170,6 +174,7 @@ class AuthRepository {
         profilePic: photoUrl,
         tag: tag,
         description: description,
+        follow: follow,
       );
 
       await firestore.collection('users').doc(uid).set(user.toJson());

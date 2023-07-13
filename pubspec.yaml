@@ -74,6 +74,7 @@ dependencies:
   cloud_functions: ^4.0.10
   chewie: ^1.6.0+1
   video_player: ^2.7.0
+  percent_indicator: ^4.2.3
 
 
 dev_dependencies:

@@ -45,7 +45,7 @@ class AuthController {
   }
 
   void saveUserDataToFirebase(
-      BuildContext context, String name, File? profilePic, String countryCode, String description) {
+      BuildContext context, String name, File? profilePic, String countryCode, String description, List<String> follow) {
     authRepository.saveUserDataToFirebase(
       name: name,
       profilePic: profilePic,
@@ -54,11 +54,12 @@ class AuthController {
       countryCode: countryCode,
       isUserCreated: false,
       description: description,
+      follow: follow,
     );
   }
 
   void saveProfileDataToFirebase(
-      BuildContext context, String name, File? profilePic, String countryCode, List<String> tag, String description) {
+      BuildContext context, String name, File? profilePic, String countryCode, List<String> tag, String description, List<String> follow) {
     authRepository.saveProfileDataToFirebase(
       name: name,
       profilePic: profilePic,
@@ -68,6 +69,7 @@ class AuthController {
       isUserCreated: false,
       tag: tag,
       description: description,
+      follow: follow,
     );
   }
 

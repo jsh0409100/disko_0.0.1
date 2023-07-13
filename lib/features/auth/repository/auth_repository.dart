@@ -79,6 +79,7 @@ class AuthRepository {
           ref: ref,
           isUserCreated: true,
           description: ' ',
+          follow: [],
         );
       } else {
         Navigator.pushNamedAndRemoveUntil(
@@ -88,7 +89,7 @@ class AuthRepository {
         );
       }
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context: context, content: e.message!);
+      //showSnackBar(context: context, content: e.message!);
     }
   }
 
@@ -184,6 +185,7 @@ class AuthRepository {
         profilePic: photoUrl,
         tag: [],
         description: description,
+        follow: [],
       );
       await firestore.collection('users').doc(uid).set(user.toJson());
 
@@ -200,7 +202,7 @@ class AuthRepository {
         );
       }
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      //showSnackBar(context: context, content: e.toString());
     }
   }
 

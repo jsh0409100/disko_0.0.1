@@ -14,6 +14,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import '../../../common/widgets/error_text.dart';
 import '../../../common/widgets/loading_screen.dart';
 import '../../home/widgets/post.dart';
+import 'other_user_profile_page.dart';
 
 const List<Widget> follow = <Widget>[
   Text('활동내역'),
@@ -24,15 +25,14 @@ class ProfilePage extends ConsumerStatefulWidget {
   final String displayName, country, description, imageURL, uid;
   final List<String> tag, follow;
 
-  const ProfilePage(
-      {Key? key,
-      required this.displayName,
-      required this.country,
-      required this.description,
-      required this.imageURL,
-      required this.tag,
-      required this.uid,
-      required this.follow})
+  const ProfilePage({Key? key,
+    required this.displayName,
+    required this.country,
+    required this.description,
+    required this.imageURL,
+    required this.tag,
+    required this.uid,
+    required this.follow})
       : super(key: key);
 
   @override
@@ -74,16 +74,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                SizedBox(height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.03),
                 state == true
                     ? Container(
-                        height: MediaQuery.of(context).size.height / 2.3,
-                        child: myPost(context),
-                      )
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height / 2.3,
+                  child: myPost(context),
+                )
                     : Container(
-                        height: MediaQuery.of(context).size.height / 2.3,
-                        child: followList(context),
-                      )
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height / 2.3,
+                  child: followList(context),
+                )
               ],
             ),
           ],
@@ -94,7 +103,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Widget myPost(BuildContext context) {
     return ref.watch(searchMyPostProvider(widget.uid)).when(
-          data: (posts) => ListView.builder(
+      data: (posts) =>
+          ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: posts.length,
@@ -108,7 +118,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           child: Column(children: [
                             SizedBox(
                               height: 180,
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * 0.9,
                             ),
                             const SizedBox(
                               height: 11,
@@ -122,15 +135,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       }
                     });
               }),
-          error: (error, stackTrace) => ErrorText(
+      error: (error, stackTrace) =>
+          ErrorText(
             error: error.toString(),
           ),
-          loading: () => const LoadingScreen(),
-        );
+      loading: () => const LoadingScreen(),
+    );
   }
 
   Widget size() {
-    return SizedBox(width: MediaQuery.of(context).size.width * 0.03);
+    return SizedBox(width: MediaQuery
+        .of(context)
+        .size
+        .width * 0.03);
   }
 
   Widget topWidget() {
@@ -144,18 +161,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               children: [
                 image == null
                     ? CircleAvatar(
-                        radius: 35,
-                        backgroundImage: NetworkImage(widget.imageURL),
-                      )
+                  radius: 35,
+                  backgroundImage: NetworkImage(widget.imageURL),
+                )
                     : CircleAvatar(
-                        radius: 35,
-                        backgroundImage: FileImage(
-                          image!,
-                        ),
-                      ),
+                  radius: 35,
+                  backgroundImage: FileImage(
+                    image!,
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width * 0.15,
+                      right: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.15,
                       left: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,8 +253,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             backgroundColor: MaterialStateProperty.all(Colors.white54),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ))),
+                  borderRadius: BorderRadius.circular(15.0),
+                ))),
         child: const Text(
           '수정',
           style: TextStyle(color: Colors.black),
@@ -243,10 +263,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   void checkFollow() async {
     DocumentSnapshot documentSnapshot =
-        await user.doc(auth.currentUser?.uid).get();
+    await user.doc(auth.currentUser?.uid).get();
     List<String> currentArray =
-        List.from(documentSnapshot.get("follow") as List<dynamic>);
-    if(mounted){
+    List.from(documentSnapshot.get("follow") as List<dynamic>);
+    if (mounted) {
       if (currentArray.contains(widget.uid)) {
         setState(() {
           isFollowed = true;
@@ -262,61 +282,61 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Widget followChip(void checkFollow) {
     return isFollowed == false
         ? ElevatedButton(
-            onPressed: () async {
-              DocumentSnapshot documentSnapshot =
-                  await user.doc(auth.currentUser?.uid).get();
-              List<String> currentArray =
-                  List.from(documentSnapshot.get("follow") as List<dynamic>);
-              currentArray.add(widget.uid);
-              await user
-                  .doc(auth.currentUser?.uid)
-                  .update({"follow": currentArray});
-              if(mounted){
-                setState(() {
-                  isFollowed = true;
-                });
-              }
-            },
-            style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all(const Color(0xFFE0D9FF)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
+        onPressed: () async {
+          DocumentSnapshot documentSnapshot =
+          await user.doc(auth.currentUser?.uid).get();
+          List<String> currentArray =
+          List.from(documentSnapshot.get("follow") as List<dynamic>);
+          currentArray.add(widget.uid);
+          await user
+              .doc(auth.currentUser?.uid)
+              .update({"follow": currentArray});
+          if (mounted) {
+            setState(() {
+              isFollowed = true;
+            });
+          }
+        },
+        style: ButtonStyle(
+            backgroundColor:
+            MaterialStateProperty.all(const Color(0xFFE0D9FF)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ))),
-            child: const Text(
-              '팔로우',
-              style: TextStyle(color: Colors.black),
-            ))
+        child: const Text(
+          '팔로우',
+          style: TextStyle(color: Colors.black),
+        ))
         : ElevatedButton(
-            onPressed: () async {
-              DocumentSnapshot documentSnapshot =
-                  await user.doc(auth.currentUser?.uid).get();
-              List<String> currentArray =
-                  List.from(documentSnapshot.get("follow") as List<dynamic>);
-              currentArray.removeWhere((str) {
-                return str == widget.uid;
-              });
-              await user
-                  .doc(auth.currentUser?.uid)
-                  .update({"follow": currentArray});
-              if(mounted){
-                setState(() {
-                  isFollowed = false;
-                });
-              }
-            },
-            style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all(const Color(0xFFE0D9FF)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
+        onPressed: () async {
+          DocumentSnapshot documentSnapshot =
+          await user.doc(auth.currentUser?.uid).get();
+          List<String> currentArray =
+          List.from(documentSnapshot.get("follow") as List<dynamic>);
+          currentArray.removeWhere((str) {
+            return str == widget.uid;
+          });
+          await user
+              .doc(auth.currentUser?.uid)
+              .update({"follow": currentArray});
+          if (mounted) {
+            setState(() {
+              isFollowed = false;
+            });
+          }
+        },
+        style: ButtonStyle(
+            backgroundColor:
+            MaterialStateProperty.all(const Color(0xFFE0D9FF)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ))),
-            child: const Text(
-              '언팔로우',
-              style: TextStyle(color: Colors.black),
-            ));
+        child: const Text(
+          '언팔로우',
+          style: TextStyle(color: Colors.black),
+        ));
   }
 
   Widget percentage() {
@@ -347,7 +367,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           ),
         ),
         LinearPercentIndicator(
-          width: MediaQuery.of(context).size.width - 60,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width - 60,
           lineHeight: 19,
           percent: 0.2,
           progressColor: const Color(0xFFE0D9FF),
@@ -365,7 +388,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       child: ToggleButtons(
         direction: Axis.horizontal,
         onPressed: (int index) {
-          if(mounted){
+          if (mounted) {
             setState(() {
               for (int i = 0; i < _selectedbutton.length; i++) {
                 _selectedbutton[i] = i == index;
@@ -383,10 +406,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         fillColor: Colors.white,
         constraints: BoxConstraints(
           minHeight: 80,
-          minWidth: MediaQuery.of(context).size.width - 250,
+          minWidth: MediaQuery
+              .of(context)
+              .size
+              .width - 250,
         ),
         textStyle: const TextStyle(
-            //fontWeight: FontWeight.w500,
+          //fontWeight: FontWeight.w500,
             fontSize: 14),
         isSelected: _selectedbutton,
         children: follow,
@@ -401,17 +427,42 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         itemCount: widget.follow.length,
         itemBuilder: (context, index) {
           return FutureBuilder(
-              future: getUserDataByUid(widget.uid),
+              future: getUserDataByUid(widget.follow[index]),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
+
                 if (snapshot.hasData == false) {
                   return Text("has error");
                 }
-                else{
-                  return const ListTile(
-                    title: Text("1"),
+                else {
+                  return ListTile(
+                    leading: CircleAvatar(
+                      radius: 35,
+                      backgroundImage: NetworkImage(
+                        snapshot.data!.profilePic,
+                      ),
+                    ),
+                    title: Text(
+                        snapshot.data!.displayName,
+                        style: TextStyle(
+                        color: Color(0xFF191919),
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      onPressed: (){
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => OtherUserProfilePage(uid: widget.follow[index]),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.arrow_forward),
+                    ),
                   );
                 }
-              });
+              }
+              );
         });
   }
 }

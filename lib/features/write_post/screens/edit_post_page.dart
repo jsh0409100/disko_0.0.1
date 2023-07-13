@@ -82,6 +82,7 @@ class _ConsumerEditPostPageState extends ConsumerState<EditPostScreen> {
           _arrImageUrls,
           widget.post.postId,
           widget.post.commentCount,
+          isQuestion,
         );
     Navigator.pushNamedAndRemoveUntil(
       context,

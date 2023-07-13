@@ -17,7 +17,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
   Future signOut() async{
     try {
       print('sign out complete!');
-      return await FirebaseAuth.instance.signOut();
+      return
+        await FirebaseAuth.instance.signOut();
     } catch (e) {
       print('sign out failed');
       print(e.toString());

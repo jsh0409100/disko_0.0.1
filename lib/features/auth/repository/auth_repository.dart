@@ -84,6 +84,28 @@ class AuthRepository {
     }
   }
 
+  void loginverifyOTP({
+    required BuildContext context,
+    required String verificationId,
+    required String userOTP,
+    required String countryCode,
+    required ProviderRef ref,
+  }) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: userOTP,
+      );
+      await auth.signInWithCredential(credential);
+      saveloginUserDataToFirebase(
+        context: context,
+        isUserCreated: false,
+      );
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context: context, content: e.message!);
+    }
+  }
+
   void saveUserDataToFirebase({
     required String name,
     required File? profilePic,
@@ -118,6 +140,28 @@ class AuthRepository {
           context,
           AppLayoutScreen.routeName,
           (route) => false,
+        );
+      }
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void saveloginUserDataToFirebase({
+    required BuildContext context,
+    required bool isUserCreated,
+  }) async {
+    try {
+      if (isUserCreated) {
+        Navigator.pushNamed(
+          context,
+          LandingPage.routeName,
+        );
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppLayoutScreen.routeName,
+              (route) => false,
         );
       }
     } catch (e) {

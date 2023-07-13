@@ -45,8 +45,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     verController.dispose();
   }
 
-  void verifyOTP(WidgetRef ref, BuildContext context, String userOTP, String countryCode) {
-    ref.read(authControllerProvider).verifyOTP(
+  void loginverifyOTP(WidgetRef ref, BuildContext context, String userOTP, String countryCode) {
+    ref.read(authControllerProvider).loginverifyOTP(
           context,
           LoginScreen.verificationId,
           userOTP,
@@ -203,7 +203,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
             Visibility(
               visible: _isVisible,
               child: SizedBox(
-                height: 44,
+                height: 50,
                 child: TextFormField(
                   keyboardType: TextInputType.phone,
                   controller: verController,
@@ -261,7 +261,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                   disabledBackgroundColor: Theme.of(context).colorScheme.primary.withAlpha(90),
                 ),
                 onPressed: verController.text != ""
-                    ? () => verifyOTP(
+                    ? () => loginverifyOTP(
                           ref,
                           context,
                           verController.text.trim(),

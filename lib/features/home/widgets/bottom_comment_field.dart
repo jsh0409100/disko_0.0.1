@@ -82,7 +82,8 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
           if (!snapshot.hasData) {
             return Container();
           }
-          return Row(children: [
+          return Row(
+              children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: Image(

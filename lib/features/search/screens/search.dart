@@ -2,8 +2,6 @@ import 'package:disko_001/features/home/delegates/search_post_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../write_post/screens/widgets/select_category.dart';
-
 class Tech {
   String label;
   bool isSelected;
@@ -71,36 +69,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ),
           ),
         ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Wrap(
-                  spacing: 8,
-                  direction: Axis.horizontal,
-                  children: techChips(),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(40, 18, 18, 10),
-                child: Text(
-                  "바로가기",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ),
-              Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Center(
-                    child: CategoryCards(selected: 0),
-                  )),
-            ],
-          ),
-        ),
       ),
     );
   }

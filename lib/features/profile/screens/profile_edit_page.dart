@@ -5,20 +5,14 @@ import 'package:disko_001/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfileEditPage extends ConsumerStatefulWidget {
-  final String displayName, country, description, imageURL;
-  final List<String> tag;
-  final List<String> follow;
+import '../../../models/user_model.dart';
 
-  const ProfileEditPage({
-    Key? key,
-    required this.displayName,
-    required this.country,
-    required this.description,
-    required this.imageURL,
-    required this.tag,
-    required this.follow,
-  }) : super(key: key);
+class ProfileEditPage extends ConsumerStatefulWidget {
+  final UserModel user;
+
+  static const String routeName = 'profile-edit-screen';
+
+  const ProfileEditPage({Key? key, required this.user}) : super(key: key);
 
   @override
   ConsumerState<ProfileEditPage> createState() => _ProfileEditPageState();
@@ -31,8 +25,6 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
   final TextEditingController keywordController = TextEditingController();
-
-
 
   @override
   void dispose() {
@@ -57,10 +49,10 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             context,
             name,
             image,
-            widget.country,
-            widget.tag,
+            widget.user.countryCode,
+            widget.user.tag,
             description,
-            widget.follow,
+            widget.user.follow,
           );
     }
   }
@@ -90,7 +82,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                   child: image == null
                       ? CircleAvatar(
                           radius: 60,
-                          backgroundImage: NetworkImage(widget.imageURL),
+                          backgroundImage: NetworkImage(widget.user.profilePic),
                         )
                       : CircleAvatar(
                           radius: 60,
@@ -111,8 +103,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                 children: [
                   textField("   2~8자 이내여야 합니다.", "사용자 이름", 1, nameController),
                   textField("   나라 선택.", "국가", 1, countryController),
-                  textField(
-                      "   40자 이내여야 합니다.", "자기소개", 10, descriptionController),
+                  textField("   40자 이내여야 합니다.", "자기소개", 10, descriptionController),
                 ],
               ),
             ],
@@ -122,8 +113,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
     );
   }
 
-  Widget textField(
-      String hint, String title, int size, TextEditingController controller) {
+  Widget textField(String hint, String title, int size, TextEditingController controller) {
     return Column(
       children: [
         Align(

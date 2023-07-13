@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/common/utils/utils.dart';
-import 'package:disko_001/features/auth/controller/auth_controller.dart';
 import 'package:disko_001/features/profile/screens/profile_edit_page.dart';
-import 'package:disko_001/features/profile/screens/tag_edit_page.dart';
 import 'package:disko_001/features/write_post/controller/write_post_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -154,9 +152,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                 Padding(
-                  padding: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width * 0.15,
-                      left: 15),
+                  padding:
+                      EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.15, left: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -228,11 +225,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Widget editChip() {
     return ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, ProfileEditPage.routeName, arguments: {'user': });
+        },
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.white54),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ))),
         child: const Text(
@@ -242,11 +240,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   void checkFollow() async {
-    DocumentSnapshot documentSnapshot =
-        await user.doc(auth.currentUser?.uid).get();
-    List<String> currentArray =
-        List.from(documentSnapshot.get("follow") as List<dynamic>);
-    if(mounted){
+    DocumentSnapshot documentSnapshot = await user.doc(auth.currentUser?.uid).get();
+    List<String> currentArray = List.from(documentSnapshot.get("follow") as List<dynamic>);
+    if (mounted) {
       if (currentArray.contains(widget.uid)) {
         setState(() {
           isFollowed = true;
@@ -263,25 +259,20 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return isFollowed == false
         ? ElevatedButton(
             onPressed: () async {
-              DocumentSnapshot documentSnapshot =
-                  await user.doc(auth.currentUser?.uid).get();
+              DocumentSnapshot documentSnapshot = await user.doc(auth.currentUser?.uid).get();
               List<String> currentArray =
                   List.from(documentSnapshot.get("follow") as List<dynamic>);
               currentArray.add(widget.uid);
-              await user
-                  .doc(auth.currentUser?.uid)
-                  .update({"follow": currentArray});
-              if(mounted){
+              await user.doc(auth.currentUser?.uid).update({"follow": currentArray});
+              if (mounted) {
                 setState(() {
                   isFollowed = true;
                 });
               }
             },
             style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all(const Color(0xFFE0D9FF)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
+                backgroundColor: MaterialStateProperty.all(const Color(0xFFE0D9FF)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ))),
             child: const Text(
@@ -290,27 +281,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ))
         : ElevatedButton(
             onPressed: () async {
-              DocumentSnapshot documentSnapshot =
-                  await user.doc(auth.currentUser?.uid).get();
+              DocumentSnapshot documentSnapshot = await user.doc(auth.currentUser?.uid).get();
               List<String> currentArray =
                   List.from(documentSnapshot.get("follow") as List<dynamic>);
               currentArray.removeWhere((str) {
                 return str == widget.uid;
               });
-              await user
-                  .doc(auth.currentUser?.uid)
-                  .update({"follow": currentArray});
-              if(mounted){
+              await user.doc(auth.currentUser?.uid).update({"follow": currentArray});
+              if (mounted) {
                 setState(() {
                   isFollowed = false;
                 });
               }
             },
             style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all(const Color(0xFFE0D9FF)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
+                backgroundColor: MaterialStateProperty.all(const Color(0xFFE0D9FF)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ))),
             child: const Text(
@@ -365,7 +351,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       child: ToggleButtons(
         direction: Axis.horizontal,
         onPressed: (int index) {
-          if(mounted){
+          if (mounted) {
             setState(() {
               for (int i = 0; i < _selectedbutton.length; i++) {
                 _selectedbutton[i] = i == index;
@@ -405,8 +391,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData == false) {
                   return Text("has error");
-                }
-                else{
+                } else {
                   return const ListTile(
                     title: Text("1"),
                   );

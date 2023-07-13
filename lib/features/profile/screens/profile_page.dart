@@ -356,7 +356,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
               ),
               Text(
-                '190',
+                '0',
                 style: TextStyle(
                   color: Color(0xFF191919),
                   fontSize: 26,
@@ -372,7 +372,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               .size
               .width - 60,
           lineHeight: 19,
-          percent: 0.2,
+          percent: 0,
           progressColor: const Color(0xFFE0D9FF),
           animation: true,
           barRadius: const Radius.circular(15.0),

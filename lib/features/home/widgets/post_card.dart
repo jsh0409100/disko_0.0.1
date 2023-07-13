@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
 import '../../../common/enums/notification_enum.dart';
 import '../../../models/post_card_model.dart';
@@ -257,9 +256,13 @@ class _PostCardState extends ConsumerState<PostCard> {
                         ],
                       ),
                       onTap: () {
-                        if (widget.post.uid != user!.uid) {
-                          Get.to(() => const OtherUserProfilePage(), arguments: widget.post.uid);
-                        }
+                        Navigator.pushNamed(
+                          context,
+                          OtherUserProfilePage.routeName,
+                          arguments: {
+                            'uid': widget.post.uid,
+                          },
+                        );
                       },
                     ),
                     Row(

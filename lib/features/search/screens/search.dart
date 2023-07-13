@@ -10,14 +10,16 @@ class Tech {
   Tech(this.label, this.isSelected);
 }
 
-class search extends ConsumerStatefulWidget {
-  const search({Key? key}) : super(key: key);
+class SearchScreen extends ConsumerStatefulWidget {
+  const SearchScreen({Key? key}) : super(key: key);
+
+  static const String routeName = "search-screen";
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _searchState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SearchScreenState();
 }
 
-class _searchState extends ConsumerState<search> {
+class _SearchScreenState extends ConsumerState<SearchScreen> {
   bool selected = false;
   final List<Tech> _chipsList = [
     Tech('유학생활', false),
@@ -95,8 +97,7 @@ class _searchState extends ConsumerState<search> {
                   padding: EdgeInsets.all(12.0),
                   child: Center(
                     child: CategoryCards(selected: 0),
-                  )
-              ),
+                  )),
             ],
           ),
         ),

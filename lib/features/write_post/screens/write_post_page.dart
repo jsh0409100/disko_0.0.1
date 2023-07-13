@@ -15,6 +15,8 @@ import '../controller/write_post_controller.dart';
 class WritePostPage extends ConsumerStatefulWidget {
   const WritePostPage({Key? key}) : super(key: key);
 
+  static const String routeName = "write-post-screen";
+
   @override
   ConsumerState<WritePostPage> createState() => _ConsumerWritePostPageState();
 }

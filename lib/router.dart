@@ -1,5 +1,6 @@
 import 'package:disko_001/app_layout_screen.dart';
 import 'package:disko_001/features/home/screens/detail_page.dart';
+import 'package:disko_001/features/profile/screens/other_user_profile_page.dart';
 import 'package:disko_001/features/profile/screens/setting_page.dart';
 import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
 import 'package:disko_001/test.dart';
@@ -10,6 +11,8 @@ import 'features/auth/screens/login_page.dart';
 import 'features/auth/screens/signup_page.dart';
 import 'features/chat/screens/chat_screen.dart';
 import 'features/report/report_screen.dart';
+import 'features/search/screens/search.dart';
+import 'features/write_post/screens/write_post_page.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -59,9 +62,25 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           reportedDisplayName: reportedDisplayName,
         ),
       );
+    case WritePostPage.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const WritePostPage(),
+      );
+    case SearchScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const SearchScreen(),
+      );
     case SettingScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const SettingScreen(),
+      );
+    case OtherUserProfilePage.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final uid = arguments['uid'];
+      return MaterialPageRoute(
+        builder: (context) => OtherUserProfilePage(
+          uid: uid,
+        ),
       );
     default:
       return MaterialPageRoute(

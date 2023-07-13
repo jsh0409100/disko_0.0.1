@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/common_app_bar.dart';
@@ -60,7 +59,7 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(() => const WritePostPage());
+          Navigator.pushNamed(context, WritePostPage.routeName);
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
         shape: const CircleBorder(),

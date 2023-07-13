@@ -68,7 +68,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       Navigator.pushAndRemoveUntil(
                           context, MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              StartPage()), (route) => false
+                              StartPage(itisSignUp: false,)), (route) => false
                       );
                     },
                     trailing: Icon(

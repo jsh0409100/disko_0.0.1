@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import '../auth/screens/login_page.dart';
 
 class StartPage extends StatelessWidget {
-  const StartPage({Key? key}) : super(key: key);
+  final bool itisSignUp;
+
+  const StartPage({required this.itisSignUp, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(18.0),
@@ -42,7 +45,8 @@ class StartPage extends StatelessWidget {
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, SignUpScreen.routeName);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => SignUpScreen(itisSignUp: true)));
                   },
                   child: Text(
                     '🥳  회원가입  →',
@@ -58,7 +62,8 @@ class StartPage extends StatelessWidget {
                   minimumSize: const Size.fromHeight(51),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, LoginScreen.routeName);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => SignUpScreen(itisSignUp: false)));
                 },
                 child: Text(
                   '로그인',

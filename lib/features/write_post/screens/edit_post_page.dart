@@ -5,24 +5,32 @@ import 'package:disko_001/features/write_post/screens/widgets/select_category.da
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../app_layout_screen.dart';
+import '../../../models/post_card_model.dart';
 import '../controller/write_post_controller.dart';
 
-class WritePostPage extends ConsumerStatefulWidget {
-  const WritePostPage({Key? key}) : super(key: key);
+class EditPostScreen extends ConsumerStatefulWidget {
+  final PostCardModel post;
+  const EditPostScreen({
+    required this.post,
+    Key? key,
+  }) : super(key: key);
+
+  static const routeName = '/edit-post-screen';
 
   @override
-  ConsumerState<WritePostPage> createState() => _ConsumerWritePostPageState();
+  ConsumerState<EditPostScreen> createState() => _ConsumerEditPostPageState();
 }
 
-class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
+class _ConsumerEditPostPageState extends ConsumerState<EditPostScreen> {
   final ImagePicker _picker = ImagePicker();
   final List<XFile>? _imageFileList = [];
-  final List<String> _arrImageUrls = [];
+  late List<String> _arrImageUrls = [];
   final FirebaseStorage _storageRef = FirebaseStorage.instance;
   late String postId;
   int commentCount = 0;
@@ -72,8 +80,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
           postTextController.text,
           postTitleController.text,
           _arrImageUrls,
-          postId,
-          commentCount,
+          widget.post.postId,
+          widget.post.commentCount,
         );
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -95,12 +103,19 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
     });
   }
 
+  Future<void> getImageXFileByUrl(List<String> urlList) async {
+    for (int i = 0; i < urlList.length; i++) {
+      var file = await DefaultCacheManager().getSingleFile(urlList[i]);
+      _imageFileList?.add(await XFile(file.path));
+    }
+  }
+
   Future<String> uploadFile(XFile _image) async {
     Reference reference = _storageRef
         .ref()
         .child('posts')
         .child(FirebaseAuth.instance.currentUser!.uid)
-        .child(postId)
+        .child(widget.post.postId)
         .child(_image.name);
     UploadTask uploadTask = reference.putFile(File(_image.path));
     await uploadTask.whenComplete(() {
@@ -108,6 +123,15 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
     });
 
     return await reference.getDownloadURL();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    postTextController.text = widget.post.postText;
+    postTitleController.text = widget.post.postTitle;
+    _arrImageUrls = widget.post.imagesUrl;
+    getImageXFileByUrl(_arrImageUrls);
   }
 
   @override
@@ -120,7 +144,6 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
             shape: const Border(bottom: BorderSide(color: Colors.black, width: 0.5)),
             centerTitle: true,
@@ -135,9 +158,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
             actions: [
               TextButton(
                   onPressed: () async {
-                    postId = const Uuid().v1();
-                    await uploadFunction(_imageFileList!);
                     Navigator.of(context).pop();
+                    await uploadFunction(_imageFileList!);
                     _uploadPost();
                   },
                   child: const Text(

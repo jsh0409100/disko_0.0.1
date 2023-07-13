@@ -23,7 +23,7 @@ class _PostState extends State<Post> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder(
-        future: getDisplayNameByUid(widget.post.uid),
+        future: getUserDataByUid(widget.post.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return Card(
@@ -51,7 +51,7 @@ class _PostState extends State<Post> with AutomaticKeepAliveClientMixin {
                     },
                   );
                 },
-                child: PostCard(post: widget.post),
+                child: PostCard(post: widget.post, user: snapshot.data),
               ));
         });
   }

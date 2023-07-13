@@ -27,7 +27,6 @@ Stream<UserModel> getUserStreamByUid(String uid) {
       .map((snapshot) => UserModel.fromJson(snapshot.data()!));
 }
 
-
 Future<PostCardModel> getPostByPostId(String postId) async {
   var postDataMap = await FirebaseFirestore.instance.collection('posts').doc(postId).get();
   return PostCardModel.fromJson(postDataMap.data()!);
@@ -56,7 +55,7 @@ Future<File?> pickImageFromGallery(BuildContext context) async {
       image = File(pickedImage.path);
     }
   } catch (e) {
-    showSnackBar(context: context, content: e.toString());
+    // showSnackBar(context: context, content: e.toString());
   }
   return image;
 }
@@ -70,7 +69,7 @@ Future<File?> pickImageFromCamera(BuildContext context) async {
       image = File(pickedImage.path);
     }
   } catch (e) {
-    showSnackBar(context: context, content: e.toString());
+    // showSnackBar(context: context, content: e.toString());
   }
   return image;
 }
@@ -84,7 +83,7 @@ Future<File?> pickVideoFromGallery(BuildContext context) async {
       video = File(pickedVideo.path);
     }
   } catch (e) {
-    showSnackBar(context: context, content: e.toString());
+    // showSnackBar(context: context, content: e.toString());
   }
   return video;
 }

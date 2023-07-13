@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/utils/utils.dart';
-
 final reportRepositoryProvider = Provider(
   (ref) => ReportRepository(
     firestore: FirebaseFirestore.instance,
@@ -60,7 +58,7 @@ class ReportRepository {
         time: time,
       );
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 }

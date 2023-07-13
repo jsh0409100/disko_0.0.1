@@ -52,22 +52,22 @@ class PostController {
   }
 
   void uploadNestedComment(
-      BuildContext context,
-      String text,
-      postId,
-      commentId,
-      likes,
-      ) {
+    BuildContext context,
+    String text,
+    postId,
+    commentId,
+    likes,
+  ) {
     ref.read(userDataAuthProvider).whenData(
           (value) => postRepository.uploadNestedComment(
-        context: context,
-        text: text,
-        senderUser: value!,
-        likes: likes,
-        postId: postId,
-        commentId: commentId,
-      ),
-    );
+            context: context,
+            text: text,
+            senderUser: value!,
+            likes: likes,
+            postId: postId,
+            commentId: commentId,
+          ),
+        );
   }
 
   void saveNotification({
@@ -86,6 +86,14 @@ class PostController {
             notificationType: notificationType,
             commentId: '',
           ),
+        );
+  }
+
+  void deletePost({
+    required String postId,
+  }) {
+    ref.read(userDataAuthProvider).whenData(
+          (value) => postRepository.deletePost(postId),
         );
   }
 }

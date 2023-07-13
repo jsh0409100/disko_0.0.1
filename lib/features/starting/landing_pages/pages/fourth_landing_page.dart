@@ -31,6 +31,7 @@ class _FourthLandingPageState extends State<FourthLandingPage> {
                   height: 10,
                 ),
                 Container(
+                  width: MediaQuery.of(context).size.width * 8,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
@@ -57,8 +58,7 @@ class _FourthLandingPageState extends State<FourthLandingPage> {
                           ),
                           const Text(
                             '좋아요 많은 글',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w700),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -74,8 +74,7 @@ class _FourthLandingPageState extends State<FourthLandingPage> {
                           ),
                           const Text(
                             '댓글 답변',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w700),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -91,8 +90,7 @@ class _FourthLandingPageState extends State<FourthLandingPage> {
                           ),
                           const Text(
                             '게시물 작성',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w700),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),

@@ -155,7 +155,7 @@ class ChatRepository {
         username: senderUser.displayName,
       );
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
@@ -229,7 +229,7 @@ class ChatRepository {
         username: senderUser.displayName,
       );
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
@@ -263,7 +263,7 @@ class ChatRepository {
         username: senderUser.displayName,
       );
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
@@ -296,7 +296,7 @@ class ChatRepository {
         username: senderUser.displayName,
       );
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
@@ -316,7 +316,7 @@ class ChatRepository {
         }
       }
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 }

@@ -76,63 +76,85 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
-          return Row(
-              children: [
-            ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Image(
-                  image: NetworkImage(snapshot.data!.profilePic),
-                  height: 43,
-                  width: 43,
-                  fit: BoxFit.scaleDown,
-                )),
-            const SizedBox(width: 10),
-            Expanded(
-              child: TextField(
-                autofocus: true,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                controller: controller,
-                maxLines: null,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: const EdgeInsets.all(10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide.none,
+    return SingleChildScrollView(
+      child: FutureBuilder(
+          future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
+            return Container(
+              height: 90,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(35),
+                  topRight: Radius.circular(35),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 0,
+                    blurRadius: 5.0,
+                    offset: Offset(0, -0.01), // changes position of shadow
                   ),
-                  filled: true,
-                  fillColor: const Color(0xffD9D9D9),
-                  hintText: "댓글 쓰기",
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _userEnterMessage = value.trim();
-                  });
-                },
+                ],
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
-                    ? null
-                    : uploadComment();
-              },
-              child: const Text(
-                '게시',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(children: [
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image(
+                        image: NetworkImage(snapshot.data!.profilePic),
+                        height: 43,
+                        width: 43,
+                        fit: BoxFit.scaleDown,
+                      )),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      autofocus: true,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      controller: controller,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: const EdgeInsets.all(10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xffD9D9D9),
+                        hintText: "댓글 쓰기",
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _userEnterMessage = value.trim();
+                        });
+                      },
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
+                          ? null
+                          : uploadComment();
+                    },
+                    child: const Text(
+                      '게시',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ]),
               ),
-            ),
-          ]);
-        });
+            );
+          }),
+    );
   }
 }

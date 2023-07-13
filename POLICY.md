@@ -1,6 +1,6 @@
 **Privacy Policy**
 
-Ehad built the DISKO app as a Free app. This SERVICE is provided by Ehad at no cost and is intended for use as is.
+Echad built the DISKO app as a Free app. This SERVICE is provided by Echad at no cost and is intended for use as is.
 
 This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.
 

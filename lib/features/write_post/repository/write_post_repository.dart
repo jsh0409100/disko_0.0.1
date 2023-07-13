@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/utils/utils.dart';
 import '../../../models/post_card_model.dart';
 import '../../../models/user_model.dart';
 
@@ -43,7 +42,8 @@ class WritePostRepository {
       postId: postId,
       commentCount: commentCount,
     );
-
+    print('\n\n\n\n\n ${imagesUrl[1]}\n\n\n\n\n');
+    print('HERE');
     await firestore.collection('posts').doc(postId).set(
           message.toJson(),
         );
@@ -72,7 +72,7 @@ class WritePostRepository {
         commentCount: commentCount,
       );
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 

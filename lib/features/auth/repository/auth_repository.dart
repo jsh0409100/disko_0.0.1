@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app_layout_screen.dart';
-import '../../../common/utils/utils.dart';
 import '../../../models/user_model.dart';
 import '../screens/signup_page.dart';
 
@@ -53,7 +52,7 @@ class AuthRepository {
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context: context, content: e.message!);
+      // showSnackBar(context: context, content: e.message!);
     }
   }
 
@@ -79,7 +78,7 @@ class AuthRepository {
         isUserCreated: true,
       );
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context: context, content: e.message!);
+      // showSnackBar(context: context, content: e.message!);
     }
   }
 
@@ -118,7 +117,7 @@ class AuthRepository {
         );
       }
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
@@ -182,7 +181,7 @@ class AuthRepository {
         );
       }
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 }

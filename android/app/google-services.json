@@ -7,6 +7,90 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:986845963221:android:72ec5746f6bc24f717d35c",
+        "android_client_info": {
+          "package_name": "com.echad.disko"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "986845963221-3u8bnfua74g2hsc8l5fn7t1v32qvn4ss.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.echad.disko",
+            "certificate_hash": "871f939d0282cdddc8528a23e30a5ba2d58d227a"
+          }
+        },
+        {
+          "client_id": "986845963221-6rtqccmsn3jr7m9chrbkfbed71rl286p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.echad.disko",
+            "certificate_hash": "2722478cd30040c681a74b6c3dec08159115663d"
+          }
+        },
+        {
+          "client_id": "986845963221-6u4ntis62sjohdrj14n2jo9avn29npjd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.echad.disko",
+            "certificate_hash": "f6fdf89a94fbeb92d9b693577ebc9086f5f201bf"
+          }
+        },
+        {
+          "client_id": "986845963221-9fbivlrncp4optbmjp9mlkpqfnk7udmo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.echad.disko",
+            "certificate_hash": "7fd90cdf20b7b727b4959fb9bb61d48e1ceaa307"
+          }
+        },
+        {
+          "client_id": "986845963221-k7k1f1qotl7hm4nggrjfrj5jje6k5dqg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.echad.disko",
+            "certificate_hash": "d618d8a7ee071a42463953b32bb493caa65486b3"
+          }
+        },
+        {
+          "client_id": "986845963221-krmva49jthmab9jo3id5n2vnbskfkp9r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.echad.disko",
+            "certificate_hash": "a6d0d717aeed47fcf3e32393064241d5eb262ec4"
+          }
+        },
+        {
+          "client_id": "986845963221-56j2mqn4pt9db5l1l9c59a6p6q7hqarg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQEa8w3ODXXyWiPj6ChL8n_7VjXuLfoE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "986845963221-56j2mqn4pt9db5l1l9c59a6p6q7hqarg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "986845963221-rgebgmrchk44ok3oldlcjgi74h29247d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.disko001"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:986845963221:android:7752f3b7a410038a17d35c",
         "android_client_info": {
           "package_name": "com.ehad.disko_001"

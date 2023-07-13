@@ -34,7 +34,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
           .read(authControllerProvider)
           .signInWithPhone(context, '+${countryCode!.dialCode}$phoneNumber');
     } else {
-      showSnackBar(context: context, content: 'Fill out all the fields');
+      showSnackBar(context: context, content: '핸드폰 번호와 국가 코드를 입력해주세요');
     }
   }
 

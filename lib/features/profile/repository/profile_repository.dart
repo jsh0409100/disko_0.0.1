@@ -1,20 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:disko_001/models/notification_model.dart';
-import 'package:disko_001/models/post_card_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../../common/enums/notification_enum.dart';
-import '../../../common/utils/utils.dart';
 import '../../../models/chip_model.dart';
-import '../../../models/comment_model.dart';
-import '../../../models/user_model.dart';
-
 
 final profileRepositoryProvider = Provider(
-      (ref) => ProfileRepository(
+  (ref) => ProfileRepository(
     firestore: FirebaseFirestore.instance,
     auth: FirebaseAuth.instance,
   ),
@@ -29,7 +21,6 @@ class ProfileRepository {
   });
 
   Stream<List<ChipModel>> getChipStream(List<String> chip) {
-
     return firestore.collection('users').snapshots().map((event) {
       List<ChipModel> tag = [];
       for (var document in event.docs) {
@@ -44,9 +35,9 @@ class ProfileRepository {
     required List<String> tag,
   }) async {
     try {
-        _saveChip(tag: tag);
+      _saveChip(tag: tag);
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
@@ -62,6 +53,5 @@ class ProfileRepository {
     if (doc.exists) {
       currentUser.update(tagg.toJson());
     }
-
   }
 }

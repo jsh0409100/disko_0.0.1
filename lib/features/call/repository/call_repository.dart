@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/utils/utils.dart';
 import '../../../models/call.dart';
 import '../screens/call_screen.dart';
 
@@ -31,10 +30,7 @@ class CallRepository {
     Call receiverCallData,
   ) async {
     try {
-      await firestore
-          .collection('call')
-          .doc(senderCallData.callerId)
-          .set(senderCallData.toJson());
+      await firestore.collection('call').doc(senderCallData.callerId).set(senderCallData.toJson());
       await firestore
           .collection('call')
           .doc(senderCallData.receiverUid)
@@ -50,7 +46,7 @@ class CallRepository {
         ),
       );
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
@@ -63,18 +59,12 @@ class CallRepository {
       await firestore.collection('call').doc(receiverUid).delete();
       await firestore.collection('call').doc(callerId).delete();
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
   void setToken(String token, Call call) async {
-    await firestore
-        .collection('call')
-        .doc(call.callerId)
-        .update({'token': token});
-    await firestore
-        .collection('call')
-        .doc(call.receiverUid)
-        .update({'token': token});
+    await firestore.collection('call').doc(call.callerId).update({'token': token});
+    await firestore.collection('call').doc(call.receiverUid).update({'token': token});
   }
 }

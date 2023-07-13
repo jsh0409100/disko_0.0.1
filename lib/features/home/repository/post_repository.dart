@@ -222,7 +222,7 @@ class PostRepository {
           notificationType: NotificationEnum.comment,
           commentId: commentId);
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 
@@ -267,7 +267,7 @@ class PostRepository {
           notificationType: NotificationEnum.comment,
           commentId: commentId);
     } catch (e) {
-      showSnackBar(context: context, content: e.toString());
+      // showSnackBar(context: context, content: e.toString());
     }
   }
 

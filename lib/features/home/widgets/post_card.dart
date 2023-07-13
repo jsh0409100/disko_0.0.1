@@ -49,7 +49,7 @@ class _PostCardState extends ConsumerState<PostCard> {
           return Builder(builder: (context) {
             final customTheme = Theme.of(context).copyWith(
               dialogTheme: const DialogTheme(
-                backgroundColor: Color(0xFFFFFBFF),
+                backgroundColor: Colors.white,
               ),
             );
 

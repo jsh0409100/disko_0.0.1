@@ -30,13 +30,8 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
               appBar: AppBar(),
             ),
             body: ProfilePage(
-              displayName: snapshot.data.displayName,
-              country: '한국',
-              description: snapshot.data.description,
-              imageURL: snapshot.data.profilePic,
-              tag: snapshot.data.tag,
+              user: snapshot.data,
               uid: widget.uid,
-              follow: snapshot.data.follow,
             ),
           );
         });

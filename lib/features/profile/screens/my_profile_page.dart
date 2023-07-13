@@ -35,13 +35,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               ],
             ),
             body: ProfilePage(
-              displayName: snapshot.data.displayName,
-              country: '한국',
-              description: snapshot.data.description,
-              imageURL: snapshot.data.profilePic,
-              tag: snapshot.data.tag,
+              user: snapshot.data,
               uid: FirebaseAuth.instance.currentUser!.uid,
-              follow: snapshot.data.follow,
             ),
           );
         });

@@ -70,7 +70,7 @@ class AuthRepository {
         smsCode: userOTP,
       );
       await auth.signInWithCredential(credential);
-      if(itis == true){
+      if (itis == true) {
         saveUserDataToFirebase(
           name: '신규 유저',
           profilePic: null,
@@ -85,7 +85,7 @@ class AuthRepository {
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppLayoutScreen.routeName,
-              (route) => false,
+          (route) => false,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -114,7 +114,7 @@ class AuthRepository {
         ref: ref,
         isUserCreated: true,
         description: ' ',
-        follow : [],
+        follow: [],
       );
     } on FirebaseAuthException catch (e) {
       // showSnackBar(context: context, content: e.message!);
@@ -198,7 +198,7 @@ class AuthRepository {
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppLayoutScreen.routeName,
-              (route) => false,
+          (route) => false,
         );
       }
     } catch (e) {

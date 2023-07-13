@@ -23,15 +23,20 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   File? image;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController countryController = TextEditingController();
   final TextEditingController keywordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.user.displayName;
+    descriptionController.text = widget.user.description;
+  }
 
   @override
   void dispose() {
     super.dispose();
     nameController.dispose();
     descriptionController.dispose();
-    countryController.dispose();
     keywordController.dispose();
   }
 
@@ -102,7 +107,6 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   textField("   2~8자 이내여야 합니다.", "사용자 이름", 1, nameController),
-                  textField("   나라 선택.", "국가", 1, countryController),
                   textField("   40자 이내여야 합니다.", "자기소개", 10, descriptionController),
                 ],
               ),

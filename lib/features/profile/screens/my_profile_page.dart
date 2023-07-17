@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/profile/screens/profile_page.dart';
 import 'package:disko_001/features/starting/start_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +25,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
       print(e.toString());
       return null;
     }
+  }
+
+  void deleteUser() async{
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    users.doc(FirebaseAuth.instance.currentUser!.uid).delete();
+    FirebaseAuth.instance.currentUser?.delete();
+    await signOut();
+    print(FirebaseAuth.instance.currentUser!.uid);
   }
 
   @override
@@ -64,9 +73,28 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       Icons.logout,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    title: Text('Log out'),
+                    title: Text('로그아웃'),
                     onTap: () async{
                       await signOut();
+                      Navigator.pushAndRemoveUntil(
+                          context, MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              StartPage(itisSignUp: false,)), (route) => false
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_sharp,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.logout,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: Text('탈퇴하기'),
+                    onTap: () async{
+                      deleteUser();
                       Navigator.pushAndRemoveUntil(
                           context, MaterialPageRoute(
                           builder: (BuildContext context) =>

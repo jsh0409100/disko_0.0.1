@@ -82,43 +82,19 @@ class AuthRepository {
           follow: [],
         );
       }
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppLayoutScreen.routeName,
-            (route) => false,
-      );
+      if(itis == false){
+        await auth.signInWithCredential(credential);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppLayoutScreen.routeName,
+              (route) => false,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       //showSnackBar(context: context, content: e.message!);
     }
   }
 
-  void loginverifyOTP({
-    required BuildContext context,
-    required String verificationId,
-    required String userOTP,
-    required String countryCode,
-    required ProviderRef ref,
-  }) async {
-    try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: userOTP,
-      );
-      await auth.signInWithCredential(credential);
-      saveUserDataToFirebase(
-        name: '신규 유저',
-        profilePic: null,
-        context: context,
-        countryCode: countryCode,
-        ref: ref,
-        isUserCreated: true,
-        description: ' ',
-        follow : [],
-      );
-    } on FirebaseAuthException catch (e) {
-      // showSnackBar(context: context, content: e.message!);
-    }
-  }
 
   void saveUserDataToFirebase({
     required String name,
@@ -184,6 +160,7 @@ class AuthRepository {
         profilePic: photoUrl,
         tag: [],
         description: description,
+        follow: [],
       );
       await firestore.collection('users').doc(uid).set(user.toJson());
 

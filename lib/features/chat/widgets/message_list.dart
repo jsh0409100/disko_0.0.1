@@ -42,6 +42,7 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
             messageController.jumpTo(messageController.position.maxScrollExtent);
           });
           DateTime? time;
+
           return ListView.builder(
             controller: messageController,
             itemCount: snapshot.data!.length,

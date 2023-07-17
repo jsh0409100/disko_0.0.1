@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../models/post_card_model.dart';
 import '../../../models/user_model.dart';
@@ -80,7 +81,7 @@ class WritePostRepository {
   }
 
   Stream<List<PostCardModel>> searchPost(String query) {
-    return _posts
+    final postTitleQuery = _posts
         .where(
           'postTitle',
           isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
@@ -91,13 +92,32 @@ class WritePostRepository {
                     query.codeUnitAt(query.length - 1) + 1,
                   ),
         )
-        .snapshots()
-        .map((event) {
-      List<PostCardModel> postcard = [];
-      for (var post in event.docs) {
-        postcard.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+        .snapshots();
+    final postTextQuery = _posts
+        .where(
+          'postText',
+          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+          isLessThan: query.isEmpty
+              ? null
+              : query.substring(0, query.length - 1) +
+                  String.fromCharCode(
+                    query.codeUnitAt(query.length - 1) + 1,
+                  ),
+        )
+        .snapshots();
+    return Rx.combineLatest2(postTitleQuery, postTextQuery,
+        (QuerySnapshot titleSnapshot, QuerySnapshot textSnapshot) {
+      final List<PostCardModel> postCards = [];
+
+      for (var post in titleSnapshot.docs) {
+        postCards.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
       }
-      return postcard;
+
+      for (var post in textSnapshot.docs) {
+        postCards.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+      }
+
+      return postCards;
     });
   }
 

@@ -5,6 +5,7 @@ import 'package:disko_001/features/write_post/screens/widgets/select_category.da
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -26,6 +27,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   final List<XFile>? _imageFileList = [];
   final List<String> _arrImageUrls = [];
   final FirebaseStorage _storageRef = FirebaseStorage.instance;
+
   late String postId;
   int commentCount = 0;
   bool isQuestion = false;
@@ -86,7 +88,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   }
 
   Future<void> uploadFunction(List<XFile> _images) async {
-    if(mounted) {
+    if (mounted) {
       setState(() {
         _isLoading = true;
       });
@@ -116,6 +118,11 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     postTextController.dispose();
@@ -124,8 +131,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
     return Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
             shape: const Border(bottom: BorderSide(color: Colors.black, width: 0.5)),
             centerTitle: true,
@@ -158,100 +165,111 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
           builder: (context, constraints) {
             return _isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : Column(children: [
-                    TextField(
-                      controller: postTitleController,
-                      maxLength: 15,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 24),
-                        hintText: '제목',
-                      ),
-                      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
-                    ),
-                    Expanded(
-                      flex: 70,
-                      child: TextField(
-                        controller: postTextController,
-                        expands: true,
-                        maxLines: null,
+                : Column(
+                    children: [
+                      TextField(
+                        controller: postTitleController,
+                        maxLength: 15,
                         decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(top: 10, left: 24, right: 24, bottom: 0),
-                          hintText: '글작성',
+                          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+                          hintText: '제목',
                         ),
-                        style: const TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
                       ),
-                    ),
-                    _imageFileList == 0
-                        ? const Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text("No Images Selected"),
-                          )
-                        : Expanded(
-                            flex: 15,
-                            child: GridView.builder(
-                              itemCount: _imageFileList?.length,
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 4),
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(2),
-                                  child: Image.file(
-                                    File(_imageFileList![index].path),
-                                    fit: BoxFit.cover,
-                                  ),
-                                );
-                              },
+                      Expanded(
+                        flex: 70,
+                        child: TextField(
+                          controller: postTextController,
+                          expands: true,
+                          maxLines: null,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding:
+                                EdgeInsets.only(top: 10, left: 24, right: 24, bottom: 0),
+                            hintText: '글작성',
+                          ),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      _imageFileList == 0
+                          ? const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text("No Images Selected"),
+                            )
+                          : Expanded(
+                              flex: 15,
+                              child: GridView.builder(
+                                itemCount: _imageFileList?.length,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 4),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(2),
+                                    child: Image.file(
+                                      File(_imageFileList![index].path),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                    Expanded(
-                      flex: 15,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                  value: isQuestion,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isQuestion = value!;
-                                    });
-                                  }),
-                              Text(
-                                '질문할래요!',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(color: Colors.black),
-                              )
-                            ],
-                          ),
-                          Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    border: Border(
-                                        top: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ))),
-                                child: Row(
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.photo_camera_outlined),
-                                      onPressed: selectImageFromCamera,
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.image_outlined),
-                                      onPressed: selectImageFromGallery,
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ],
-                      ),
-                    )
-                  ]);
+                      Expanded(
+                        flex: isVisible ? 30 : 15,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Checkbox(
+                                    value: isQuestion,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        isQuestion = value!;
+                                      });
+                                    }),
+                                isVisible
+                                    ? Text(
+                                        '질문할래요!',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(color: Colors.black),
+                                      )
+                                    : Text(
+                                        '제발...',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(color: Colors.black),
+                                      )
+                              ],
+                            ),
+                            Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          top: BorderSide(
+                                    color: Colors.black,
+                                    width: 0.5,
+                                  ))),
+                                  child: Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.photo_camera_outlined),
+                                        onPressed: selectImageFromCamera,
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.image_outlined),
+                                        onPressed: selectImageFromGallery,
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                          ],
+                        ),
+                      )
+                    ],
+                  );
           },
         ));
   }

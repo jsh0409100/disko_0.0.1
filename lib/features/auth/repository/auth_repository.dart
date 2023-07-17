@@ -41,7 +41,7 @@ class AuthRepository {
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
-         // await auth.signInWithCredential(credential);
+          // await auth.signInWithCredential(credential);
         },
         verificationFailed: (e) {
           throw Exception(e.message);
@@ -70,7 +70,7 @@ class AuthRepository {
         smsCode: userOTP,
       );
       await auth.signInWithCredential(credential);
-      if(itis == true){
+      if (itis == true) {
         saveUserDataToFirebase(
           name: '신규 유저',
           profilePic: null,
@@ -85,7 +85,7 @@ class AuthRepository {
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppLayoutScreen.routeName,
-            (route) => false,
+        (route) => false,
       );
     } on FirebaseAuthException catch (e) {
       //showSnackBar(context: context, content: e.message!);
@@ -113,7 +113,7 @@ class AuthRepository {
         ref: ref,
         isUserCreated: true,
         description: ' ',
-        follow : [],
+        follow: [],
       );
     } on FirebaseAuthException catch (e) {
       // showSnackBar(context: context, content: e.message!);
@@ -184,6 +184,7 @@ class AuthRepository {
         profilePic: photoUrl,
         tag: [],
         description: description,
+        follow: [],
       );
       await firestore.collection('users').doc(uid).set(user.toJson());
 
@@ -196,7 +197,7 @@ class AuthRepository {
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppLayoutScreen.routeName,
-              (route) => false,
+          (route) => false,
         );
       }
     } catch (e) {

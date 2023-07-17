@@ -9,8 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/enums/notification_enum.dart';
 import '../../../models/post_card_model.dart';
 import '../../../models/user_model.dart';
+import '../../../src/providers.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../profile/screens/other_user_profile_page.dart';
+import '../../write_post/screens/edit_post_page.dart';
 
 class PostCard extends ConsumerStatefulWidget {
   final PostCardModel post;
@@ -131,8 +133,13 @@ class _PostCardState extends ConsumerState<PostCard> {
           _showMyDialog();
           break;
         case '글 수정':
+          Navigator.of(context)
+              .pushNamed(EditPostScreen.routeName, arguments: {'post': widget.post});
           break;
         case '글 삭제':
+          ref.read(postControllerProvider).deletePost(postId: widget.post.postId);
+          Navigator.pop(context);
+          ref.read(postsProvider.notifier).reloadPage();
           break;
       }
     }
@@ -154,7 +161,7 @@ class _PostCardState extends ConsumerState<PostCard> {
     }
 
     Text isQuestion() {
-      if(widget.post.isQuestion == true) {
+      if (widget.post.isQuestion == true) {
         return Text(
           "Q",
           style: TextStyle(
@@ -191,21 +198,51 @@ class _PostCardState extends ConsumerState<PostCard> {
               children: <Widget>[
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Row(
-                      children: [
-                        isQuestion(),
-                        Text(
-                          widget.post.postTitle,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Color(0xff191919),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: Row(
+                        children: [
+                          isQuestion(),
+                          Text(
+                            widget.post.postTitle,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Color(0xff191919),
+                            ),
                           ),
-                        ),
-                      ],
-                    )
-                  ),
+                          const Spacer(),
+                          PopupMenuButton<String>(
+                            onSelected: showMenu,
+                            itemBuilder: (BuildContext context) {
+                              return (widget.post.uid != user!.uid)
+                                  ? {'메세지 보내기', '신고하기'}.map((String choice) {
+                                      return PopupMenuItem<String>(
+                                        value: choice,
+                                        child: choice == '신고하기'
+                                            ? Text(
+                                                choice,
+                                                style: TextStyle(
+                                                    color: Theme.of(context).colorScheme.error),
+                                              )
+                                            : Text(choice),
+                                      );
+                                    }).toList()
+                                  : {'글 수정', '글 삭제'}.map((String choice) {
+                                      return PopupMenuItem<String>(
+                                        value: choice,
+                                        child: choice == '글 삭제'
+                                            ? Text(
+                                                choice,
+                                                style: TextStyle(
+                                                    color: Theme.of(context).colorScheme.error),
+                                              )
+                                            : Text(choice),
+                                      );
+                                    }).toList();
+                            },
+                          ),
+                        ],
+                      )),
                   widget.post.imagesUrl.isEmpty
                       ? Container()
                       : Padding(

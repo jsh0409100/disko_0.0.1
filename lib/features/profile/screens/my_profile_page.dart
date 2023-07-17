@@ -94,11 +94,38 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     ),
                     title: Text('탈퇴하기'),
                     onTap: () async{
-                      deleteUser();
-                      Navigator.pushAndRemoveUntil(
-                          context, MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              StartPage(itisSignUp: false,)), (route) => false
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true, //바깥 영역 터치시 닫을지 여부 결정
+                        builder: ((context) {
+                          return AlertDialog(
+                            title: Text("탈퇴"),
+                            content: Text("정말로 탈퇴하시겠습니까?"),
+                            actions: <Widget>[
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); //창 닫기
+                                  },
+                                  child: Text("아니요"),
+                                ),
+                              ),
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    deleteUser();
+                                    Navigator.pushAndRemoveUntil(
+                                        context, MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            StartPage(itisSignUp: false,)), (route) => false
+                                    ); //창 닫기
+                                  },
+                                  child: Text("네"),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                       );
                     },
                     trailing: Icon(

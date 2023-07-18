@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/home/widgets/post_card.dart';
+import 'package:disko_001/models/user_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/utils/utils.dart';
@@ -8,8 +9,9 @@ import '../screens/detail_page.dart';
 
 class Post extends StatefulWidget {
   final PostCardModel post;
+  final UserModel user;
 
-  const Post({Key? key, required this.post}) : super(key: key);
+  const Post({Key? key, required this.post, required this.user}) : super(key: key);
 
   @override
   State<Post> createState() => _PostState();
@@ -47,6 +49,7 @@ class _PostState extends State<Post> with AutomaticKeepAliveClientMixin {
                     context,
                     DetailPage.routeName,
                     arguments: {
+                      'user' : widget.user,
                       'postId': widget.post.postId,
                     },
                   );

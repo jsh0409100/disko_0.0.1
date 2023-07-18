@@ -112,7 +112,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         );
                       } else {
                         return Post(
-                          post: posts[index],
+                          post: posts[index], user: snapshot.data,
                         );
                       }
                     });
@@ -321,7 +321,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               Text(
                 '0',
                 style: TextStyle(
-                  color: Color(0xFF191919),
+                  color: Color (0xFF191919),
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
                 ),

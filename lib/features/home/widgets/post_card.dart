@@ -17,6 +17,7 @@ import '../../write_post/screens/edit_post_page.dart';
 class PostCard extends ConsumerStatefulWidget {
   final PostCardModel post;
   final UserModel user;
+
   const PostCard({
     Key? key,
     required this.post,
@@ -118,6 +119,25 @@ class _PostCardState extends ConsumerState<PostCard> {
       );
     }
 
+    Future _shareSheet(){
+      return showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context){
+          return SizedBox(
+            height: 500,
+            child: Center(
+              child: ElevatedButton(
+                child: const Text('Close'),
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     void showMenu(String value) {
       switch (value) {
         case '메세지 보내기':
@@ -140,6 +160,9 @@ class _PostCardState extends ConsumerState<PostCard> {
           ref.read(postControllerProvider).deletePost(postId: widget.post.postId);
           Navigator.pop(context);
           ref.read(postsProvider.notifier).reloadPage();
+          break;
+        case '앱 내 공유':
+          _shareSheet();
           break;
       }
     }
@@ -227,7 +250,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                                             : Text(choice),
                                       );
                                     }).toList()
-                                  : {'글 수정', '글 삭제'}.map((String choice) {
+                                  : {'글 수정', '글 삭제', '앱 내 공유'}.map((String choice) {
                                       return PopupMenuItem<String>(
                                         value: choice,
                                         child: choice == '글 삭제'

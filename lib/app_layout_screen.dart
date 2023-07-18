@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/chat/screens/chat_list_screen.dart';
-import 'package:disko_001/test.dart';
+import 'package:disko_001/features/chat/screens/chat_screen.dart';
+import 'package:disko_001/features/home/screens/detail_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../../common/utils/local_notification.dart';
 import 'features/home/screens/home_feed_page.dart';
 import 'features/profile/screens/my_profile_page.dart';
+import 'main.dart';
 
 class AppLayoutScreen extends StatefulWidget {
   static const String routeName = '/my-home';
@@ -27,25 +32,52 @@ class MyHomeState extends State<AppLayoutScreen> {
     const MyProfilePage(),
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    requestPermission();
-    getToken();
-    notificationService = NotificationService();
-    pushToPost();
+  Future<void> setupInteractedMessage() async {
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                icon: android.smallIcon,
+              ),
+            ));
+      }
+    });
   }
 
-  void pushToPost() => notificationService.behaviorSubject.listen((payload) {
-        print('Here');
-        Navigator.pushNamed(
-          context,
-          TestScreen.routeName,
-          arguments: {
-            'postId': payload,
-          },
-        );
-      });
+  void _handleMessage(RemoteMessage message) {
+    if (message.data['type'] == 'post') {
+      Navigator.pushNamed(
+        context,
+        DetailPage.routeName,
+        arguments: {'postId': message.data['postId']},
+      );
+    }
+
+    if (message.data['type'] == 'chat') {
+      Navigator.pushNamed(
+        context,
+        ChatScreen.routeName,
+        arguments: {'peerUid': message.data['senderId']},
+      );
+    }
+  }
 
   void requestPermission() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -88,7 +120,36 @@ class MyHomeState extends State<AppLayoutScreen> {
     });
   }
 
+  void listenToNotificationStream() => notificationService.behaviorSubject.listen((payload) {
+        Map<String, dynamic> notification = jsonDecode(payload!);
+        switch (notification['type']) {
+          case 'post':
+            Navigator.pushNamed(
+              context,
+              DetailPage.routeName,
+              arguments: {'postId': notification['postId']},
+            );
+            break;
+          case 'chat':
+            Navigator.pushNamed(
+              context,
+              ChatScreen.routeName,
+              arguments: {'peerUid': notification['senderId']},
+            );
+        }
+      });
+
   final PageController pageController = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+    requestPermission();
+    getToken();
+    notificationService = NotificationService();
+    listenToNotificationStream();
+    setupInteractedMessage();
+  }
 
   @override
   Widget build(BuildContext context) {

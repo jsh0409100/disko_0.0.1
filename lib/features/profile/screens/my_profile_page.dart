@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/profile/screens/profile_page.dart';
 import 'package:disko_001/features/starting/start_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,23 +46,19 @@ class _MyProfilePageState extends State<MyProfilePage> {
             appBar: AppBar(
               actions: [
                 IconButton(
-                    onPressed:(){},
+                    onPressed: () {
+                      Navigator.pushNamed(context, SettingScreen.routeName);
+                    },
                     icon: const Icon(
                       Icons.settings_outlined,
                       color: Colors.black,
-                    )
-                ),
+                    )),
               ],
             ),
             body: ProfilePage(
-              displayName: snapshot.data.displayName,
-              country: '한국',
-              description: snapshot.data.description,
-              imageURL: snapshot.data.profilePic,
-              tag: snapshot.data.tag,
+              user: snapshot.data,
               uid: FirebaseAuth.instance.currentUser!.uid,
               follow : snapshot.data.follow,
-
             ),
             drawer: Drawer(
               child: ListView(

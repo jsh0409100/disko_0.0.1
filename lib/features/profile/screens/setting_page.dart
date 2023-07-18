@@ -1,11 +1,87 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/utils/utils.dart';
+import '../../starting/start_page.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
 
   static const routeName = '/setting-screen';
+
+  Future<void> _showMyDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (context) {
+        return Builder(builder: (context) {
+          final customTheme = Theme.of(context).copyWith(
+            dialogTheme: const DialogTheme(
+              backgroundColor: Color(0xFFFFFBFF),
+            ),
+          );
+
+          return Theme(
+            data: customTheme,
+            child: AlertDialog(
+              title: Text(
+                '정말로 로그아웃 하시겠습니까?',
+                style: Theme.of(context).textTheme.bodyLarge,
+                maxLines: 2,
+              ),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: TextButton.styleFrom(
+                        elevation: 2,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      ),
+                      child: Text('아니요',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: Colors.white)),
+                    ),
+                    TextButton(
+                        onPressed: () async {
+                          try {
+                            print('sign out complete!');
+                            await FirebaseAuth.instance.signOut();
+                          } catch (e) {
+                            print('sign out failed');
+                            print(e.toString());
+                            return null;
+                          }
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) => StartPage(
+                                        itisSignUp: false,
+                                      )),
+                              (route) => false);
+                        },
+                        style: TextButton.styleFrom(
+                          elevation: 2,
+                          backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        child: Text(
+                          '로그아웃',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +154,11 @@ class SettingScreen extends StatelessWidget {
               option: "업데이트",
               action: null,
             ),
-            const SettingOption(
-              option: "로그아웃",
-              action: null,
-            ),
+            SettingOption(
+                option: "로그아웃",
+                action: () async {
+                  _showMyDialog(context);
+                }),
             const SettingOption(
               option: "탈퇴하기",
               action: null,
@@ -116,8 +193,11 @@ class SettingOption extends StatelessWidget {
                 textAlign: TextAlign.left,
               ),
             ),
-            onPressed: () =>
-                {showSnackBar(context: context, content: "로그아웃, 탈퇴하기를 제외한 모든 설정은 준비중에 있습니다.")},
+            onPressed: () => {
+              action == null
+                  ? showSnackBar(context: context, content: "로그아웃, 탈퇴하기를 제외한 모든 설정은 준비중에 있습니다.")
+                  : action!()
+            },
           )),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:disko_001/app_layout_screen.dart';
 import 'package:disko_001/features/home/screens/detail_page.dart';
 import 'package:disko_001/features/profile/screens/other_user_profile_page.dart';
+import 'package:disko_001/features/profile/screens/profile_edit_page.dart';
 import 'package:disko_001/features/profile/screens/setting_page.dart';
 import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
 import 'package:disko_001/features/write_post/screens/edit_post_page.dart';
@@ -24,7 +25,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case SignUpScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => const SignUpScreen(itisSignUp: true,),
+        builder: (context) => const SignUpScreen(
+          itisSignUp: true,
+        ),
       );
     case LoginScreen.routeName:
       return MaterialPageRoute(
@@ -90,6 +93,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => OtherUserProfilePage(
           uid: uid,
+        ),
+      );
+    case ProfileEditPage.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final user = arguments['user'];
+      return MaterialPageRoute(
+        builder: (context) => ProfileEditPage(
+          user: user,
         ),
       );
     default:

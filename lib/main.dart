@@ -2,6 +2,7 @@ import 'package:disko_001/router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +36,7 @@ void main() async {
     'high_importance_channel', // id
     'High Importance Notifications', // title
     description: 'This channel is used for important notifications.', // description
-    importance: Importance.high,
+    importance: Importance.max,
   );
 
   var initialzationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -72,46 +73,51 @@ class MyApp extends ConsumerWidget {
   // ur application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GetMaterialApp(
-      title: 'Disko Demo',
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('ko'),
-      ],
-      locale: const Locale('ko'),
-      theme: ThemeData(
-        useMaterial3: true,
-        cardColor: Colors.white,
-        fontFamily: 'Pretendard',
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
-          headlineMedium:
-              TextStyle(fontSize: 17.0, fontWeight: FontWeight.w700, color: Colors.black),
-        ),
-        dialogTheme: DialogTheme(
-          backgroundColor: lightColorScheme.background,
-        ),
-        colorScheme: lightColorScheme.copyWith(background: Colors.white),
-      ),
-      onGenerateRoute: (settings) => generateRoute(settings),
-      home: ref.watch(userDataAuthProvider).when(
-            data: (user) {
-              if (user == null) {
-                return const StartPage(itisSignUp: true,);
-              }
-              return const CallPickupScreen(scaffold: AppLayoutScreen());
-            },
-            error: (err, trace) {
-              return ErrorScreen(
-                error: err.toString(),
-              );
-            },
-            loading: () => const LoadingScreen(),
+    return KeyboardVisibilityProvider(
+      child: GetMaterialApp(
+        title: 'Disko Demo',
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ko'),
+        ],
+        locale: const Locale('ko'),
+        theme: ThemeData(
+          useMaterial3: true,
+          cardColor: Colors.white,
+          fontFamily: 'Pretendard',
+          textTheme: const TextTheme(
+            bodyLarge: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+            headlineMedium:
+                TextStyle(fontSize: 17.0, fontWeight: FontWeight.w700, color: Colors.black),
           ),
+          dialogTheme: DialogTheme(
+            backgroundColor: lightColorScheme.background,
+          ),
+          colorScheme: lightColorScheme.copyWith(background: Colors.white),
+        ),
+        onGenerateRoute: (settings) => generateRoute(settings),
+        home: ref.watch(userDataAuthProvider).when(
+              data: (user) {
+                if (user == null) {
+                  return const StartPage(
+                    itisSignUp: true,
+                  );
+                } else {
+                  return const CallPickupScreen(scaffold: AppLayoutScreen());
+                }
+              },
+              error: (err, trace) {
+                return ErrorScreen(
+                  error: err.toString(),
+                );
+              },
+              loading: () => const LoadingScreen(),
+            ),
+      ),
     );
   }
 }

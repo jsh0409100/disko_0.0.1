@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/common/utils/utils.dart';
-import 'package:disko_001/features/auth/controller/auth_controller.dart';
 import 'package:disko_001/features/profile/screens/profile_edit_page.dart';
-import 'package:disko_001/features/profile/screens/tag_edit_page.dart';
 import 'package:disko_001/features/write_post/controller/write_post_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +11,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../common/widgets/error_text.dart';
 import '../../../common/widgets/loading_screen.dart';
+import '../../../models/user_model.dart';
 import '../../home/widgets/post.dart';
 import 'other_user_profile_page.dart';
 
@@ -22,18 +21,14 @@ const List<Widget> follow = <Widget>[
 ];
 
 class ProfilePage extends ConsumerStatefulWidget {
-  final String displayName, country, description, imageURL, uid;
-  final List<String> tag, follow;
+  final String uid;
+  final UserModel user;
 
-  const ProfilePage({Key? key,
-    required this.displayName,
-    required this.country,
-    required this.description,
-    required this.imageURL,
-    required this.tag,
+  const ProfilePage({
+    Key? key,
+    required this.user,
     required this.uid,
-    required this.follow})
-      : super(key: key);
+  }) : super(key: key);
 
   @override
   ConsumerState<ProfilePage> createState() => _ProfilePageState();
@@ -41,7 +36,7 @@ class ProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  CollectionReference user = FirebaseFirestore.instance.collection("users");
+  CollectionReference currUser = FirebaseFirestore.instance.collection("users");
   String test = 'test';
   File? image;
   final TextEditingController nameController = TextEditingController();
@@ -74,25 +69,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.03),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 state == true
                     ? Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height / 2.3,
-                  child: myPost(context),
-                )
+                        height: MediaQuery.of(context).size.height / 2.3,
+                        child: myPost(context),
+                      )
                     : Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height / 2.3,
-                  child: followList(context),
-                )
+                        height: MediaQuery.of(context).size.height / 2.3,
+                        child: followList(context),
+                      )
               ],
             ),
           ],
@@ -103,8 +89,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Widget myPost(BuildContext context) {
     return ref.watch(searchMyPostProvider(widget.uid)).when(
-      data: (posts) =>
-          ListView.builder(
+          data: (posts) => ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: posts.length,
@@ -118,10 +103,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           child: Column(children: [
                             SizedBox(
                               height: 180,
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * 0.9,
+                              width: MediaQuery.of(context).size.width * 0.9,
                             ),
                             const SizedBox(
                               height: 11,
@@ -135,19 +117,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       }
                     });
               }),
-      error: (error, stackTrace) =>
-          ErrorText(
+          error: (error, stackTrace) => ErrorText(
             error: error.toString(),
           ),
-      loading: () => const LoadingScreen(),
-    );
+          loading: () => const LoadingScreen(),
+        );
   }
 
   Widget size() {
-    return SizedBox(width: MediaQuery
-        .of(context)
-        .size
-        .width * 0.03);
+    return SizedBox(width: MediaQuery.of(context).size.width * 0.03);
   }
 
   Widget topWidget() {
@@ -161,26 +139,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               children: [
                 image == null
                     ? CircleAvatar(
-                  radius: 35,
-                  backgroundImage: NetworkImage(widget.imageURL),
-                )
+                        radius: 35,
+                        backgroundImage: NetworkImage(widget.user.profilePic),
+                      )
                     : CircleAvatar(
-                  radius: 35,
-                  backgroundImage: FileImage(
-                    image!,
-                  ),
-                ),
+                        radius: 35,
+                        backgroundImage: FileImage(
+                          image!,
+                        ),
+                      ),
                 Padding(
-                  padding: EdgeInsets.only(
-                      right: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.15,
-                      left: 15),
+                  padding:
+                      EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.15, left: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      profileNameText(widget.displayName),
+                      profileNameText(widget.user.displayName),
                       verEmailText(),
                     ],
                   ),
@@ -236,7 +210,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Text(
-        widget.description,
+        widget.user.description,
         style: const TextStyle(
           color: Colors.black,
           fontSize: 12,
@@ -248,13 +222,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Widget editChip() {
     return ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, ProfileEditPage.routeName, arguments: {'user': widget.user});
+        },
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.white54),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ))),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ))),
         child: const Text(
           '수정',
           style: TextStyle(color: Colors.black),
@@ -262,10 +237,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   void checkFollow() async {
-    DocumentSnapshot documentSnapshot =
-    await user.doc(auth.currentUser?.uid).get();
-    List<String> currentArray =
-    List.from(documentSnapshot.get("follow") as List<dynamic>);
+    DocumentSnapshot documentSnapshot = await currUser.doc(auth.currentUser?.uid).get();
+    List<String> currentArray = List.from(documentSnapshot.get("follow") as List<dynamic>);
     if (mounted) {
       if (currentArray.contains(widget.uid)) {
         setState(() {
@@ -282,61 +255,51 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Widget followChip(void checkFollow) {
     return isFollowed == false
         ? ElevatedButton(
-        onPressed: () async {
-          DocumentSnapshot documentSnapshot =
-          await user.doc(auth.currentUser?.uid).get();
-          List<String> currentArray =
-          List.from(documentSnapshot.get("follow") as List<dynamic>);
-          currentArray.add(widget.uid);
-          await user
-              .doc(auth.currentUser?.uid)
-              .update({"follow": currentArray});
-          if (mounted) {
-            setState(() {
-              isFollowed = true;
-            });
-          }
-        },
-        style: ButtonStyle(
-            backgroundColor:
-            MaterialStateProperty.all(const Color(0xFFE0D9FF)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
+            onPressed: () async {
+              DocumentSnapshot documentSnapshot = await currUser.doc(auth.currentUser?.uid).get();
+              List<String> currentArray =
+                  List.from(documentSnapshot.get("follow") as List<dynamic>);
+              currentArray.add(widget.uid);
+              await currUser.doc(auth.currentUser?.uid).update({"follow": currentArray});
+              if (mounted) {
+                setState(() {
+                  isFollowed = true;
+                });
+              }
+            },
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(const Color(0xFFE0D9FF)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ))),
-        child: const Text(
-          '팔로우',
-          style: TextStyle(color: Colors.black),
-        ))
+            child: const Text(
+              '팔로우',
+              style: TextStyle(color: Colors.black),
+            ))
         : ElevatedButton(
-        onPressed: () async {
-          DocumentSnapshot documentSnapshot =
-          await user.doc(auth.currentUser?.uid).get();
-          List<String> currentArray =
-          List.from(documentSnapshot.get("follow") as List<dynamic>);
-          currentArray.removeWhere((str) {
-            return str == widget.uid;
-          });
-          await user
-              .doc(auth.currentUser?.uid)
-              .update({"follow": currentArray});
-          if (mounted) {
-            setState(() {
-              isFollowed = false;
-            });
-          }
-        },
-        style: ButtonStyle(
-            backgroundColor:
-            MaterialStateProperty.all(const Color(0xFFE0D9FF)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
+            onPressed: () async {
+              DocumentSnapshot documentSnapshot = await currUser.doc(auth.currentUser?.uid).get();
+              List<String> currentArray =
+                  List.from(documentSnapshot.get("follow") as List<dynamic>);
+              currentArray.removeWhere((str) {
+                return str == widget.uid;
+              });
+              await currUser.doc(auth.currentUser?.uid).update({"follow": currentArray});
+              if (mounted) {
+                setState(() {
+                  isFollowed = false;
+                });
+              }
+            },
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(const Color(0xFFE0D9FF)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ))),
-        child: const Text(
-          '언팔로우',
-          style: TextStyle(color: Colors.black),
-        ));
+            child: const Text(
+              '언팔로우',
+              style: TextStyle(color: Colors.black),
+            ));
   }
 
   Widget percentage() {
@@ -367,10 +330,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           ),
         ),
         LinearPercentIndicator(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width - 60,
+          width: MediaQuery.of(context).size.width - 60,
           lineHeight: 19,
           percent: 0,
           progressColor: const Color(0xFFE0D9FF),
@@ -406,13 +366,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         fillColor: Colors.white,
         constraints: BoxConstraints(
           minHeight: 80,
-          minWidth: MediaQuery
-              .of(context)
-              .size
-              .width - 250,
+          minWidth: MediaQuery.of(context).size.width - 250,
         ),
         textStyle: const TextStyle(
-          //fontWeight: FontWeight.w500,
+            //fontWeight: FontWeight.w500,
             fontSize: 14),
         isSelected: _selectedbutton,
         children: follow,
@@ -424,16 +381,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: widget.follow.length,
+        itemCount: widget.user.follow.length,
         itemBuilder: (context, index) {
           return FutureBuilder(
-              future: getUserDataByUid(widget.follow[index]),
+              future: getUserDataByUid(widget.user.follow[index]),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-
                 if (snapshot.hasData == false) {
                   return Text("has error");
-                }
-                else {
+                } else {
                   return ListTile(
                     leading: CircleAvatar(
                       radius: 35,
@@ -442,18 +397,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ),
                     ),
                     title: Text(
-                        snapshot.data!.displayName,
-                        style: TextStyle(
+                      snapshot.data!.displayName,
+                      style: const TextStyle(
                         color: Color(0xFF191919),
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     trailing: IconButton(
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => OtherUserProfilePage(uid: widget.follow[index]),
+                            builder: (context) =>
+                                OtherUserProfilePage(uid: widget.user.follow[index]),
                           ),
                         );
                       },
@@ -461,8 +417,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     ),
                   );
                 }
-              }
-              );
+              });
         });
   }
 }

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -140,7 +141,7 @@ class NotificationService {
 
   void cancelAllNotifications() => _localNotifications.cancelAll();
 
-  Future<bool> sendNotification({
+  Future<bool> sendPostNotification({
     required String receiverId,
     required String postTitle,
     required String postId,
@@ -154,13 +155,46 @@ class NotificationService {
       final ownerToken = doc.get('token');
 
       HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'asia-northeast3')
-          .httpsCallable('sendNotifications');
+          .httpsCallable('sendPostNotification');
       try {
         final response = await callable.call({
           'ownerToken': ownerToken,
           'postTitle': postTitle,
           'notificationBody': notificationBody,
           'postId': postId,
+          'senderDisplayName': senderDisplayName,
+        });
+        debugPrint('result is ${response.data ?? 'No data came back'}');
+
+        if (response.data == null) return false;
+        return true;
+      } catch (e) {
+        debugPrint('There was an error $e');
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> sendChatNotification({
+    required String receiverId,
+    required String notificationBody,
+    required String? senderDisplayName,
+  }) async {
+    final receiverTokenRef = FirebaseFirestore.instance.collection('userTokens').doc(receiverId);
+    final doc = await receiverTokenRef.get();
+
+    if (doc.exists) {
+      final ownerToken = doc.get('token');
+
+      HttpsCallable callable = FirebaseFunctions.instanceFor(region: 'asia-northeast3')
+          .httpsCallable('sendChatNotification');
+      try {
+        final response = await callable.call({
+          'ownerToken': ownerToken,
+          'senderId': FirebaseAuth.instance.currentUser!.uid,
+          'notificationBody': notificationBody,
           'senderDisplayName': senderDisplayName,
         });
         debugPrint('result is ${response.data ?? 'No data came back'}');

@@ -8,6 +8,7 @@ import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/enums/message_enum.dart';
+import '../../../common/utils/local_notification.dart';
 import '../../../common/utils/utils.dart';
 import '../../call/controller/call_controller.dart';
 import '../controller/chat_controller.dart';
@@ -37,6 +38,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   FocusNode focusNode = FocusNode();
   final user = FirebaseAuth.instance.currentUser;
   late AnimateIconController animatedController;
+  late final NotificationService notificationService;
 
   var _userEnterMessage = '';
 
@@ -44,6 +46,8 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void initState() {
     animatedController = AnimateIconController();
     focusNode.addListener(onFocusChange);
+    notificationService = NotificationService();
+    notificationService.initializePlatformNotifications();
     super.initState();
   }
 
@@ -67,6 +71,11 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
           _userEnterMessage,
           widget.receiverUid,
         );
+    notificationService.sendChatNotification(
+      senderDisplayName: user!.displayName,
+      receiverId: widget.receiverUid,
+      notificationBody: _userEnterMessage,
+    );
     setState(() {
       controller.clear();
       _userEnterMessage = '';
@@ -83,6 +92,11 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
           widget.receiverUid,
           messageEnum,
         );
+    notificationService.sendChatNotification(
+      senderDisplayName: user!.displayName,
+      receiverId: widget.receiverUid,
+      notificationBody: messageEnum.toString(),
+    );
   }
 
   void selectImage() async {

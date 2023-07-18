@@ -54,7 +54,7 @@ class _BottomCommentFieldState extends ConsumerState<BottomCommentField> {
           widget.post.imagesUrl,
           widget.post.likes,
         );
-    notificationService.sendNotification(
+    notificationService.sendPostNotification(
       postTitle: widget.post.postTitle,
       postId: widget.post.postId,
       senderDisplayName: user!.displayName,

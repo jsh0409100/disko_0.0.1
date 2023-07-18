@@ -226,21 +226,13 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                                         isQuestion = value!;
                                       });
                                     }),
-                                isVisible
-                                    ? Text(
-                                        '질문할래요!',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: Colors.black),
-                                      )
-                                    : Text(
-                                        '제발...',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: Colors.black),
-                                      )
+                                Text(
+                                  '질문할래요!',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(color: Colors.black),
+                                )
                               ],
                             ),
                             Align(

@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/home/widgets/bottom_comment_field.dart';
 import 'package:disko_001/features/home/widgets/comment_list.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ import '../../chat/screens/chat_screen.dart';
 import '../../report/report_screen.dart';
 import '../../write_post/screens/edit_post_page.dart';
 import '../controller/post_controller.dart';
+import '../widgets/custom_image_provider.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
   final String postId;
@@ -195,7 +198,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 Row(
                                   children: [
                                     post.isQuestion
-                                        ? Text(
+                                        ? const Text(
                                             "Q",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -295,16 +298,30 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                         padding: const EdgeInsets.all(3),
                                         child: SizedBox(
                                           height: MediaQuery.of(context).size.height / 3,
+                                          width: MediaQuery.of(context).size.width * 9,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                             itemCount: post.imagesUrl.length,
                                             dragStartBehavior: DragStartBehavior.start,
                                             itemBuilder: (BuildContext context, int index) {
-                                              return Padding(
-                                                padding: const EdgeInsets.all(2),
-                                                child: Image.network(
-                                                  post.imagesUrl[index],
-                                                ),
+                                              return GestureDetector(
+                                                onTap: () async {
+                                                  CustomImageProvider customImageProvider =
+                                                      CustomImageProvider(
+                                                    imageUrls: post.imagesUrl.toList(),
+                                                  );
+                                                  showImageViewerPager(
+                                                    context,
+                                                    customImageProvider,
+                                                    swipeDismissible: true,
+                                                    doubleTapZoomable: true,
+                                                  );
+                                                },
+                                                child: SizedBox(
+                                                    height: 150,
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: post.imagesUrl[index],
+                                                    )),
                                               );
                                             },
                                           ),

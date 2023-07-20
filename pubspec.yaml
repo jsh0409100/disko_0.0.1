@@ -80,6 +80,8 @@ dependencies:
   material_symbols_icons: ^4.2665.0
   rxdart: ^0.27.7
   flutter_keyboard_visibility: ^5.4.1
+  easy_image_viewer: ^1.2.1
+  email_validator: ^2.1.17
 
 
 dev_dependencies:

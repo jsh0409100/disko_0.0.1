@@ -121,6 +121,15 @@ class MyHomeState extends State<AppLayoutScreen> {
   }
 
   void listenToNotificationStream() => notificationService.behaviorSubject.listen((payload) {
+        print(payload);
+        print(payload);
+        print(payload);
+        print(payload);
+        print(payload);
+        print(payload);
+        print(payload);
+        print(payload);
+        print(payload);
         Map<String, dynamic> notification = jsonDecode(payload!);
         switch (notification['type']) {
           case 'post':

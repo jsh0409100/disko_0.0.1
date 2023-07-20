@@ -58,6 +58,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             widget.user.tag,
             description,
             widget.user.follow,
+            widget.user.email,
+            widget.user.diskoPoint,
           );
     }
   }

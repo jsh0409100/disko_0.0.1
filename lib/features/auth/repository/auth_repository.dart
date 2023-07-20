@@ -140,6 +140,8 @@ class AuthRepository {
         displayName: name,
         countryCode: countryCode,
         profilePic: photoUrl,
+        email: null,
+        diskoPoint: 0,
         tag: [],
         description: description,
         follow: follow,
@@ -163,47 +165,47 @@ class AuthRepository {
     }
   }
 
-  void saveloginUserDataToFirebase({
-    required String name,
-    required File? profilePic,
-    required String countryCode,
-    required ProviderRef ref,
-    required BuildContext context,
-    required bool isUserCreated,
-    required String description,
-  }) async {
-    try {
-      String uid = auth.currentUser!.uid;
-      String photoUrl =
-          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
-
-      var user = UserModel(
-        phoneNum: auth.currentUser!.phoneNumber!,
-        displayName: name,
-        countryCode: countryCode,
-        profilePic: photoUrl,
-        tag: [],
-        description: description,
-        follow: [],
-      );
-      await firestore.collection('users').doc(uid).set(user.toJson());
-
-      if (isUserCreated) {
-        Navigator.pushNamed(
-          context,
-          LandingPage.routeName,
-        );
-      } else {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppLayoutScreen.routeName,
-          (route) => false,
-        );
-      }
-    } catch (e) {
-      //showSnackBar(context: context, content: e.toString());
-    }
-  }
+  // void saveloginUserDataToFirebase({
+  //   required String name,
+  //   required File? profilePic,
+  //   required String countryCode,
+  //   required ProviderRef ref,
+  //   required BuildContext context,
+  //   required bool isUserCreated,
+  //   required String description,
+  // }) async {
+  //   try {
+  //     String uid = auth.currentUser!.uid;
+  //     String photoUrl =
+  //         'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+  //
+  //     var user = UserModel(
+  //       phoneNum: auth.currentUser!.phoneNumber!,
+  //       displayName: name,
+  //       countryCode: countryCode,
+  //       profilePic: photoUrl,
+  //       tag: [],
+  //       description: description,
+  //       follow: [],
+  //     );
+  //     await firestore.collection('users').doc(uid).set(user.toJson());
+  //
+  //     if (isUserCreated) {
+  //       Navigator.pushNamed(
+  //         context,
+  //         LandingPage.routeName,
+  //       );
+  //     } else {
+  //       Navigator.pushNamedAndRemoveUntil(
+  //         context,
+  //         AppLayoutScreen.routeName,
+  //         (route) => false,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     //showSnackBar(context: context, content: e.toString());
+  //   }
+  // }
 
   Stream<UserModel> userData(String userId) {
     return firestore.collection('users').doc(userId).snapshots().map(
@@ -225,6 +227,8 @@ class AuthRepository {
     required String countryCode,
     required ProviderRef ref,
     required BuildContext context,
+    required String? email,
+    required int diskoPoint,
     required bool isUserCreated,
     required List<String> tag,
     required String description,
@@ -249,6 +253,8 @@ class AuthRepository {
         displayName: name,
         countryCode: countryCode,
         profilePic: photoUrl,
+        email: email,
+        diskoPoint: diskoPoint,
         tag: tag,
         description: description,
         follow: follow,

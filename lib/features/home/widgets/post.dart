@@ -9,9 +9,8 @@ import '../screens/detail_page.dart';
 
 class Post extends StatefulWidget {
   final PostCardModel post;
-  final UserModel user;
 
-  const Post({Key? key, required this.post, required this.user}) : super(key: key);
+  const Post({Key? key, required this.post}) : super(key: key);
 
   @override
   State<Post> createState() => _PostState();
@@ -49,7 +48,6 @@ class _PostState extends State<Post> with AutomaticKeepAliveClientMixin {
                     context,
                     DetailPage.routeName,
                     arguments: {
-                      'user' : widget.user,
                       'postId': widget.post.postId,
                     },
                   );

@@ -112,7 +112,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         );
                       } else {
                         return Post(
-                          post: posts[index], user: snapshot.data,
+                          post: posts[index],
                         );
                       }
                     });

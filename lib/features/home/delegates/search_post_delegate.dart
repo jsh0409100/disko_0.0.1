@@ -55,7 +55,6 @@ class SearchPostDelegate extends SearchDelegate{
                 } else {
                   return Post(
                     post: posts[index],
-                    user: snapshot.data,
                   );
                 }
               }

@@ -50,6 +50,20 @@ class ChatController {
         );
   }
 
+  void sendPostMessage(
+      BuildContext context,
+      String text,
+      String receiverUid,
+      ) {
+    ref.read(userDataAuthProvider).whenData(
+          (value) => chatRepository.sendPostMessage(
+        context: context,
+        text: text,
+        receiverUid: receiverUid,
+        senderUser: value!,
+      ),
+    );
+  }
   // void toggleUserOnline(
   //   BuildContext context,
   //   String receiverUid,

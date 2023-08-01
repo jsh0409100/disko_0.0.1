@@ -39,9 +39,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case DetailPage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
       final postId = arguments['postId'];
-      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => DetailPage(postId: postId, user: user),
+        builder: (context) => DetailPage(postId: postId),
       );
     case TestScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;

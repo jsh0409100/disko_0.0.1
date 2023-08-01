@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/common/widgets/loading_screen.dart';
 import 'package:disko_001/features/home/widgets/bottom_comment_field.dart';
 import 'package:disko_001/features/home/widgets/comment_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import '../../../common/widgets/common_app_bar.dart';
 import '../../../models/post_card_model.dart';
 import '../../../models/user_model.dart';
 import '../../../src/providers.dart';
+import '../../chat/controller/chat_controller.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../report/report_screen.dart';
 import '../../write_post/screens/edit_post_page.dart';
@@ -20,11 +22,9 @@ import '../controller/post_controller.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
   final String postId;
-  final UserModel user;
 
   const DetailPage({
     Key? key,
-    required this.user,
     required this.postId,
   }) : super(key: key);
 
@@ -32,12 +32,12 @@ class DetailPage extends ConsumerStatefulWidget {
 
   @override
   _DetailPageState createState() => _DetailPageState();
-
 }
 
 class _DetailPageState extends ConsumerState<DetailPage> {
   List<bool> checkboxValues = [];
-  late final PostCardModel post;
+  List<String> checkUser = [];
+  late PostCardModel post;
   final replyController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference postsCollection =
@@ -49,14 +49,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   Icon likeIcon = const Icon(Icons.favorite_border);
   late int size = 0;
 
-  @override
-  void initState(){
-    super.initState();
-    initializeCheckboxList();
-  }
-
-  void initializeCheckboxList(){
-    checkboxValues = List<bool>.filled(widget.user.follow.length, false);
+  void initializeCheckboxList(int snap) {
+    checkboxValues = List<bool>.filled(snap, false);
   }
 
   void saveNotification({
@@ -141,73 +135,132 @@ class _DetailPageState extends ConsumerState<DetailPage> {
     );
   }
 
-  Future _shareSheet() {
+  Future _shareSheet(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return SizedBox(
-          height: 500,
-          child: Column(
-            children: [
-              const Text(
-                '공유하기',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: widget.user.follow.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return FutureBuilder(
-                    future: getUserDataByUid(widget.user.follow[index]),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData == false) {
-                        return const Text("has error");
-                      } else {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundImage: NetworkImage(
-                              snapshot.data!.profilePic,
-                            ),
+        return FutureBuilder<UserModel>(
+            future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
+            builder: (context, snapshot) {
+              return StatefulBuilder(builder: (context, setState) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const LoadingScreen();
+                } else if (snapshot.hasError) {
+                  return const Text("Error loading data");
+                } else if (!snapshot.hasData) {
+                  return const Text("No data available");
+                }
+                checkboxValues =
+                    List<bool>.filled(snapshot.data!.follow.length, false);
+                return SizedBox(
+                  height: 500,
+                  child: Column(
+                    children: [
+                      const Text(
+                        '공유하기',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.45,
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.follow.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return FutureBuilder(
+                              future: getUserDataByUid(
+                                  snapshot.data!.follow[index]),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshots) {
+                                if (snapshots.hasData == false) {
+                                  return const LoadingScreen();
+                                } else {
+                                  return ListTile(
+                                      leading: CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage: NetworkImage(
+                                          snapshots.data!.profilePic,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        snapshots.data!.displayName,
+                                        style: const TextStyle(
+                                          color: Color(0xFF191919),
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      trailing: Checkbox(
+                                        value: checkboxValues[index],
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            checkboxValues[index] = value!;
+                                            if (checkboxValues[index] == true) {
+                                              print(
+                                                  snapshot.data!.follow[index]);
+                                              checkUser.add(
+                                                  snapshot.data!.follow[index]);
+                                            } else {
+                                              print("remove 통과");
+                                              checkUser.remove(
+                                                  snapshot.data!.follow[index]);
+                                            }
+                                          });
+                                        },
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        checkColor: Colors.white,
+                                        activeColor: const Color(0xFF7150FF),
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.padded,
+                                      ));
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFF7150FF)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(9))),
                           ),
-                          title: Text(
-                            snapshot.data!.displayName,
-                            style: const TextStyle(
-                              color: Color(0xFF191919),
+                          onPressed: () {
+                            for (String uid in checkUser) {
+                              print(uid);
+                              ref.read(chatControllerProvider).sendPostMessage(
+                                    context,
+                                    widget.postId,
+                                    uid,
+                                  );
+                            }
+                          },
+                          child: const Text(
+                            '보내기',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
                               fontSize: 17,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          trailing: Checkbox(
-                            value: checkboxValues[index],
-                            onChanged: (bool? newValue){
-                              if(post == null){
-
-                              }
-                              setState(() {
-                                checkboxValues[index] = newValue!;
-                              });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)
-                            ),
-                            checkColor: Colors.white,
-                            activeColor: const Color(0xFF7150FF),
-                            materialTapTargetSize: MaterialTapTargetSize.padded,
-                          )
-                        );
-                      }
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-        );
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+            });
       },
     );
   }
@@ -236,7 +289,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
         ref.read(postsProvider.notifier).reloadPage();
         break;
       case '앱 내 공유':
-        _shareSheet();
+        _shareSheet(context);
         break;
     }
   }

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
+import '../../profile/screens/other_user_profile_page.dart';
 import '../controller/post_controller.dart';
 import 'bottom_nestedcomment_field.dart';
 
@@ -75,27 +76,50 @@ class _NestedCommentState extends State<NestedComment> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image(
-                            image: NetworkImage(snapshot.data.profilePic),
-                            height: 36,
-                            width: 36,
-                            fit: BoxFit.scaleDown,
-                          )),
+                      GestureDetector(
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image(
+                              image: NetworkImage(snapshot.data.profilePic),
+                              height: 36,
+                              width: 36,
+                              fit: BoxFit.scaleDown,
+                            )
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            OtherUserProfilePage.routeName,
+                            arguments: {
+                              'uid': widget.uid,
+                            },
+                          );
+                        },
+                      ),
                       const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              Text(
-                                widget.userName,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                              GestureDetector(
+                                child: Text(
+                                  widget.userName,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    OtherUserProfilePage.routeName,
+                                    arguments: {
+                                      'uid': widget.uid,
+                                    },
+                                  );
+                                },
                               ),
                               const SizedBox(width: 5),
                               Text(

@@ -127,6 +127,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
           ChatScreen.routeName,
           arguments: {
             'peerUid': post.uid,
+            'peerName': post.userName,
           },
         );
         break;

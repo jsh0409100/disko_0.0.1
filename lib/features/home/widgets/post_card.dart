@@ -126,6 +126,7 @@ class _PostCardState extends ConsumerState<PostCard> {
             ChatScreen.routeName,
             arguments: {
               'peerUid': widget.post.uid,
+              'peerName': widget.post.userName,
             },
           );
           break;

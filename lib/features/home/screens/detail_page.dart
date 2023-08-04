@@ -11,53 +11,35 @@ import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/common_app_bar.dart';
 import '../../../models/post_card_model.dart';
-import '../../../models/user_model.dart';
 import '../../../src/providers.dart';
 import '../../chat/screens/chat_screen.dart';
+import '../../profile/screens/other_user_profile_page.dart';
 import '../../report/report_screen.dart';
 import '../../write_post/screens/edit_post_page.dart';
 import '../controller/post_controller.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
-  final String postId;
-  final UserModel user;
-
+  final PostCardModel post;
   const DetailPage({
     Key? key,
-    required this.user,
-    required this.postId,
+    required this.post,
   }) : super(key: key);
 
   static const routeName = '/detail-screen';
 
   @override
   _DetailPageState createState() => _DetailPageState();
-
 }
 
 class _DetailPageState extends ConsumerState<DetailPage> {
-  List<bool> checkboxValues = [];
   late final PostCardModel post;
   final replyController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
-  CollectionReference postsCollection =
-      FirebaseFirestore.instance.collection('posts');
-  CollectionReference usersCollection =
-      FirebaseFirestore.instance.collection('users');
+  CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
   bool _isLiked = false;
   Color likeColor = Colors.black;
   Icon likeIcon = const Icon(Icons.favorite_border);
   late int size = 0;
-
-  @override
-  void initState(){
-    super.initState();
-    initializeCheckboxList();
-  }
-
-  void initializeCheckboxList(){
-    checkboxValues = List<bool>.filled(widget.user.follow.length, false);
-  }
 
   void saveNotification({
     required String postId,
@@ -113,23 +95,19 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                     ),
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(ReportScreen.routeName, arguments: {
+                          Navigator.of(context).pushNamed(ReportScreen.routeName, arguments: {
                             'reportedUid': post.uid,
                             'reportedDisplayName': post.userName
                           });
                         },
                         style: TextButton.styleFrom(
                           elevation: 2,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onSurfaceVariant,
+                          backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         child: Text(
                           '예, 신고할게요',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(color: Colors.white),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
                         )),
                   ],
                 ),
@@ -137,77 +115,6 @@ class _DetailPageState extends ConsumerState<DetailPage> {
             ),
           );
         });
-      },
-    );
-  }
-
-  Future _shareSheet() {
-    return showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: 500,
-          child: Column(
-            children: [
-              const Text(
-                '공유하기',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: widget.user.follow.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return FutureBuilder(
-                    future: getUserDataByUid(widget.user.follow[index]),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData == false) {
-                        return const Text("has error");
-                      } else {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundImage: NetworkImage(
-                              snapshot.data!.profilePic,
-                            ),
-                          ),
-                          title: Text(
-                            snapshot.data!.displayName,
-                            style: const TextStyle(
-                              color: Color(0xFF191919),
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          trailing: Checkbox(
-                            value: checkboxValues[index],
-                            onChanged: (bool? newValue){
-                              if(post == null){
-
-                              }
-                              setState(() {
-                                checkboxValues[index] = newValue!;
-                              });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)
-                            ),
-                            checkColor: Colors.white,
-                            activeColor: const Color(0xFF7150FF),
-                            materialTapTargetSize: MaterialTapTargetSize.padded,
-                          )
-                        );
-                      }
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-        );
       },
     );
   }
@@ -227,16 +134,12 @@ class _DetailPageState extends ConsumerState<DetailPage> {
         _showMyDialog();
         break;
       case '글 수정':
-        Navigator.of(context)
-            .pushNamed(EditPostScreen.routeName, arguments: {'post': post});
+        Navigator.of(context).pushNamed(EditPostScreen.routeName, arguments: {'post': post});
         break;
       case '글 삭제':
         ref.read(postControllerProvider).deletePost(postId: post.postId);
         Navigator.pop(context);
         ref.read(postsProvider.notifier).reloadPage();
-        break;
-      case '앱 내 공유':
-        _shareSheet();
         break;
     }
   }
@@ -244,7 +147,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getPostByPostId(widget.postId),
+        future: getPostByPostId(widget.post.postId),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
@@ -302,31 +205,43 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                             ),
                                           )
                                         : SizedBox(),
-                                    ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        child: Image(
-                                          image: NetworkImage(
-                                              snapshot.data!.profilePic),
-                                          height: 43,
-                                          width: 43,
-                                          fit: BoxFit.scaleDown,
-                                        )),
-                                    const SizedBox(
-                                      width: 12,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          snapshot.data!.displayName,
-                                          style: const TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w600,
+                                    GestureDetector(
+                                      child: Row(
+                                        children: [
+                                          ClipRRect(
+                                              borderRadius: BorderRadius.circular(100),
+                                              child: Image(
+                                                image: NetworkImage(snapshot.data!.profilePic),
+                                                height: 43,
+                                                width: 43,
+                                                fit: BoxFit.scaleDown,
+                                              )),
+                                          const SizedBox(
+                                            width: 12,
                                           ),
-                                        ),
-                                      ],
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                snapshot.data!.displayName,
+                                                style: const TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          OtherUserProfilePage.routeName,
+                                          arguments: {
+                                            'uid': widget.post.uid,
+                                          },
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -335,8 +250,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                   onSelected: showMenu,
                                   itemBuilder: (BuildContext context) {
                                     return (post.uid != user!.uid)
-                                        ? {'메세지 보내기', '신고하기'}
-                                            .map((String choice) {
+                                        ? {'메세지 보내기', '신고하기'}.map((String choice) {
                                             return PopupMenuItem<String>(
                                               value: choice,
                                               child: choice == '신고하기'
@@ -344,15 +258,12 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                                       choice,
                                                       style: TextStyle(
                                                           color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .error),
+                                                              Theme.of(context).colorScheme.error),
                                                     )
                                                   : Text(choice),
                                             );
                                           }).toList()
-                                        : {'글 수정', '글 삭제', '앱 내 공유'}
-                                            .map((String choice) {
+                                        : {'글 수정', '글 삭제'}.map((String choice) {
                                             return PopupMenuItem<String>(
                                               value: choice,
                                               child: choice == '글 삭제'
@@ -360,9 +271,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                                       choice,
                                                       style: TextStyle(
                                                           color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .error),
+                                                              Theme.of(context).colorScheme.error),
                                                     )
                                                   : Text(choice),
                                             );
@@ -371,9 +280,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height / 50),
+                            SizedBox(height: MediaQuery.of(context).size.height / 50),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -388,9 +295,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                    height: MediaQuery.of(context).size.height /
-                                        100),
+                                SizedBox(height: MediaQuery.of(context).size.height / 100),
                                 SizedBox(
                                   child: Text(
                                     post.postText,
@@ -405,20 +310,14 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     : Padding(
                                         padding: const EdgeInsets.all(3),
                                         child: SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              3,
+                                          height: MediaQuery.of(context).size.height / 3,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                             itemCount: post.imagesUrl.length,
-                                            dragStartBehavior:
-                                                DragStartBehavior.start,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
+                                            dragStartBehavior: DragStartBehavior.start,
+                                            itemBuilder: (BuildContext context, int index) {
                                               return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2),
+                                                padding: const EdgeInsets.all(2),
                                                 child: Image.network(
                                                   post.imagesUrl[index],
                                                 ),
@@ -429,9 +328,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                       ),
                               ],
                             ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height / 50),
+                            SizedBox(height: MediaQuery.of(context).size.height / 50),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -469,9 +366,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                       _isLiked = true;
                                     });
                                   }
-                                  await postsCollection
-                                      .doc(post.postId)
-                                      .update({
+                                  await postsCollection.doc(post.postId).update({
                                     'likes': post.likes,
                                   });
                                   if (post.uid != user!.uid) {

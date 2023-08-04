@@ -1,9 +1,10 @@
 import 'package:disko_001/features/profile/screens/profile_page.dart';
-import 'package:disko_001/features/profile/screens/setting_page.dart';
+import 'package:disko_001/features/starting/start_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/utils/utils.dart';
+import '../../../common/widgets/common_app_bar.dart';
 
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({Key? key}) : super(key: key);
@@ -13,6 +14,26 @@ class MyProfilePage extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<MyProfilePage> {
+  Future signOut() async{
+    try {
+      print('sign out complete!');
+      return
+        await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print('sign out failed');
+      print(e.toString());
+      return null;
+    }
+  }
+
+  void deleteUser() async{
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    users.doc(FirebaseAuth.instance.currentUser!.uid).delete();
+    FirebaseAuth.instance.currentUser?.delete();
+    await signOut();
+    print(FirebaseAuth.instance.currentUser!.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -37,6 +58,78 @@ class _MyProfilePageState extends State<MyProfilePage> {
             body: ProfilePage(
               user: snapshot.data,
               uid: FirebaseAuth.instance.currentUser!.uid,
+              follow : snapshot.data.follow,
+            ),
+            drawer: Drawer(
+              child: ListView(
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.logout,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: Text('로그아웃'),
+                    onTap: () async{
+                      await signOut();
+                      Navigator.pushAndRemoveUntil(
+                          context, MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              StartPage(itisSignUp: false,)), (route) => false
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_sharp,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.logout,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: Text('탈퇴하기'),
+                    onTap: () async{
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true, //바깥 영역 터치시 닫을지 여부 결정
+                        builder: ((context) {
+                          return AlertDialog(
+                            title: Text("탈퇴"),
+                            content: Text("정말로 탈퇴하시겠습니까?"),
+                            actions: <Widget>[
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); //창 닫기
+                                  },
+                                  child: Text("아니요"),
+                                ),
+                              ),
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    deleteUser();
+                                    Navigator.pushAndRemoveUntil(
+                                        context, MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            StartPage(itisSignUp: false,)), (route) => false
+                                    ); //창 닫기
+                                  },
+                                  child: Text("네"),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_sharp,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });

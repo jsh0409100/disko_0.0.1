@@ -15,6 +15,7 @@ import 'features/chat/screens/chat_screen.dart';
 import 'features/report/report_screen.dart';
 import 'features/search/screens/search.dart';
 import 'features/write_post/screens/write_post_page.dart';
+import 'models/post_card_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -38,10 +39,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case DetailPage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
-      final postId = arguments['postId'];
-      final user = arguments['user'];
+      final PostCardModel post = arguments['post'];
       return MaterialPageRoute(
-        builder: (context) => DetailPage(postId: postId, user: user),
+        builder: (context) => DetailPage(post: post),
       );
     case TestScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;

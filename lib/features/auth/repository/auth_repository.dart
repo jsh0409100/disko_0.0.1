@@ -41,7 +41,7 @@ class AuthRepository {
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
-          // await auth.signInWithCredential(credential);
+         // await auth.signInWithCredential(credential);
         },
         verificationFailed: (e) {
           throw Exception(e.message);
@@ -70,7 +70,7 @@ class AuthRepository {
         smsCode: userOTP,
       );
       await auth.signInWithCredential(credential);
-      if (itis == true) {
+      if(itis == true){
         saveUserDataToFirebase(
           name: '신규 유저',
           profilePic: null,
@@ -82,39 +82,14 @@ class AuthRepository {
           follow: [],
         );
       }
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppLayoutScreen.routeName,
-        (route) => false,
-      );
-    } on FirebaseAuthException catch (e) {
-      //showSnackBar(context: context, content: e.message!);
-    }
-  }
-
-  void loginverifyOTP({
-    required BuildContext context,
-    required String verificationId,
-    required String userOTP,
-    required String countryCode,
-    required ProviderRef ref,
-  }) async {
-    try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: userOTP,
-      );
-      await auth.signInWithCredential(credential);
-      saveUserDataToFirebase(
-        name: '신규 유저',
-        profilePic: null,
-        context: context,
-        countryCode: countryCode,
-        ref: ref,
-        isUserCreated: true,
-        description: ' ',
-        follow: [],
-      );
+      if(itis == false){
+        await auth.signInWithCredential(credential);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppLayoutScreen.routeName,
+              (route) => false,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       // showSnackBar(context: context, content: e.message!);
     }
@@ -197,7 +172,7 @@ class AuthRepository {
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppLayoutScreen.routeName,
-          (route) => false,
+              (route) => false,
         );
       }
     } catch (e) {

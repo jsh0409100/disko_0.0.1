@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/loading_screen.dart';
+import '../../profile/screens/other_user_profile_page.dart';
 import '../../report/report_screen.dart';
 import '../widgets/bottom_chat_field.dart';
 import '../widgets/message_list.dart';
@@ -123,21 +124,32 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
             child: Scaffold(
                 appBar: AppBar(
                   centerTitle: true,
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(snapshot.data!.profilePic),
-                        radius: 20,
-                      ),
-                      const SizedBox(
-                        width: 6,
-                      ),
-                      Text(
-                        snapshot.data!.displayName,
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                      ),
-                    ],
+                  title: GestureDetector(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(snapshot.data!.profilePic),
+                          radius: 20,
+                        ),
+                        const SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          snapshot.data!.displayName,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        OtherUserProfilePage.routeName,
+                        arguments: {
+                          'uid': widget.peerUid,
+                        },
+                      );
+                    },
                   ),
                   actions: [
                     PopupMenuButton<String>(

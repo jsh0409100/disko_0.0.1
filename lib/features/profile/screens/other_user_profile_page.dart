@@ -32,6 +32,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
             body: ProfilePage(
               user: snapshot.data,
               uid: widget.uid,
+              follow: null,
             ),
           );
         });

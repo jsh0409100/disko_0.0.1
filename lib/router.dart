@@ -52,6 +52,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ChatScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
       final peerUid = arguments['peerUid'];
+      final peerName = arguments['peerName'];
       return MaterialPageRoute(
         builder: (context) => ChatScreen(
           peerUid: peerUid,

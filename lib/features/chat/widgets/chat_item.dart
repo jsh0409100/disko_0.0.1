@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../features/chat/screens/chat_screen.dart';
+import '../../profile/screens/other_user_profile_page.dart';
 
 class ChatItem extends StatefulWidget {
   final String name, peerUid, profilePic;
@@ -55,14 +56,25 @@ class _ChatItemState extends State<ChatItem> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image(
-                    image: NetworkImage(widget.profilePic),
-                    height: 43,
-                    width: 43,
-                    fit: BoxFit.scaleDown,
-                  )),
+              GestureDetector(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image(
+                      image: NetworkImage(widget.profilePic),
+                      height: 43,
+                      width: 43,
+                      fit: BoxFit.scaleDown,
+                    )),
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    OtherUserProfilePage.routeName,
+                    arguments: {
+                      'uid': widget.peerUid,
+                    },
+                  );
+                },
+              ),
               const SizedBox(
                 width: 11,
               ),

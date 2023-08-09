@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/profile/screens/profile_page.dart';
+import 'package:disko_001/features/profile/screens/setting_page.dart';
 import 'package:disko_001/features/starting/start_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

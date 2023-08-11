@@ -1,8 +1,6 @@
 import 'package:disko_001/features/auth/screens/signup_page.dart';
 import 'package:flutter/material.dart';
 
-import '../auth/screens/login_page.dart';
-
 class StartPage extends StatelessWidget {
   final bool itisSignUp;
 
@@ -10,7 +8,6 @@ class StartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(18.0),

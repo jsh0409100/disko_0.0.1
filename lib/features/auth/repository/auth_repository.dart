@@ -115,6 +115,8 @@ class AuthRepository {
         displayName: name,
         countryCode: countryCode,
         profilePic: photoUrl,
+        email: null,
+        diskoPoint: 0,
         tag: [],
         description: description,
         follow: follow,
@@ -137,6 +139,7 @@ class AuthRepository {
       // showSnackBar(context: context, content: e.toString());
     }
   }
+
 
   void saveloginUserDataToFirebase({
     required String name,
@@ -200,6 +203,8 @@ class AuthRepository {
     required String countryCode,
     required ProviderRef ref,
     required BuildContext context,
+    required String? email,
+    required int diskoPoint,
     required bool isUserCreated,
     required List<String> tag,
     required String description,
@@ -224,6 +229,8 @@ class AuthRepository {
         displayName: name,
         countryCode: countryCode,
         profilePic: photoUrl,
+        email: email,
+        diskoPoint: diskoPoint,
         tag: tag,
         description: description,
         follow: follow,

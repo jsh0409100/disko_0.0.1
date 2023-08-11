@@ -2,7 +2,6 @@ import 'package:disko_001/common/widgets/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../models/comment_model.dart';
 import '../../../models/nestedcomment_model.dart';
 import '../controller/post_controller.dart';
 import 'nestedcomment.dart';
@@ -27,7 +26,8 @@ class _NestedCommentListState extends ConsumerState<NestedCommentList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<NestedCommentModel>>(
-        stream: ref.read(postControllerProvider).nestedcommentStream(widget.postId, widget.commentId),
+        stream:
+            ref.read(postControllerProvider).nestedcommentStream(widget.postId, widget.commentId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingScreen();

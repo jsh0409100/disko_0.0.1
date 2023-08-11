@@ -49,7 +49,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               actions: [
                 IconButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, SettingScreen.routeName);
+                      Navigator.pushNamed(context, SettingScreen.routeName,
+                          arguments: {'user': snapshot.data});
                     },
                     icon: const Icon(
                       Icons.settings_outlined,

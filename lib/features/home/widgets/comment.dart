@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../common/utils/utils.dart';
+import '../../profile/screens/other_user_profile_page.dart';
 import 'bottom_nestedcomment_field.dart';
 
 class Comment extends StatefulWidget {
@@ -127,14 +128,26 @@ class _CommentState extends State<Comment> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image(
-                                image: NetworkImage(snapshot.data.profilePic),
-                                height: 36,
-                                width: 36,
-                                fit: BoxFit.scaleDown,
-                              )),
+                          GestureDetector(
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Image(
+                                  image: NetworkImage(snapshot.data.profilePic),
+                                  height: 36,
+                                  width: 36,
+                                  fit: BoxFit.scaleDown,
+                                )
+                            ),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                OtherUserProfilePage.routeName,
+                                arguments: {
+                                  'uid': widget.uid,
+                                },
+                              );
+                            },
+                          ),
                           const SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,13 +156,24 @@ class _CommentState extends State<Comment> {
                                 padding: const EdgeInsets.symmetric(vertical: 5),
                                 child: Row(
                                   children: [
-                                    Text(
-                                      widget.userName,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
+                                    GestureDetector(
+                                      child: Text(
+                                        widget.userName,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          OtherUserProfilePage.routeName,
+                                          arguments: {
+                                            'uid': widget.uid,
+                                          },
+                                        );
+                                      },
                                     ),
                                     const SizedBox(width: 5),
                                     Text(

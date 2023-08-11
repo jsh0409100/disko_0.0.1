@@ -15,16 +15,17 @@ import '../../../common/widgets/common_app_bar.dart';
 import '../../../models/post_card_model.dart';
 import '../../../src/providers.dart';
 import '../../chat/screens/chat_screen.dart';
+import '../../profile/screens/other_user_profile_page.dart';
 import '../../report/report_screen.dart';
 import '../../write_post/screens/edit_post_page.dart';
 import '../controller/post_controller.dart';
 import '../widgets/custom_image_provider.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
-  final String postId;
+  final PostCardModel post;
   const DetailPage({
     Key? key,
-    required this.postId,
+    required this.post,
   }) : super(key: key);
 
   static const routeName = '/detail-screen';
@@ -129,6 +130,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
           ChatScreen.routeName,
           arguments: {
             'peerUid': post.uid,
+            'peerName': post.userName,
           },
         );
         break;
@@ -149,7 +151,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getPostByPostId(widget.postId),
+        future: getPostByPostId(widget.post.postId),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
@@ -207,28 +209,43 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                             ),
                                           )
                                         : SizedBox(),
-                                    ClipRRect(
-                                        borderRadius: BorderRadius.circular(100),
-                                        child: Image(
-                                          image: NetworkImage(snapshot.data!.profilePic),
-                                          height: 43,
-                                          width: 43,
-                                          fit: BoxFit.scaleDown,
-                                        )),
-                                    const SizedBox(
-                                      width: 12,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          snapshot.data!.displayName,
-                                          style: const TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w600,
+                                    GestureDetector(
+                                      child: Row(
+                                        children: [
+                                          ClipRRect(
+                                              borderRadius: BorderRadius.circular(100),
+                                              child: Image(
+                                                image: NetworkImage(snapshot.data!.profilePic),
+                                                height: 43,
+                                                width: 43,
+                                                fit: BoxFit.scaleDown,
+                                              )),
+                                          const SizedBox(
+                                            width: 12,
                                           ),
-                                        ),
-                                      ],
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                snapshot.data!.displayName,
+                                                style: const TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          OtherUserProfilePage.routeName,
+                                          arguments: {
+                                            'uid': widget.post.uid,
+                                          },
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),

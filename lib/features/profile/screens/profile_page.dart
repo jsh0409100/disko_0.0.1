@@ -27,7 +27,7 @@ class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({
     Key? key,
     required this.user,
-    required this.uid,
+    required this.uid, required follow,
   }) : super(key: key);
 
   @override

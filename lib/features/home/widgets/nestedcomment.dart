@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/utils/utils.dart';
+import '../../profile/screens/other_user_profile_page.dart';
+import '../controller/post_controller.dart';
+import 'bottom_nestedcomment_field.dart';
 
 class NestedComment extends StatefulWidget {
   final String userName, text, uid, postId, commentId, nestedcommentId;
@@ -52,49 +55,62 @@ class _NestedCommentState extends State<NestedComment> {
     }
 
     return FutureBuilder(
-        future: getUserDataByUid(widget.uid),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData == false) {
-            return Card(
-              color: Colors.grey.shade300,
-              child: Column(children: [
-                SizedBox(
-                  height: 70,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                ),
-                const SizedBox(
-                  height: 11,
-                )
-              ]),
-            );
-          }
-          return SizedBox(
-            height: 100,
-            child: Row(
-              children: [
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
+      future: getUserDataByUid(widget.uid),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData == false) {
+          return Card(
+            color: Colors.grey.shade300,
+            child: Column(children: [
+              SizedBox(
+                height: 70,
+                width: MediaQuery.of(context).size.width * 0.9,
+              ),
+              const SizedBox(
+                height: 11,
+              )
+            ]),
+          );
+        }
+        return SizedBox(
+          height: 100,
+          child: Row(
+            children: [
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Image(
                               image: NetworkImage(snapshot.data.profilePic),
                               height: 36,
                               width: 36,
                               fit: BoxFit.scaleDown,
-                            )),
-                        const SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
+                            )
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            OtherUserProfilePage.routeName,
+                            arguments: {
+                              'uid': widget.uid,
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              GestureDetector(
+                                child: Text(
                                   widget.userName,
                                   style: const TextStyle(
                                     fontSize: 14,
@@ -102,20 +118,19 @@ class _NestedCommentState extends State<NestedComment> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  readTimestamp(widget.time),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              width: 200,
-                              child: Text(
-                                widget.text,
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    OtherUserProfilePage.routeName,
+                                    arguments: {
+                                      'uid': widget.uid,
+                                    },
+                                  );
+                                },
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                readTimestamp(widget.time),
                                 style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,

@@ -45,19 +45,8 @@ class AuthController {
     );
   }
 
-  void loginverifyOTP(
-      BuildContext context, String verificationId, String userOTP, String countryCode) {
-    authRepository.loginverifyOTP(
-      context: context,
-      verificationId: verificationId,
-      userOTP: userOTP,
-      countryCode: countryCode,
-      ref: ref,
-    );
-  }
-
-  void saveUserDataToFirebase(BuildContext context, String name, File? profilePic,
-      String countryCode, String description, List<String> follow) {
+  void saveUserDataToFirebase(
+      BuildContext context, String name, File? profilePic, String countryCode, String description, List<String> follow) {
     authRepository.saveUserDataToFirebase(
       name: name,
       profilePic: profilePic,

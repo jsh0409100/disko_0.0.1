@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/home/widgets/nestedcomment_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../common/utils/utils.dart';
+import '../../profile/screens/other_user_profile_page.dart';
 import 'bottom_nestedcomment_field.dart';
 
 class Comment extends StatefulWidget {
@@ -58,15 +58,13 @@ class _CommentState extends State<Comment> {
 
     void commentBottomsheet() {
       showModalBottomSheet<void>(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         context: context,
         builder: (BuildContext context) {
           return SizedBox(
             height: MediaQuery.of(context).size.height / 2,
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -78,9 +76,7 @@ class _CommentState extends State<Comment> {
                           icon: const Icon(Icons.arrow_back_ios_new)),
                       const Text(
                         '댓글',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                       ),
                     ],
                   ),
@@ -132,14 +128,26 @@ class _CommentState extends State<Comment> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image(
-                                image: NetworkImage(snapshot.data.profilePic),
-                                height: 36,
-                                width: 36,
-                                fit: BoxFit.scaleDown,
-                              )),
+                          GestureDetector(
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Image(
+                                  image: NetworkImage(snapshot.data.profilePic),
+                                  height: 36,
+                                  width: 36,
+                                  fit: BoxFit.scaleDown,
+                                )
+                            ),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                OtherUserProfilePage.routeName,
+                                arguments: {
+                                  'uid': widget.uid,
+                                },
+                              );
+                            },
+                          ),
                           const SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,13 +156,24 @@ class _CommentState extends State<Comment> {
                                 padding: const EdgeInsets.symmetric(vertical: 5),
                                 child: Row(
                                   children: [
-                                    Text(
-                                      widget.userName,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
+                                    GestureDetector(
+                                      child: Text(
+                                        widget.userName,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          OtherUserProfilePage.routeName,
+                                          arguments: {
+                                            'uid': widget.uid,
+                                          },
+                                        );
+                                      },
                                     ),
                                     const SizedBox(width: 5),
                                     Text(

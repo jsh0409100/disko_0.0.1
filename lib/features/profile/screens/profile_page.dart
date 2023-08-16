@@ -29,7 +29,7 @@ class My_ProfilePage extends ConsumerStatefulWidget {
   const My_ProfilePage({
     Key? key,
     required this.user,
-    required this.uid,
+    required this.uid, required follow,
   }) : super(key: key);
 
   @override
@@ -299,12 +299,12 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
   Widget percentage() {
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(right: 50),
+        Padding(
+          padding: const EdgeInsets.only(right: 50),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
+              const Text(
                 'LV1. ',
                 style: TextStyle(
                   color: Color(0xFF191919),
@@ -313,9 +313,9 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
                 ),
               ),
               Text(
-                '0',
-                style: TextStyle(
-                  color: Color (0xFF191919),
+                widget.user.diskoPoint.toString(),
+                style: const TextStyle(
+                  color: Color(0xFF191919),
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
                 ),
@@ -326,7 +326,7 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
         LinearPercentIndicator(
           width: MediaQuery.of(context).size.width - 60,
           lineHeight: 19,
-          percent: 0,
+          percent: widget.user.diskoPoint / 1000,
           progressColor: const Color(0xFFE0D9FF),
           animation: true,
           barRadius: const Radius.circular(15.0),
@@ -358,7 +358,7 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
           }
         },
         borderRadius: const BorderRadius.all(Radius.circular(3)),
-        selectedColor: Color(0xFF7150FF),
+        selectedColor: const Color(0xFF7150FF),
         fillColor: Colors.white,
         constraints: BoxConstraints(
           minHeight: 80,
@@ -383,7 +383,7 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
               future: getUserDataByUid(widget.user.follow[index]),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData == false) {
-                  return Text("has error");
+                  return const Text("has error");
                 } else {
                   return ListTile(
                     leading: CircleAvatar(

@@ -114,7 +114,6 @@ class ChatRepository {
 
     if (doc.exists) {
       final data = doc.get('senderId');
-      final isReceiverOnline = doc.get('isReceiverOnline');
       (data == senderId)
           ? currentChat.update({
               'unreadMessageCount': FieldValue.increment(1),

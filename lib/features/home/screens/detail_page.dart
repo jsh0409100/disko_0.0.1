@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/common/widgets/loading_screen.dart';
 import 'package:disko_001/features/home/widgets/bottom_comment_field.dart';
 import 'package:disko_001/features/home/widgets/comment_list.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +18,18 @@ import '../../../models/user_model.dart';
 import '../../../src/providers.dart';
 import '../../chat/controller/chat_controller.dart';
 import '../../chat/screens/chat_screen.dart';
+import '../../profile/screens/other_user_profile_page.dart';
 import '../../report/report_screen.dart';
 import '../../write_post/screens/edit_post_page.dart';
 import '../controller/post_controller.dart';
+import '../widgets/custom_image_provider.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
   final String postId;
-
+  final PostCardModel post;
   const DetailPage({
     Key? key,
-    required this.postId,
+    required this.post,
   }) : super(key: key);
 
   static const routeName = '/detail-screen';
@@ -273,6 +277,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
           ChatScreen.routeName,
           arguments: {
             'peerUid': post.uid,
+            'peerName': post.userName,
           },
         );
         break;
@@ -297,7 +302,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getPostByPostId(widget.postId),
+        future: getPostByPostId(widget.post.postId),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
@@ -346,7 +351,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 Row(
                                   children: [
                                     post.isQuestion
-                                        ? Text(
+                                        ? const Text(
                                             "Q",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -355,31 +360,44 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                             ),
                                           )
                                         : SizedBox(),
-                                    ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        child: Image(
-                                          image: NetworkImage(
-                                              snapshot.data!.profilePic),
-                                          height: 43,
-                                          width: 43,
-                                          fit: BoxFit.scaleDown,
-                                        )),
-                                    const SizedBox(
-                                      width: 12,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          snapshot.data!.displayName,
-                                          style: const TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w600,
+
+                                    GestureDetector(
+                                      child: Row(
+                                        children: [
+                                          ClipRRect(
+                                              borderRadius: BorderRadius.circular(100),
+                                              child: Image(
+                                                image: NetworkImage(snapshot.data!.profilePic),
+                                                height: 43,
+                                                width: 43,
+                                                fit: BoxFit.scaleDown,
+                                              )),
+                                          const SizedBox(
+                                            width: 12,
                                           ),
-                                        ),
-                                      ],
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                snapshot.data!.displayName,
+                                                style: const TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          OtherUserProfilePage.routeName,
+                                          arguments: {
+                                            'uid': widget.post.uid,
+                                          },
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -458,23 +476,31 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     : Padding(
                                         padding: const EdgeInsets.all(3),
                                         child: SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              3,
+                                          height: MediaQuery.of(context).size.height / 3,
+                                          width: MediaQuery.of(context).size.width * 9,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                             itemCount: post.imagesUrl.length,
-                                            dragStartBehavior:
-                                                DragStartBehavior.start,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2),
-                                                child: Image.network(
-                                                  post.imagesUrl[index],
-                                                ),
+                                            dragStartBehavior: DragStartBehavior.start,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              return GestureDetector(
+                                                onTap: () async {
+                                                  CustomImageProvider customImageProvider =
+                                                      CustomImageProvider(
+                                                    imageUrls: post.imagesUrl.toList(),
+                                                  );
+                                                  showImageViewerPager(
+                                                    context,
+                                                    customImageProvider,
+                                                    swipeDismissible: true,
+                                                    doubleTapZoomable: true,
+                                                  );
+                                                },
+                                                child: SizedBox(
+                                                    height: 150,
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: post.imagesUrl[index],
+                                                    )),
                                               );
                                             },
                                           ),

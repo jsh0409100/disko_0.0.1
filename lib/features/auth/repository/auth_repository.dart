@@ -149,6 +149,8 @@ class AuthRepository {
     required BuildContext context,
     required bool isUserCreated,
     required String description,
+    required String email,
+    required int diskoPoint,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
@@ -163,6 +165,8 @@ class AuthRepository {
         tag: [],
         description: description,
         follow: [],
+        email: email,
+        diskoPoint: diskoPoint,
       );
       await firestore.collection('users').doc(uid).set(user.toJson());
 

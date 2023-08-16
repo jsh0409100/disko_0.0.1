@@ -30,7 +30,8 @@ class NestedComment extends StatefulWidget {
 
 class _NestedCommentState extends State<NestedComment> {
   final user = FirebaseAuth.instance.currentUser;
-  CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
+  CollectionReference postsCollection =
+      FirebaseFirestore.instance.collection('posts');
   bool _isLiked = false;
   Color likeColor = Colors.black;
   Icon likeIcon = const Icon(
@@ -55,60 +56,58 @@ class _NestedCommentState extends State<NestedComment> {
     }
 
     return FutureBuilder(
-      future: getUserDataByUid(widget.uid),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData == false) {
-          return Card(
-            color: Colors.grey.shade300,
-            child: Column(children: [
-              SizedBox(
-                height: 70,
-                width: MediaQuery.of(context).size.width * 0.9,
-              ),
-              const SizedBox(
-                height: 11,
-              )
-            ]),
-          );
-        }
-        return SizedBox(
-          height: 100,
-          child: Row(
-            children: [
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image(
-                              image: NetworkImage(snapshot.data.profilePic),
-                              height: 36,
-                              width: 36,
-                              fit: BoxFit.scaleDown,
-                            )
+        future: getUserDataByUid(widget.uid),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData == false) {
+            return Card(
+              color: Colors.grey.shade300,
+              child: Column(children: [
+                SizedBox(
+                  height: 70,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                ),
+                const SizedBox(
+                  height: 11,
+                )
+              ]),
+            );
+          }
+          return SizedBox(
+            height: 100,
+            child: Row(
+              children: [
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image(
+                                image: NetworkImage(snapshot.data.profilePic),
+                                height: 36,
+                                width: 36,
+                                fit: BoxFit.scaleDown,
+                              )),
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              OtherUserProfilePage.routeName,
+                              arguments: {
+                                'uid': widget.uid,
+                              },
+                            );
+                          },
                         ),
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            OtherUserProfilePage.routeName,
-                            arguments: {
-                              'uid': widget.uid,
-                            },
-                          );
-                        },
-                      ),
-                      const SizedBox(width: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
+                        const SizedBox(width: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(children: [
                               GestureDetector(
                                 child: Text(
                                   widget.userName,
@@ -136,7 +135,7 @@ class _NestedCommentState extends State<NestedComment> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ),
+                            ]),
                             Row(
                               children: [
                                 Row(
@@ -176,8 +175,10 @@ class _NestedCommentState extends State<NestedComment> {
                                       color: likeColor,
                                       style: IconButton.styleFrom(
                                         minimumSize: Size.zero,
-                                        padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
-                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 5, 5, 5),
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
                                       ),
                                     ),
                                     Text(

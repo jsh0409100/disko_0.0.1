@@ -25,7 +25,6 @@ import '../controller/post_controller.dart';
 import '../widgets/custom_image_provider.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
-  final String postId;
   final PostCardModel post;
   const DetailPage({
     Key? key,
@@ -240,6 +239,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     borderRadius: BorderRadius.circular(9))),
                           ),
                           onPressed: () {
+                            //ToDo 공유기능 이어서 만들기
+                            /*
                             for (String uid in checkUser) {
                               print(uid);
                               ref.read(chatControllerProvider).sendPostMessage(
@@ -248,6 +249,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     uid,
                                   );
                             }
+
+                             */
                           },
                           child: const Text(
                             '보내기',

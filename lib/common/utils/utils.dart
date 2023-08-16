@@ -22,6 +22,12 @@ Future<List<String>> getFollowByUid(String uid) async{
   return userFollow.data()!['follow'];
 }
 
+Future<List<DocumentSnapshot>> getScrapListByUid(String uid) async{
+  QuerySnapshot userScrap = await FirebaseFirestore.instance.collection('users').doc(uid).collection('Scrap').get();
+  return userScrap.docs;
+}
+
+
 Stream<UserModel> getUserStreamByUid(String uid) {
   return FirebaseFirestore.instance
       .collection('users')

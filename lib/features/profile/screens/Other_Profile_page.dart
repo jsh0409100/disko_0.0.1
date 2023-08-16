@@ -7,7 +7,6 @@ import 'package:disko_001/features/write_post/controller/write_post_controller.d
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../common/widgets/error_text.dart';
@@ -19,32 +18,31 @@ import 'other_user_profile_page.dart';
 const List<Widget> follow = <Widget>[
   Text('활동내역'),
   Text('팔로우'),
-  Text('스크랩'),
 ];
 
-class My_ProfilePage extends ConsumerStatefulWidget {
+class Other_ProfilePage extends ConsumerStatefulWidget {
   final String uid;
   final UserModel user;
 
-  const My_ProfilePage({
+  const Other_ProfilePage({
     Key? key,
     required this.user,
     required this.uid,
   }) : super(key: key);
 
   @override
-  ConsumerState<My_ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<Other_ProfilePage> createState() => __ProfilePageState();
 }
 
-class _ProfilePageState extends ConsumerState<My_ProfilePage> {
+class __ProfilePageState extends ConsumerState<Other_ProfilePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   CollectionReference currUser = FirebaseFirestore.instance.collection("users");
   String test = 'test';
   File? image;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController followController = TextEditingController();
-  final List<bool> _selectedbutton = <bool>[true, false, false];
-  String state = '';
+  final List<bool> _selectedbutton = <bool>[true, false];
+  bool state = true;
   bool isFollowed = false;
 
   @override
@@ -72,7 +70,15 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                decideWidgetBasedOnState(state, context),
+                state == true
+                    ? Container(
+                        height: MediaQuery.of(context).size.height / 2.3,
+                        child: myPost(context),
+                      )
+                    : Container(
+                        height: MediaQuery.of(context).size.height / 2.3,
+                        child: followList(context),
+                      )
               ],
             ),
           ],
@@ -83,40 +89,45 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
 
   Widget myPost(BuildContext context) {
     return ref.watch(searchMyPostProvider(widget.uid)).when(
-          data: (posts) => ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                return FutureBuilder(
-                    future: getUserDataByUid(posts[index].uid),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData == false) {
-                        return Card(
-                          color: Colors.grey.shade300,
-                          child: Column(children: [
-                            SizedBox(
-                              height: 180,
-                              width: MediaQuery.of(context).size.width * 0.9,
-                            ),
-                            const SizedBox(
-                              height: 11,
-                            )
-                          ]),
-                        );
-                      } else {
-                        return Post(
-                          post: posts[index],
-                        );
-                      }
-                    });
-              }),
-          error: (error, stackTrace) => ErrorText(
-            error: error.toString(),
-          ),
-          loading: () => const LoadingScreen(),
-        );
+      data: (posts) => ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: posts.length,
+        itemBuilder: (context, index) {
+          return FutureBuilder(
+            future: getUserDataByUid(posts[index].uid),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData == false) {
+                return Card(
+                  color: Colors.grey.shade300,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 180,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                      ),
+                      const SizedBox(
+                        height: 11,
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return Post(
+                  post: posts[index],
+                );
+              }
+            },
+          );
+        },
+      ),
+      error: (error, stackTrace) => ErrorText(
+        error: error.toString(),
+      ),
+      loading: () => const LoadingScreen(),
+    );
   }
+
 
   Widget size() {
     return SizedBox(width: MediaQuery.of(context).size.width * 0.03);
@@ -346,12 +357,10 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
             setState(() {
               for (int i = 0; i < _selectedbutton.length; i++) {
                 _selectedbutton[i] = i == index;
-                if (index == 0){
-                  state = '';
-                } else if (index == 1){
-                  state = '팔로우';
-                } else if (index == 2){
-                  state = '스크랩';
+                if (i == index) {
+                  state = false;
+                } else {
+                  state = true;
                 }
               }
             });
@@ -362,7 +371,7 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
         fillColor: Colors.white,
         constraints: BoxConstraints(
           minHeight: 80,
-          minWidth: MediaQuery.of(context).size.width - 300,
+          minWidth: MediaQuery.of(context).size.width - 250,
         ),
         textStyle: const TextStyle(
             //fontWeight: FontWeight.w500,
@@ -415,112 +424,5 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
                 }
               });
         });
-  }
-
-  Widget scrap(BuildContext context) {
-    return FutureBuilder<List<DocumentSnapshot>>(
-      future: getScrapListByUid(widget.uid),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LoadingScreen();
-        } else if (snapshot.hasError) {
-          return Text('에러 발생 : ${snapshot.error}');
-        } else if (!snapshot.hasData) {
-          return const Text('데이터 없음');
-        } else {
-          final documents = snapshot.data!;
-          return SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: documents.map((documentSnapshot) {
-                final data = documentSnapshot.data() as Map<String, dynamic>?;
-                if (data == null) {
-                  return const ListTile(
-                    title: Text('문서 ID 없음'),
-                  );
-                }
-                final scrapID = data['postID'];
-                return ref.watch(searchMyScrapProvider(scrapID)).when(
-                  data: (posts) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: posts.length,
-                          itemBuilder: (context, index) {
-                            return FutureBuilder(
-                              future: getUserDataByUid(posts[index].uid),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return const LoadingScreen();
-                                } else if (snapshot.hasError) {
-                                  return Text('에러 발생 : ${snapshot.error}');
-                                } else if (!snapshot.hasData) {
-                                  return const Text('데이터 없음');
-                                } else {
-                                  return Post(
-                                    post: posts[index],
-                                  );
-                                }
-                              },
-                            );
-                          },
-                        ),
-                        // 스크랩 항목과 항목 사이의 간격
-                        SizedBox(height: 10),
-                      ],
-                    );
-                  },
-                  error: (error, stackTrace) => ErrorText(
-                    error: error.toString(),
-                  ),
-                  loading: () => const LoadingScreen(),
-                );
-              }).toList(),
-            ),
-          );
-        }
-      },
-    );
-  }
-
-
-
-  Future<List<String>> getScrappedPostIDs(BuildContext context) async{
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.uid)
-        .collection('Scrap')
-        .get();
-
-    List<String> scrappedPostIDs = [];
-    querySnapshot.docs.forEach((doc){
-      scrappedPostIDs.add(doc['postID']);
-    });
-
-    return scrappedPostIDs;
-  }
-
-  Widget decideWidgetBasedOnState(String state, BuildContext context) {
-    switch (state) {
-      case '팔로우':
-        return Container(
-          height: MediaQuery.of(context).size.height / 2.3,
-          child: followList(context),
-        );
-      case '스크랩':
-         return Container(
-          height: MediaQuery.of(context).size.height / 2.3,
-          child: scrap(context),
-        );
-      default:
-        return Container(
-          height: MediaQuery.of(context).size.height / 2.3,
-          child: myPost(context),
-        );
-    }
   }
 }

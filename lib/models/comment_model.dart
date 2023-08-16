@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CommentModel {
-  final String userName, text, uid, commentId;
+  final String userName, text, uid, commentId, postId;
   final List<String> likes;
   final Timestamp time;
   final int commentCount;
@@ -14,6 +14,7 @@ class CommentModel {
     required this.likes,
     required this.commentId,
     required this.commentCount,
+    required this.postId,
   });
 
   factory CommentModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +30,7 @@ class CommentModel {
         uid: json['uid'],
         commentId: json['commentId'],
         commentCount: json['commentCount'],
+        postId: json['postId'],
     );
   }
 
@@ -40,5 +42,6 @@ class CommentModel {
     'uid': uid,
     'commentId': commentId,
     'commentCount': commentCount,
+    'postId' : postId,
   };
 }

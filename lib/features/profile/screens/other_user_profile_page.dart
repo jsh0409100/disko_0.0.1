@@ -3,6 +3,7 @@ import 'package:disko_001/features/profile/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/widgets/common_app_bar.dart';
+import 'Other_Profile_page.dart';
 
 class OtherUserProfilePage extends StatefulWidget {
   final String uid;
@@ -29,7 +30,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
               title: '',
               appBar: AppBar(),
             ),
-            body: ProfilePage(
+            body: Other_ProfilePage(
               user: snapshot.data,
               uid: widget.uid,
             ),

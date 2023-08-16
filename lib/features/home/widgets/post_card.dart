@@ -30,7 +30,11 @@ class PostCard extends ConsumerStatefulWidget {
 
 class _PostCardState extends ConsumerState<PostCard> {
   final user = FirebaseAuth.instance.currentUser;
+  final uid = FirebaseAuth.instance.currentUser!.uid;
   CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
+  CollectionReference scrapCollection = FirebaseFirestore.instance.collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('Scrap');
   bool _isLiked = false;
   Color likeColor = Colors.black;
   Icon likeIcon = const Icon(
@@ -140,6 +144,25 @@ class _PostCardState extends ConsumerState<PostCard> {
 
     void showMenu(String value) {
       switch (value) {
+        case '스크랩' :
+          Map<String, dynamic> scrapData = {
+            'time' : Timestamp.now(),
+            'postID' : widget.post.postId,
+          };
+
+          isPostScrapped().then((isScrapped){
+            if(isScrapped){
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('스크랩이 이미 되었습니다!'),
+                  duration: Duration(seconds: 1),
+                ),
+              );
+            } else{
+              saveToScrap(scrapData);
+            }
+          });
+          break;
         case '메세지 보내기':
           Navigator.pushNamed(
             context,
@@ -238,7 +261,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                             onSelected: showMenu,
                             itemBuilder: (BuildContext context) {
                               return (widget.post.uid != user!.uid)
-                                  ? {'메세지 보내기', '신고하기'}.map((String choice) {
+                                  ? {'메세지 보내기','스크랩', '신고하기'}.map((String choice) {
                                       return PopupMenuItem<String>(
                                         value: choice,
                                         child: choice == '신고하기'
@@ -250,7 +273,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                                             : Text(choice),
                                       );
                                     }).toList()
-                                  : {'글 수정', '글 삭제', '앱 내 공유'}.map((String choice) {
+                                  : {'글 수정', '글 삭제','스크랩', '앱 내 공유'}.map((String choice) {
                                       return PopupMenuItem<String>(
                                         value: choice,
                                         child: choice == '글 삭제'
@@ -425,5 +448,27 @@ class _PostCardState extends ConsumerState<PostCard> {
         )
       ],
     );
+  }
+
+  void saveToScrap(Map<String, dynamic> scrapData) {
+    scrapCollection.add(scrapData);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('스크랩이 완료되었습니다!'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  Future<bool> isPostScrapped() async{
+    String userUID = uid;
+    QuerySnapshot snapshot =
+      await FirebaseFirestore.instance.collection('users/$userUID/Scrap').get();
+
+    List<dynamic> scrappedPostIDs = snapshot.docs.map((doc) => doc['postID']).toList();
+    List<String> cast = scrappedPostIDs.cast<String>().toList();
+
+    return cast.contains(widget.post.postId);
   }
 }

@@ -34,7 +34,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     )),
               ],
             ),
-            body: ProfilePage(
+            body: My_ProfilePage(
               user: snapshot.data,
               uid: FirebaseAuth.instance.currentUser!.uid,
             ),

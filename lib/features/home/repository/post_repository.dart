@@ -68,6 +68,7 @@ class PostRepository {
       likes: likes,
       commentId: commentId,
       commentCount: 0,
+      postId: postId,
     );
     return firestore.collection('posts').doc(postId).collection('comment').doc(commentId).set(
           comment.toJson(),

@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ final writePostRepositoryProvider = Provider(
 class WritePostRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
+
   WritePostRepository({
     required this.firestore,
     required this.auth,
@@ -110,11 +112,12 @@ class WritePostRepository {
       final List<PostCardModel> postCards = [];
 
       for (var post in titleSnapshot.docs) {
-        postCards.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+        postCards
+            .add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
       }
-
       for (var post in textSnapshot.docs) {
-        postCards.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+        postCards
+            .add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
       }
 
       return postCards;
@@ -124,24 +127,79 @@ class WritePostRepository {
   Stream<List<PostCardModel>> searchMyPost(String query) {
     return _posts
         .where(
-          'uid',
-          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
-          isLessThan: query.isEmpty
-              ? null
-              : query.substring(0, query.length - 1) +
-                  String.fromCharCode(
-                    query.codeUnitAt(query.length - 1) + 1,
-                  ),
+      'uid',
+      isEqualTo: query,
+    )
+        .snapshots()
+        .map((event) {
+      List<PostCardModel> postcard = [];
+      for (var post in event.docs) {
+        postcard
+            .add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+      }
+      return postcard;
+    });
+
+    /*
+    final commentUidQuery = _comment
+        .where(
+      'uid',
+      isEqualTo: query,
+    )
+        .snapshots();
+
+    final List<Stream<QuerySnapshot>> postStreams = []; // List to hold post streams
+
+    commentUidQuery.listen((realSnapshot) {
+      for (final doc in realSnapshot.docs) {
+        final postId = doc.get('postId');
+        final postStream = _posts.where('postId', isEqualTo: postId).snapshots();
+        postStreams.add(postStream); // Add post stream to the list
+      }
+    });
+
+    return Rx.combineLatest2(
+      postUidQuery,
+      Rx.combineLatestList(postStreams), // Combine the list of post streams
+          (QuerySnapshot titleSnapshot, List<QuerySnapshot> postSnapshotsList) {
+        final List<PostCardModel> postCards = [];
+
+        for (var post in titleSnapshot.docs) {
+          postCards.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+        }
+/*
+        for (var postSnapshots in postSnapshotsList) {
+          for (var post in postSnapshots.docs) {
+            postCards.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+          }
+        }
+*/
+        return postCards;
+      },
+    );
+     */
+  }
+
+
+  Stream<List<PostCardModel>> search_My_Scrap(String query) {
+    return _posts
+        .where(
+          'postId',
+          isEqualTo: query,
         )
         .snapshots()
         .map((event) {
       List<PostCardModel> postcard = [];
       for (var post in event.docs) {
-        postcard.add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
+        postcard
+            .add(PostCardModel.fromJson(post.data() as Map<String, dynamic>));
       }
       return postcard;
     });
   }
 
   CollectionReference get _posts => firestore.collection('posts');
+
+  Query<Map<String, dynamic>> get _comment =>
+      firestore.collectionGroup('comment');
 }

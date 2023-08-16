@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/utils/utils.dart';
-import '../../starting/start_page.dart';
+import '../../../../models/user_model.dart';
+import '../../../starting/start_page.dart';
+import 'account_setting_page.dart';
 
 class SettingScreen extends StatelessWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+  final UserModel user;
+  const SettingScreen({Key? key, required this.user}) : super(key: key);
 
   static const routeName = '/setting-screen';
 
@@ -85,6 +87,7 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isSnackbarDisplayed = false;
     return Scaffold(
         appBar: AppBar(
           title: const Text('설정'),
@@ -103,9 +106,25 @@ class SettingScreen extends StatelessWidget {
               child: Text("알림설정",
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black)),
             ),
-            const SettingOption(
+            SettingOption(
               option: "알림 및 소리",
-              action: null,
+              action: () {
+                if (!isSnackbarDisplayed) {
+                  isSnackbarDisplayed = true;
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                        const SnackBar(
+                          content: Text("아직 지원하지 않는 기능입니다"),
+                          duration: Duration(seconds: 3),
+                        ),
+                      )
+                      .closed
+                      .then((reason) {
+                    // Snackbar is dismissed
+                    isSnackbarDisplayed = false;
+                  });
+                }
+              },
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,13 +146,32 @@ class SettingScreen extends StatelessWidget {
               child: Text("계정설정",
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black)),
             ),
-            const SettingOption(
-              option: "계정, 정보 관리",
-              action: null,
+            SettingOption(
+              option: "계정/정보 관리",
+              action: () {
+                Navigator.pushNamed(context, AccountSettingScreen.routeName,
+                    arguments: {'user': user});
+              },
             ),
-            const SettingOption(
+            SettingOption(
               option: "차단 사용자 관리",
-              action: null,
+              action: () {
+                if (!isSnackbarDisplayed) {
+                  isSnackbarDisplayed = true;
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                        const SnackBar(
+                          content: Text("아직 지원하지 않는 기능입니다"),
+                          duration: Duration(seconds: 3),
+                        ),
+                      )
+                      .closed
+                      .then((reason) {
+                    // Snackbar is dismissed
+                    isSnackbarDisplayed = false;
+                  });
+                }
+              },
             ),
             Container(
               width: double.infinity,
@@ -142,26 +180,89 @@ class SettingScreen extends StatelessWidget {
               child: Text("기타설정",
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black)),
             ),
-            const SettingOption(
+            SettingOption(
               option: " FAQ",
-              action: null,
+              action: () {
+                if (!isSnackbarDisplayed) {
+                  isSnackbarDisplayed = true;
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                        const SnackBar(
+                          content: Text("아직 지원하지 않는 기능입니다"),
+                          duration: Duration(seconds: 3),
+                        ),
+                      )
+                      .closed
+                      .then((reason) {
+                    // Snackbar is dismissed
+                    isSnackbarDisplayed = false;
+                  });
+                }
+              },
             ),
-            const SettingOption(
+            SettingOption(
               option: "국가변경",
-              action: null,
+              action: () {
+                if (!isSnackbarDisplayed) {
+                  isSnackbarDisplayed = true;
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                        const SnackBar(
+                          content: Text("아직 지원하지 않는 기능입니다"),
+                          duration: Duration(seconds: 3),
+                        ),
+                      )
+                      .closed
+                      .then((reason) {
+                    // Snackbar is dismissed
+                    isSnackbarDisplayed = false;
+                  });
+                }
+              },
             ),
-            const SettingOption(
+            SettingOption(
               option: "업데이트",
-              action: null,
+              action: () {
+                if (!isSnackbarDisplayed) {
+                  isSnackbarDisplayed = true;
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                        const SnackBar(
+                          content: Text("아직 지원하지 않는 기능입니다"),
+                          duration: Duration(seconds: 3),
+                        ),
+                      )
+                      .closed
+                      .then((reason) {
+                    // Snackbar is dismissed
+                    isSnackbarDisplayed = false;
+                  });
+                }
+              },
             ),
             SettingOption(
                 option: "로그아웃",
                 action: () async {
                   _showMyDialog(context);
                 }),
-            const SettingOption(
+            SettingOption(
               option: "탈퇴하기",
-              action: null,
+              action: () {
+                if (!isSnackbarDisplayed) {
+                  isSnackbarDisplayed = true;
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                        const SnackBar(
+                          content: Text("아직 지원하지 않는 기능입니다"),
+                          duration: Duration(seconds: 3),
+                        ),
+                      )
+                      .closed
+                      .then((reason) {
+                    isSnackbarDisplayed = false;
+                  });
+                }
+              },
             ),
           ],
         ));
@@ -170,7 +271,7 @@ class SettingScreen extends StatelessWidget {
 
 class SettingOption extends StatelessWidget {
   final String option;
-  final Function? action;
+  final Function action;
 
   const SettingOption({
     Key? key,
@@ -181,7 +282,7 @@ class SettingOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      buttonColor: action == null ? const Color(0xFFFCFCFC) : const Color(0xFFFFFFFF),
+      buttonColor: const Color(0xFFFFFFFF),
       child: SizedBox(
           width: double.infinity,
           child: TextButton(
@@ -194,9 +295,7 @@ class SettingOption extends StatelessWidget {
               ),
             ),
             onPressed: () => {
-              action == null
-                  ? showSnackBar(context: context, content: "로그아웃, 탈퇴하기를 제외한 모든 설정은 준비중에 있습니다.")
-                  : action!()
+              action(),
             },
           )),
     );

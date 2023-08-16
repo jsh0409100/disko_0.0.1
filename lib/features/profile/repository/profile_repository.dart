@@ -54,4 +54,24 @@ class ProfileRepository {
       currentUser.update(tagg.toJson());
     }
   }
+
+  void increaseDiskoPointFirebase({
+    required int point,
+  }) {
+    final doc = firestore.collection('users').doc(auth.currentUser!.uid);
+
+    doc.update({
+      'diskoPoint': FieldValue.increment(point),
+    });
+  }
+
+  void updateEmailFirebase({
+    required String newEmail,
+  }) {
+    final doc = firestore.collection('users').doc(auth.currentUser!.uid);
+
+    doc.update({
+      'email': newEmail,
+    });
+  }
 }

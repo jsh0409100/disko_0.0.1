@@ -114,7 +114,6 @@ class ChatRepository {
 
     if (doc.exists) {
       final data = doc.get('senderId');
-      final isReceiverOnline = doc.get('isReceiverOnline');
       (data == senderId)
           ? currentChat.update({
               'unreadMessageCount': FieldValue.increment(1),
@@ -158,6 +157,41 @@ class ChatRepository {
       // showSnackBar(context: context, content: e.toString());
     }
   }
+
+  void sendPostMessage({
+    required BuildContext context,
+    required String text,
+    required String receiverUid,
+    required UserModel senderUser,
+  }) async {
+    try {
+      var timeSent = Timestamp.now();
+      var messageId = const Uuid().v1();
+
+      _saveMessageToMessageSubcollection(
+        receiverUid: receiverUid,
+        text: text,
+        messageId: messageId,
+        messageType: MessageEnum.share,
+        timeSent: timeSent,
+        username: senderUser.displayName,
+        coordinates: null,
+      );
+      _saveMessageToLatestMessage(
+        receiverUid: receiverUid,
+        text: text,
+        messageId: messageId,
+        messageType: MessageEnum.share,
+        timeSent: timeSent,
+        username: senderUser.displayName,
+      );
+    } catch (e) {
+      // showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+
+
 
   // void toggleUserOnline({
   //   required BuildContext context,

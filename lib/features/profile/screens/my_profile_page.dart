@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/profile/screens/profile_page.dart';
+import 'package:disko_001/features/profile/screens/setting_page.dart';
 import 'package:disko_001/features/starting/start_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +49,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               actions: [
                 IconButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, SettingScreen.routeName);
+                      Navigator.pushNamed(context, SettingScreen.routeName,
+                          arguments: {'user': snapshot.data});
                     },
                     icon: const Icon(
                       Icons.settings_outlined,
@@ -55,7 +58,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     )),
               ],
             ),
-            body: ProfilePage(
+            body: My_ProfilePage(
               user: snapshot.data,
               uid: FirebaseAuth.instance.currentUser!.uid,
               follow : snapshot.data.follow,

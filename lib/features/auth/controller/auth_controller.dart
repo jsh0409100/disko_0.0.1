@@ -33,8 +33,8 @@ class AuthController {
     authRepository.signInWithPhone(context, phoneNumber);
   }
 
-  void verifyOTP(BuildContext context, String verificationId, String userOTP,
-      String countryCode, bool itisSignUp) {
+  void verifyOTP(BuildContext context, String verificationId, String userOTP, String countryCode,
+      bool itisSignUp) {
     authRepository.verifyOTP(
       context: context,
       verificationId: verificationId,
@@ -60,7 +60,15 @@ class AuthController {
   }
 
   void saveProfileDataToFirebase(
-      BuildContext context, String name, File? profilePic, String countryCode, List<String> tag, String description, List<String> follow) {
+      BuildContext context,
+      String name,
+      File? profilePic,
+      String countryCode,
+      List<String> tag,
+      String description,
+      List<String> follow,
+      String? email,
+      int diskoPoint) {
     authRepository.saveProfileDataToFirebase(
       name: name,
       profilePic: profilePic,
@@ -71,6 +79,8 @@ class AuthController {
       tag: tag,
       description: description,
       follow: follow,
+      email: email,
+      diskoPoint: diskoPoint,
     );
   }
 

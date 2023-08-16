@@ -181,7 +181,6 @@ class PostsListBuilder extends StatelessWidget {
                       commentCount: posts[index].commentCount);
                   return Post(
                     post: post,
-                    user: snapshot.data,
                   );
                 }
               });

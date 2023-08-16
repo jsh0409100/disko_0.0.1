@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/common/widgets/loading_screen.dart';
 import 'package:disko_001/features/home/widgets/bottom_comment_field.dart';
 import 'package:disko_001/features/home/widgets/comment_list.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,14 +14,18 @@ import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/common_app_bar.dart';
 import '../../../models/post_card_model.dart';
+import '../../../models/user_model.dart';
 import '../../../src/providers.dart';
+import '../../chat/controller/chat_controller.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../profile/screens/other_user_profile_page.dart';
 import '../../report/report_screen.dart';
 import '../../write_post/screens/edit_post_page.dart';
 import '../controller/post_controller.dart';
+import '../widgets/custom_image_provider.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
+  final String postId;
   final PostCardModel post;
   const DetailPage({
     Key? key,
@@ -32,14 +39,23 @@ class DetailPage extends ConsumerStatefulWidget {
 }
 
 class _DetailPageState extends ConsumerState<DetailPage> {
-  late final PostCardModel post;
+  List<bool> checkboxValues = [];
+  List<String> checkUser = [];
+  late PostCardModel post;
   final replyController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
-  CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
+  CollectionReference postsCollection =
+      FirebaseFirestore.instance.collection('posts');
+  CollectionReference usersCollection =
+      FirebaseFirestore.instance.collection('users');
   bool _isLiked = false;
   Color likeColor = Colors.black;
   Icon likeIcon = const Icon(Icons.favorite_border);
   late int size = 0;
+
+  void initializeCheckboxList(int snap) {
+    checkboxValues = List<bool>.filled(snap, false);
+  }
 
   void saveNotification({
     required String postId,
@@ -95,19 +111,23 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                     ),
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed(ReportScreen.routeName, arguments: {
+                          Navigator.of(context)
+                              .pushNamed(ReportScreen.routeName, arguments: {
                             'reportedUid': post.uid,
                             'reportedDisplayName': post.userName
                           });
                         },
                         style: TextButton.styleFrom(
                           elevation: 2,
-                          backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         child: Text(
                           '예, 신고할게요',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: Colors.white),
                         )),
                   ],
                 ),
@@ -115,6 +135,136 @@ class _DetailPageState extends ConsumerState<DetailPage> {
             ),
           );
         });
+      },
+    );
+  }
+
+  Future _shareSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder<UserModel>(
+            future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
+            builder: (context, snapshot) {
+              return StatefulBuilder(builder: (context, setState) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const LoadingScreen();
+                } else if (snapshot.hasError) {
+                  return const Text("Error loading data");
+                } else if (!snapshot.hasData) {
+                  return const Text("No data available");
+                }
+                checkboxValues =
+                    List<bool>.filled(snapshot.data!.follow.length, false);
+                return SizedBox(
+                  height: 500,
+                  child: Column(
+                    children: [
+                      const Text(
+                        '공유하기',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.45,
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.follow.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return FutureBuilder(
+                              future: getUserDataByUid(
+                                  snapshot.data!.follow[index]),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshots) {
+                                if (snapshots.hasData == false) {
+                                  return const LoadingScreen();
+                                } else {
+                                  return ListTile(
+                                      leading: CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage: NetworkImage(
+                                          snapshots.data!.profilePic,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        snapshots.data!.displayName,
+                                        style: const TextStyle(
+                                          color: Color(0xFF191919),
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      trailing: Checkbox(
+                                        value: checkboxValues[index],
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            checkboxValues[index] = value!;
+                                            if (checkboxValues[index] == true) {
+                                              print(
+                                                  snapshot.data!.follow[index]);
+                                              checkUser.add(
+                                                  snapshot.data!.follow[index]);
+                                            } else {
+                                              print("remove 통과");
+                                              checkUser.remove(
+                                                  snapshot.data!.follow[index]);
+                                            }
+                                          });
+                                        },
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        checkColor: Colors.white,
+                                        activeColor: const Color(0xFF7150FF),
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.padded,
+                                      ));
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFF7150FF)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(9))),
+                          ),
+                          onPressed: () {
+                            for (String uid in checkUser) {
+                              print(uid);
+                              ref.read(chatControllerProvider).sendPostMessage(
+                                    context,
+                                    widget.postId,
+                                    uid,
+                                  );
+                            }
+                          },
+                          child: const Text(
+                            '보내기',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+            });
       },
     );
   }
@@ -127,6 +277,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
           ChatScreen.routeName,
           arguments: {
             'peerUid': post.uid,
+            'peerName': post.userName,
           },
         );
         break;
@@ -134,12 +285,16 @@ class _DetailPageState extends ConsumerState<DetailPage> {
         _showMyDialog();
         break;
       case '글 수정':
-        Navigator.of(context).pushNamed(EditPostScreen.routeName, arguments: {'post': post});
+        Navigator.of(context)
+            .pushNamed(EditPostScreen.routeName, arguments: {'post': post});
         break;
       case '글 삭제':
         ref.read(postControllerProvider).deletePost(postId: post.postId);
         Navigator.pop(context);
         ref.read(postsProvider.notifier).reloadPage();
+        break;
+      case '앱 내 공유':
+        _shareSheet(context);
         break;
     }
   }
@@ -196,7 +351,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 Row(
                                   children: [
                                     post.isQuestion
-                                        ? Text(
+                                        ? const Text(
                                             "Q",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -205,6 +360,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                             ),
                                           )
                                         : SizedBox(),
+
                                     GestureDetector(
                                       child: Row(
                                         children: [
@@ -250,7 +406,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                   onSelected: showMenu,
                                   itemBuilder: (BuildContext context) {
                                     return (post.uid != user!.uid)
-                                        ? {'메세지 보내기', '신고하기'}.map((String choice) {
+                                        ? {'메세지 보내기', '신고하기'}
+                                            .map((String choice) {
                                             return PopupMenuItem<String>(
                                               value: choice,
                                               child: choice == '신고하기'
@@ -258,12 +415,15 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                                       choice,
                                                       style: TextStyle(
                                                           color:
-                                                              Theme.of(context).colorScheme.error),
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .error),
                                                     )
                                                   : Text(choice),
                                             );
                                           }).toList()
-                                        : {'글 수정', '글 삭제'}.map((String choice) {
+                                        : {'글 수정', '글 삭제', '앱 내 공유'}
+                                            .map((String choice) {
                                             return PopupMenuItem<String>(
                                               value: choice,
                                               child: choice == '글 삭제'
@@ -271,7 +431,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                                       choice,
                                                       style: TextStyle(
                                                           color:
-                                                              Theme.of(context).colorScheme.error),
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .error),
                                                     )
                                                   : Text(choice),
                                             );
@@ -280,7 +442,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: MediaQuery.of(context).size.height / 50),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height / 50),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -295,7 +459,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: MediaQuery.of(context).size.height / 100),
+                                SizedBox(
+                                    height: MediaQuery.of(context).size.height /
+                                        100),
                                 SizedBox(
                                   child: Text(
                                     post.postText,
@@ -311,16 +477,30 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                         padding: const EdgeInsets.all(3),
                                         child: SizedBox(
                                           height: MediaQuery.of(context).size.height / 3,
+                                          width: MediaQuery.of(context).size.width * 9,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                             itemCount: post.imagesUrl.length,
                                             dragStartBehavior: DragStartBehavior.start,
                                             itemBuilder: (BuildContext context, int index) {
-                                              return Padding(
-                                                padding: const EdgeInsets.all(2),
-                                                child: Image.network(
-                                                  post.imagesUrl[index],
-                                                ),
+                                              return GestureDetector(
+                                                onTap: () async {
+                                                  CustomImageProvider customImageProvider =
+                                                      CustomImageProvider(
+                                                    imageUrls: post.imagesUrl.toList(),
+                                                  );
+                                                  showImageViewerPager(
+                                                    context,
+                                                    customImageProvider,
+                                                    swipeDismissible: true,
+                                                    doubleTapZoomable: true,
+                                                  );
+                                                },
+                                                child: SizedBox(
+                                                    height: 150,
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: post.imagesUrl[index],
+                                                    )),
                                               );
                                             },
                                           ),
@@ -328,7 +508,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                       ),
                               ],
                             ),
-                            SizedBox(height: MediaQuery.of(context).size.height / 50),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height / 50),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -366,7 +548,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                       _isLiked = true;
                                     });
                                   }
-                                  await postsCollection.doc(post.postId).update({
+                                  await postsCollection
+                                      .doc(post.postId)
+                                      .update({
                                     'likes': post.likes,
                                   });
                                   if (post.uid != user!.uid) {

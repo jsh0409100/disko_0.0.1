@@ -80,6 +80,7 @@ dependencies:
   material_symbols_icons: ^4.2665.0
   rxdart: ^0.27.7
   flutter_keyboard_visibility: ^5.4.1
+  url_launcher: ^6.1.12
 
 
 dev_dependencies:

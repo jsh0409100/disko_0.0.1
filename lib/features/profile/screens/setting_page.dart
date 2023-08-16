@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../common/utils/utils.dart';
 import '../../starting/start_page.dart';
+import 'FAQ_page.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -26,7 +27,10 @@ class SettingScreen extends StatelessWidget {
             child: AlertDialog(
               title: Text(
                 '정말로 로그아웃 하시겠습니까?',
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyLarge,
                 maxLines: 2,
               ),
               content: SingleChildScrollView(
@@ -38,10 +42,14 @@ class SettingScreen extends StatelessWidget {
                       },
                       style: TextButton.styleFrom(
                         elevation: 2,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: Theme
+                            .of(context)
+                            .colorScheme
+                            .primary,
                       ),
                       child: Text('아니요',
-                          style: Theme.of(context)
+                          style: Theme
+                              .of(context)
                               .textTheme
                               .bodyMedium!
                               .copyWith(color: Colors.white)),
@@ -59,19 +67,27 @@ class SettingScreen extends StatelessWidget {
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                  builder: (BuildContext context) => StartPage(
+                                  builder: (BuildContext context) =>
+                                      StartPage(
                                         itisSignUp: false,
                                       )),
-                              (route) => false);
+                                  (route) => false);
                         },
                         style: TextButton.styleFrom(
                           elevation: 2,
-                          backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                          backgroundColor: Theme
+                              .of(context)
+                              .colorScheme
+                              .onSurfaceVariant,
                         ),
                         child: Text(
                           '로그아웃',
                           style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                          Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: Colors.white),
                         )),
                   ],
                 ),
@@ -83,14 +99,24 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _FAQ(BuildContext context) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => FAQPage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Text('설정'),
           centerTitle: true,
-          backgroundColor: Theme.of(context).colorScheme.onPrimary,
-          surfaceTintColor: Theme.of(context).colorScheme.onPrimary,
+          backgroundColor: Theme
+              .of(context)
+              .colorScheme
+              .onPrimary,
+          surfaceTintColor: Theme
+              .of(context)
+              .colorScheme
+              .onPrimary,
           elevation: 0,
         ),
         body: Column(
@@ -101,7 +127,11 @@ class SettingScreen extends StatelessWidget {
               color: Color(0xFFF9F9F9),
               padding: const EdgeInsets.all(8.0),
               child: Text("알림설정",
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black)),
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: Colors.black)),
             ),
             const SettingOption(
               option: "알림 및 소리",
@@ -112,11 +142,18 @@ class SettingScreen extends StatelessWidget {
               children: [
                 Text('방해금지 시간 설정',
                     style:
-                        Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black)),
+                    Theme
+                        .of(context)
+                        .textTheme
+                        .headlineSmall!
+                        .copyWith(color: Colors.black)),
                 Switch(
                   value: false,
                   onChanged: (value) {},
-                  inactiveThumbColor: Theme.of(context).colorScheme.outline,
+                  inactiveThumbColor: Theme
+                      .of(context)
+                      .colorScheme
+                      .outline,
                 ),
               ],
             ),
@@ -125,7 +162,11 @@ class SettingScreen extends StatelessWidget {
               color: Color(0xFFF9F9F9),
               padding: const EdgeInsets.all(8.0),
               child: Text("계정설정",
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black)),
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: Colors.black)),
             ),
             const SettingOption(
               option: "계정, 정보 관리",
@@ -140,11 +181,17 @@ class SettingScreen extends StatelessWidget {
               color: const Color(0xFFF9F9F9),
               padding: const EdgeInsets.all(8.0),
               child: Text("기타설정",
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black)),
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: Colors.black)),
             ),
-            const SettingOption(
-              option: " FAQ",
-              action: null,
+            SettingOption(
+                option: "FAQ",
+                action: () async {
+                  _FAQ(context);
+                }
             ),
             const SettingOption(
               option: "국가변경",
@@ -181,7 +228,8 @@ class SettingOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      buttonColor: action == null ? const Color(0xFFFCFCFC) : const Color(0xFFFFFFFF),
+      buttonColor: action == null ? const Color(0xFFFCFCFC) : const Color(
+          0xFFFFFFFF),
       child: SizedBox(
           width: double.infinity,
           child: TextButton(
@@ -189,13 +237,19 @@ class SettingOption extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 option,
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black),
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headlineSmall!
+                    .copyWith(color: Colors.black),
                 textAlign: TextAlign.left,
               ),
             ),
-            onPressed: () => {
+            onPressed: () =>
+            {
               action == null
-                  ? showSnackBar(context: context, content: "로그아웃, 탈퇴하기를 제외한 모든 설정은 준비중에 있습니다.")
+                  ? showSnackBar(context: context,
+                  content: "로그아웃, 탈퇴하기를 제외한 모든 설정은 준비중에 있습니다.")
                   : action!()
             },
           )),

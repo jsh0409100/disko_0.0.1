@@ -4,7 +4,8 @@ enum MessageEnum {
   audio('audio'),
   video('video'),
   gif('gif'),
-  location('location');
+  location('location'),
+  share('share');
 
   const MessageEnum(this.type);
   final String type;
@@ -28,6 +29,8 @@ extension ConvertMessage on String {
         return MessageEnum.video;
       case 'location':
         return MessageEnum.location;
+      case 'share':
+        return MessageEnum.share;
       default:
         return MessageEnum.text;
     }

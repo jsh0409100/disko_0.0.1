@@ -22,6 +22,10 @@ final searchMyPostProvider = StreamProvider.family((ref, String query) {
   return ref.watch(writePostRepositoryProvider).searchMyPost(query);
 });
 
+final searchMyScrapProvider = StreamProvider.family((ref, String query) {
+  return ref.watch(writePostRepositoryProvider).search_My_Scrap(query);
+});
+
 class WritePostController {
   final WritePostRepository writePostRepository;
   final ProviderRef ref;

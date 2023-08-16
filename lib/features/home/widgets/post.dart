@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/home/widgets/post_card.dart';
+import 'package:disko_001/models/user_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/utils/utils.dart';

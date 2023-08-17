@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'common/widgets/error_screen.dart';
 import 'features/auth/screens/signup_page.dart';
 import 'features/chat/screens/chat_screen.dart';
+import 'features/profile/screens/settings/FAQPage.dart';
 import 'features/profile/screens/settings/change_email_page.dart';
 import 'features/report/report_screen.dart';
 import 'features/search/screens/search.dart';
@@ -86,6 +87,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case SearchScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const SearchScreen(),
+      );
+    case FAQPage.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const FAQPage(),
       );
     case SettingScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;

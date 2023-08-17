@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../models/user_model.dart';
 import '../../../starting/start_page.dart';
+import 'FAQPage.dart';
 import 'account_setting_page.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -183,21 +184,7 @@ class SettingScreen extends StatelessWidget {
             SettingOption(
               option: " FAQ",
               action: () {
-                if (!isSnackbarDisplayed) {
-                  isSnackbarDisplayed = true;
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                        const SnackBar(
-                          content: Text("아직 지원하지 않는 기능입니다"),
-                          duration: Duration(seconds: 3),
-                        ),
-                      )
-                      .closed
-                      .then((reason) {
-                    // Snackbar is dismissed
-                    isSnackbarDisplayed = false;
-                  });
-                }
+                Navigator.pushNamed(context, FAQPage.routeName);
               },
             ),
             SettingOption(

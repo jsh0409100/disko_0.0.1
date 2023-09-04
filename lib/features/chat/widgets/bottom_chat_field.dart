@@ -16,13 +16,21 @@ import '../screens/make_appointment_screen.dart';
 import 'message_category_card.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
-  const BottomChatField({
+  BottomChatField({
     Key? key,
     required this.receiverUid,
     required this.profilePic,
     required this.receiverDisplayName,
+    required this.isUploading,
+    required this.uploadedFileURL,
+    required this.saveisUploading,
+    required this.scrollToBottom,
   }) : super(key: key);
   final String receiverUid, profilePic, receiverDisplayName;
+  final Function(bool) saveisUploading;
+  final Function() scrollToBottom;
+  bool isUploading = false;
+  String uploadedFileURL = '';
 
   @override
   ConsumerState<BottomChatField> createState() => _SendMessageState();
@@ -87,11 +95,13 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     MessageEnum messageEnum,
   ) {
     ref.read(chatControllerProvider).sendFileMessage(
-          context,
-          file,
-          widget.receiverUid,
-          messageEnum,
-        );
+      context,
+      file,
+      widget.receiverUid,
+      messageEnum,
+      widget.saveisUploading,
+    );
+
     notificationService.sendChatNotification(
       senderDisplayName: user!.displayName,
       receiverId: widget.receiverUid,
@@ -102,6 +112,9 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void selectImage() async {
     File? image = await pickImageFromGallery(context);
     if (image != null) {
+      setState(() {
+        widget.saveisUploading(true);
+      });
       sendFileMessage(image, MessageEnum.image);
     }
   }
@@ -109,6 +122,9 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void selectVideo() async {
     File? video = await pickVideoFromGallery(context);
     if (video != null) {
+      setState(() {
+        widget.saveisUploading(true);
+      });
       sendFileMessage(video, MessageEnum.video);
     }
   }
@@ -116,6 +132,9 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void takePhoto() async {
     File? image = await pickImageFromCamera(context);
     if (image != null) {
+      setState(() {
+        widget.saveisUploading(true);
+      });
       sendFileMessage(image, MessageEnum.image);
     }
   }

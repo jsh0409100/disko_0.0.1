@@ -22,6 +22,7 @@ final chatControllerProvider = Provider((ref) {
 class ChatController {
   final ChatRepository chatRepository;
   final ProviderRef ref;
+
   ChatController({
     required this.chatRepository,
     required this.ref,
@@ -65,6 +66,7 @@ class ChatController {
     File file,
     String receiverUid,
     MessageEnum messageEnum,
+    saveisUploading,
   ) {
     ref.read(userDataAuthProvider).whenData(
           (value) => chatRepository.sendFileMessage(
@@ -74,6 +76,7 @@ class ChatController {
             senderUser: value!,
             messageEnum: messageEnum,
             ref: ref,
+            saveisUploading: saveisUploading,
           ),
         );
   }

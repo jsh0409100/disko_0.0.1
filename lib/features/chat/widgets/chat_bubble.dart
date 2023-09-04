@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/common/widgets/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,11 +10,13 @@ class MyChatBubble extends StatelessWidget {
   final MessageEnum type;
   final String text;
   final Timestamp timeSent;
+  final bool isUploading;
 
   const MyChatBubble({
     required this.text,
     required this.timeSent,
     required this.type,
+    required this.isUploading,
     Key? key,
   }) : super(key: key);
 
@@ -23,17 +26,18 @@ class MyChatBubble extends StatelessWidget {
     final timeFormat = DateFormat('aa hh:mm', 'ko');
     final showTime = timeFormat.format(date);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(showTime),
-        DisplayTextImageGIF(
-          isSender: false,
-          message: text,
-          type: type,
-        ),
-      ],
-    );
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(showTime),
+              DisplayTextImageGIF(
+                isSender: false,
+                message: text,
+                type: type,
+                isUploading: isUploading,
+              ),
+            ],
+          );
   }
 }
 
@@ -41,11 +45,13 @@ class PeerChatBubble extends StatelessWidget {
   final MessageEnum type;
   final String text;
   final Timestamp timeSent;
+  final bool isUploading;
 
   const PeerChatBubble({
     required this.text,
     required this.timeSent,
     required this.type,
+    required this.isUploading,
     Key? key,
   }) : super(key: key);
 
@@ -62,6 +68,7 @@ class PeerChatBubble extends StatelessWidget {
           isSender: false,
           message: text,
           type: type,
+          isUploading: isUploading,
         ),
         Text('$showTime'),
       ],

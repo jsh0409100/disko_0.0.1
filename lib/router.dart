@@ -53,9 +53,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final arguments = settings.arguments as Map<String, dynamic>;
       final peerUid = arguments['peerUid'];
       final peerName = arguments['peerName'];
+      final isUploading = arguments['isUploading'] ?? false;
       return MaterialPageRoute(
         builder: (context) => ChatScreen(
           peerUid: peerUid,
+          isUploading: isUploading,
         ),
       );
     case EditPostScreen.routeName:

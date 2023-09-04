@@ -1,9 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../models/user_model.dart';
-import '../../../starting/start_page.dart';
-import 'account_setting_page.dart';
 
 class FAQPage extends StatefulWidget {
   const FAQPage({Key? key}) : super(key: key);
@@ -38,8 +33,7 @@ class _FAQPageState extends State<FAQPage> {
                 children: [
                   TextButton(
                       onPressed: () => throw Exception(),
-                      child: const Text("Throw Test Exception")
-                  ),
+                      child: const Text("Throw Test Exception")),
                   const Text(
                     '🫱🏻‍🫲🏼 서로 존중해주세요',
                     style: TextStyle(
@@ -124,7 +118,6 @@ class _FAQPageState extends State<FAQPage> {
               expandedHeaderPadding: const EdgeInsets.all(10.0),
               children: [
                 ExpansionPanel(
-                  hasIcon: false,
                   canTapOnHeader: true,
                   headerBuilder: (context, isExpanded) {
                     return ListTile(
@@ -139,8 +132,7 @@ class _FAQPageState extends State<FAQPage> {
                         ),
                         leading: _expanded1
                             ? const Icon(Icons.arrow_right)
-                            : const Icon(Icons.arrow_drop_down)
-                    );
+                            : const Icon(Icons.arrow_drop_down));
                   },
                   body: const Text(
                     '1) 혐오 콘텐츠 및 비속어\n2) 폭력적이거나, 충격적이거나, 유혈적인 콘텐츠\n3) 노출 및 성적 콘텐츠\n4) 정치적 콘텐츠 및 논란이 될 수 있는 사회적 이슈\n5) 비극적, 민감성 콘텐츠\n7) 호도하는 콘텐츠\n',
@@ -155,23 +147,21 @@ class _FAQPageState extends State<FAQPage> {
                   isExpanded: _expanded1,
                 ),
                 ExpansionPanel(
-                  hasIcon: false,
                   canTapOnHeader: true,
                   headerBuilder: (context, isExpanded) {
                     return ListTile(
-                      title: const Text(
-                        '이용제한 방식',
-                        style: TextStyle(
-                          color: Color(0xFF191919),
-                          fontSize: 17,
-                          fontFamily: 'Pretendard',
-                          fontWeight: FontWeight.w700,
+                        title: const Text(
+                          '이용제한 방식',
+                          style: TextStyle(
+                            color: Color(0xFF191919),
+                            fontSize: 17,
+                            fontFamily: 'Pretendard',
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
                         leading: _expanded2
                             ? const Icon(Icons.arrow_right)
-                            : const Icon(Icons.arrow_drop_down)
-                    );
+                            : const Icon(Icons.arrow_drop_down));
                   },
                   body: const Text.rich(
                     TextSpan(

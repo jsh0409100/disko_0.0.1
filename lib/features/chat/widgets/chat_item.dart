@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../features/chat/screens/chat_screen.dart';
+import '../../../models/user_model.dart';
 import '../../profile/screens/other_user_profile_page.dart';
 
 class ChatItem extends StatefulWidget {
@@ -10,6 +11,7 @@ class ChatItem extends StatefulWidget {
   final String text;
   final Timestamp timeSent;
   final int unreadMessageCount;
+  final UserModel user;
 
   const ChatItem({
     Key? key,
@@ -19,6 +21,7 @@ class ChatItem extends StatefulWidget {
     required this.unreadMessageCount,
     required this.peerUid,
     required this.profilePic,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -38,8 +41,7 @@ class _ChatItemState extends State<ChatItem> {
           ChatScreen.routeName,
           arguments: {
             'peerUid': widget.peerUid,
-            'peerDisplayName': widget.name,
-            'profilePic': widget.profilePic,
+            'user': widget.user,
           },
         );
       },
@@ -87,13 +89,11 @@ class _ChatItemState extends State<ChatItem> {
                       children: [
                         Text(
                           widget.name,
-                          style: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500),
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                         ),
                         Text(
                           showTime,
-                          style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w500),
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -103,15 +103,12 @@ class _ChatItemState extends State<ChatItem> {
                         Text(
                           widget.text,
                           style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF767676)),
+                              fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xFF767676)),
                         ),
                         Visibility(
                           visible: (widget.unreadMessageCount != 0),
                           child: CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             radius: 15,
                             child: Text(
                               widget.unreadMessageCount.toString(),

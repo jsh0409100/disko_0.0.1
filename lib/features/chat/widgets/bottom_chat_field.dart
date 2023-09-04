@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:animate_icons/animate_icons.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
@@ -10,19 +9,22 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../common/enums/message_enum.dart';
 import '../../../common/utils/local_notification.dart';
 import '../../../common/utils/utils.dart';
+import '../../../models/user_model.dart';
 import '../../call/controller/call_controller.dart';
 import '../controller/chat_controller.dart';
 import '../screens/make_appointment_screen.dart';
 import 'message_category_card.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
-  const BottomChatField({
-    Key? key,
-    required this.receiverUid,
-    required this.profilePic,
-    required this.receiverDisplayName,
-  }) : super(key: key);
+  const BottomChatField(
+      {Key? key,
+      required this.receiverUid,
+      required this.profilePic,
+      required this.receiverDisplayName,
+      required this.user})
+      : super(key: key);
   final String receiverUid, profilePic, receiverDisplayName;
+  final UserModel user;
 
   @override
   ConsumerState<BottomChatField> createState() => _SendMessageState();
@@ -36,7 +38,6 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   bool isShowOptionsContainer = false;
   bool isRecording = false;
   FocusNode focusNode = FocusNode();
-  final user = FirebaseAuth.instance.currentUser;
   late AnimateIconController animatedController;
   late final NotificationService notificationService;
 
@@ -72,7 +73,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
           widget.receiverUid,
         );
     notificationService.sendChatNotification(
-      senderDisplayName: user!.displayName,
+      senderDisplayName: widget.user.displayName,
       receiverId: widget.receiverUid,
       notificationBody: _userEnterMessage,
     );
@@ -93,7 +94,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
           messageEnum,
         );
     notificationService.sendChatNotification(
-      senderDisplayName: user!.displayName,
+      senderDisplayName: widget.user.displayName,
       receiverId: widget.receiverUid,
       notificationBody: messageEnum.toString(),
     );

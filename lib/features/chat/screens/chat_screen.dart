@@ -1,4 +1,5 @@
 import 'package:disko_001/features/chat/controller/chat_controller.dart';
+import 'package:disko_001/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,10 +14,8 @@ import '../widgets/message_list.dart';
 class ChatScreen extends ConsumerStatefulWidget {
   static const String routeName = '/chat-screen';
   final String peerUid;
-  const ChatScreen({
-    Key? key,
-    required this.peerUid,
-  }) : super(key: key);
+  final UserModel user;
+  const ChatScreen({Key? key, required this.peerUid, required this.user}) : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -82,7 +81,7 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
                         child: Text(
                           '예, 신고할게요',
                           style:
-                          Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
                         )),
                   ],
                 ),
@@ -155,15 +154,14 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
                     PopupMenuButton<String>(
                       onSelected: showMenu,
                       itemBuilder: (BuildContext context) {
-                        return {'신고하기','차단하기','알림끄기','채팅방 나가기'}.map((String choice) {
+                        return {'신고하기', '차단하기', '알림끄기', '채팅방 나가기'}.map((String choice) {
                           return PopupMenuItem<String>(
                             value: choice,
                             child: choice == '신고하기'
                                 ? Text(
-                              choice,
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error),
-                            )
+                                    choice,
+                                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                                  )
                                 : Text(choice),
                           );
                         }).toList();
@@ -183,6 +181,7 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
                       receiverUid: widget.peerUid,
                       profilePic: snapshot.data!.profilePic,
                       receiverDisplayName: snapshot.data!.displayName,
+                      user: widget.user,
                     ),
                   ],
                 )),

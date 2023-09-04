@@ -180,7 +180,7 @@ class NotificationService {
   Future<bool> sendChatNotification({
     required String receiverId,
     required String notificationBody,
-    required String? senderDisplayName,
+    required String senderDisplayName,
   }) async {
     final receiverTokenRef = FirebaseFirestore.instance.collection('userTokens').doc(receiverId);
     final doc = await receiverTokenRef.get();

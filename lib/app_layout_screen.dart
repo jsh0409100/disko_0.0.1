@@ -13,10 +13,12 @@ import '../../../common/utils/local_notification.dart';
 import 'features/home/screens/home_feed_page.dart';
 import 'features/profile/screens/my_profile_page.dart';
 import 'main.dart';
+import 'models/user_model.dart';
 
 class AppLayoutScreen extends StatefulWidget {
+  final UserModel user;
   static const String routeName = '/my-home';
-  const AppLayoutScreen({Key? key}) : super(key: key);
+  const AppLayoutScreen({Key? key, required this.user}) : super(key: key);
   @override
   MyHomeState createState() => MyHomeState();
 }
@@ -26,11 +28,6 @@ class MyHomeState extends State<AppLayoutScreen> {
   String? mtoken = '';
   FirebaseAuth auth = FirebaseAuth.instance;
   int _selectedIndex = 0;
-  final pages = [
-    HomeFeedPage(),
-    const ChatListPage(),
-    const MyProfilePage(),
-  ];
 
   Future<void> setupInteractedMessage() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
@@ -74,7 +71,7 @@ class MyHomeState extends State<AppLayoutScreen> {
       Navigator.pushNamed(
         context,
         ChatScreen.routeName,
-        arguments: {'peerUid': message.data['senderId']},
+        arguments: {'peerUid': message.data['senderId'], 'user': widget.user},
       );
     }
   }
@@ -121,15 +118,6 @@ class MyHomeState extends State<AppLayoutScreen> {
   }
 
   void listenToNotificationStream() => notificationService.behaviorSubject.listen((payload) {
-        print(payload);
-        print(payload);
-        print(payload);
-        print(payload);
-        print(payload);
-        print(payload);
-        print(payload);
-        print(payload);
-        print(payload);
         Map<String, dynamic> notification = jsonDecode(payload!);
         switch (notification['type']) {
           case 'post':
@@ -143,7 +131,10 @@ class MyHomeState extends State<AppLayoutScreen> {
             Navigator.pushNamed(
               context,
               ChatScreen.routeName,
-              arguments: {'peerUid': notification['senderId']},
+              arguments: {
+                'peerUid': notification['senderId'],
+                'user': widget.user,
+              },
             );
         }
       });
@@ -162,6 +153,11 @@ class MyHomeState extends State<AppLayoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      HomeFeedPage(),
+      ChatListPage(user: widget.user),
+      const MyProfilePage(),
+    ];
     return Scaffold(
         body: PageView(
           controller: pageController,

@@ -32,8 +32,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         ),
       );
     case AppLayoutScreen.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => const AppLayoutScreen(),
+        builder: (context) => AppLayoutScreen(user: user),
       );
     case AccountSettingScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
@@ -56,9 +58,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ChatScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
       final peerUid = arguments['peerUid'];
-      final peerName = arguments['peerName'];
+      final user = arguments['user'];
       return MaterialPageRoute(
         builder: (context) => ChatScreen(
+          user: user,
           peerUid: peerUid,
         ),
       );

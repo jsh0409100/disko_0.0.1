@@ -64,11 +64,10 @@ Future main() async {
     sound: true,
   );
 
-  FlutterError.onError = (errorDetails){
-    FirebaseCrashlytics.instance
-        .recordFlutterFatalError(errorDetails);
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
-  PlatformDispatcher.instance.onError = (error, stack){
+  PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
@@ -119,7 +118,7 @@ class MyApp extends ConsumerWidget {
                     itisSignUp: true,
                   );
                 } else {
-                  return const CallPickupScreen(scaffold: AppLayoutScreen());
+                  return CallPickupScreen(scaffold: AppLayoutScreen(user: user));
                 }
               },
               error: (err, trace) {

@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/utils.dart';
+import '../../../models/user_model.dart';
 import '../controller/chat_controller.dart';
 import 'chat_item.dart';
 
 class ChatList extends ConsumerStatefulWidget {
-  const ChatList({Key? key}) : super(key: key);
+  final UserModel user;
+  const ChatList({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   ConsumerState<ChatList> createState() => _ChatListState();
@@ -28,11 +33,10 @@ class _ChatListState extends ConsumerState<ChatList> {
         return ListView.builder(
             itemCount: chatDocs.length,
             itemBuilder: (context, index) {
-              bool currentIsSender = (chatDocs[index].senderId ==
-                  FirebaseAuth.instance.currentUser!.uid);
-              String peerUid = (currentIsSender)
-                  ? chatDocs[index].receiverUid
-                  : chatDocs[index].senderId;
+              bool currentIsSender =
+                  (chatDocs[index].senderId == FirebaseAuth.instance.currentUser!.uid);
+              String peerUid =
+                  (currentIsSender) ? chatDocs[index].receiverUid : chatDocs[index].senderId;
               return FutureBuilder(
                   future: getUserDataByUid(peerUid),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -58,9 +62,9 @@ class _ChatListState extends ConsumerState<ChatList> {
                       profilePic: snapshot.data.profilePic,
                       peerUid: peerUid,
                       timeSent: chatDocs[index].timeSent,
-                      unreadMessageCount: (currentIsSender)
-                          ? 0
-                          : chatDocs[index].unreadMessageCount,
+                      unreadMessageCount:
+                          (currentIsSender) ? 0 : chatDocs[index].unreadMessageCount,
+                      user: widget.user,
                     );
                   });
             });

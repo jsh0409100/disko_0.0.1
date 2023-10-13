@@ -21,6 +21,7 @@ final authRepositoryProvider = Provider(
 class AuthRepository {
   final FirebaseAuth auth;
   final FirebaseFirestore firestore;
+
   AuthRepository({
     required this.auth,
     required this.firestore,
@@ -41,7 +42,7 @@ class AuthRepository {
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
-         // await auth.signInWithCredential(credential);
+          // await auth.signInWithCredential(credential);
         },
         verificationFailed: (e) {
           throw Exception(e.message);
@@ -70,7 +71,7 @@ class AuthRepository {
         smsCode: userOTP,
       );
       await auth.signInWithCredential(credential);
-      if(itis == true){
+      if (itis == true) {
         saveUserDataToFirebase(
           name: '신규 유저',
           profilePic: null,
@@ -82,12 +83,12 @@ class AuthRepository {
           follow: [],
         );
       }
-      if(itis == false){
+      if (itis == false) {
         await auth.signInWithCredential(credential);
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppLayoutScreen.routeName,
-              (route) => false,
+          (route) => false,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -124,9 +125,10 @@ class AuthRepository {
       await firestore.collection('users').doc(uid).set(user.toJson());
 
       if (isUserCreated) {
-        Navigator.pushNamed(
+        Navigator.pushNamedAndRemoveUntil(
           context,
           LandingPage.routeName,
+          (route) => false,
         );
       } else {
         Navigator.pushNamedAndRemoveUntil(
@@ -139,7 +141,6 @@ class AuthRepository {
       // showSnackBar(context: context, content: e.toString());
     }
   }
-
 
   void saveloginUserDataToFirebase({
     required String name,
@@ -171,15 +172,16 @@ class AuthRepository {
       await firestore.collection('users').doc(uid).set(user.toJson());
 
       if (isUserCreated) {
-        Navigator.pushNamed(
+        Navigator.pushNamedAndRemoveUntil(
           context,
           LandingPage.routeName,
+          (route) => false,
         );
       } else {
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppLayoutScreen.routeName,
-              (route) => false,
+          (route) => false,
         );
       }
     } catch (e) {
@@ -243,9 +245,10 @@ class AuthRepository {
       await firestore.collection('users').doc(uid).set(user.toJson());
 
       if (isUserCreated) {
-        Navigator.pushNamed(
+        Navigator.pushNamedAndRemoveUntil(
           context,
           LandingPage.routeName,
+          (route) => false,
         );
       } else {
         Navigator.pushNamedAndRemoveUntil(

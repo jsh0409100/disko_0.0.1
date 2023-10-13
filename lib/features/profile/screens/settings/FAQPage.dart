@@ -124,7 +124,6 @@ class _FAQPageState extends State<FAQPage> {
               expandedHeaderPadding: const EdgeInsets.all(10.0),
               children: [
                 ExpansionPanel(
-                  hasIcon: false,
                   canTapOnHeader: true,
                   headerBuilder: (context, isExpanded) {
                     return ListTile(
@@ -155,7 +154,6 @@ class _FAQPageState extends State<FAQPage> {
                   isExpanded: _expanded1,
                 ),
                 ExpansionPanel(
-                  hasIcon: false,
                   canTapOnHeader: true,
                   headerBuilder: (context, isExpanded) {
                     return ListTile(

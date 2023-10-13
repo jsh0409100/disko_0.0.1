@@ -9,7 +9,10 @@ class SignUpScreen extends ConsumerStatefulWidget {
   static const routeName = '/signup-screen';
   final bool itisSignUp;
 
-  const SignUpScreen({required this.itisSignUp, Key? key, }) : super(key: key);
+  const SignUpScreen({
+    required this.itisSignUp,
+    Key? key,
+  }) : super(key: key);
 
   static String verificationId = "";
 
@@ -35,6 +38,9 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
       ref
           .read(authControllerProvider)
           .signInWithPhone(context, '+${countryCode!.dialCode}$phoneNumber');
+      setState(() {
+        _isVisible = true;
+      });
     } else {
       showSnackBar(context: context, content: '핸드폰 번호와 국가 코드를 입력해주세요');
     }
@@ -47,7 +53,8 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
     verController.dispose();
   }
 
-  void verifyOTP(WidgetRef ref, BuildContext context, String userOTP, String countryCode, bool itisSignUp) {
+  void verifyOTP(WidgetRef ref, BuildContext context, String userOTP,
+      String countryCode, bool itisSignUp) {
     ref.read(authControllerProvider).verifyOTP(
           context,
           SignUpScreen.verificationId,
@@ -57,14 +64,8 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
         );
   }
 
-  void visibility() {
-    setState(() {
-      _isVisible = true;
-    });
-  }
-
   String whattitle() {
-    if(widget.itisSignUp == true){
+    if (widget.itisSignUp == true) {
       return "회원가입";
     } else {
       return "로그인";
@@ -139,7 +140,8 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                   flex: 1,
                   child: GestureDetector(
                     onTap: () async {
-                      final code = await countryPicker.showPicker(context: context);
+                      final code =
+                          await countryPicker.showPicker(context: context);
                       setState(() {
                         countryCode = code;
                       });
@@ -151,7 +153,8 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                             width: 1,
                             color: const Color(0xffC4C4C4),
                           ),
-                          borderRadius: const BorderRadius.all(Radius.circular(5.0))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5.0))),
                       child: Row(
                         children: [
                           const SizedBox(width: 10),
@@ -187,7 +190,9 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                       },
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
+                          borderSide: BorderSide(
+                              width: 1,
+                              color: Color(0xffC4C4C4)), //<-- SEE HERE
                         ),
                         hintText: '휴대폰 번호를 입력해주세요.',
                       ),
@@ -206,8 +211,9 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                 disabledBackgroundColor: const Color(0xff4e4e4e4d),
                 disabledForegroundColor: Colors.white,
               ),
-              onPressed:
-                  phoneNumController.text != "" ? () => {sendPhoneNumber(), visibility()} : null,
+              onPressed: (phone.trim().isEmpty || phone.trim() == '')
+                  ? null
+                  : sendPhoneNumber,
               child: const Text(
                 '인증문자 받기',
                 style: TextStyle(
@@ -226,7 +232,8 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                   controller: verController,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
+                      borderSide: BorderSide(
+                          width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
                     ),
                     hintText: '인증번호를 입력해 주세요.',
                   ),
@@ -275,7 +282,8 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.maxFinite, 51),
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  disabledBackgroundColor: Theme.of(context).colorScheme.primary.withAlpha(90),
+                  disabledBackgroundColor:
+                      Theme.of(context).colorScheme.primary.withAlpha(90),
                 ),
                 onPressed: verController.text != ""
                     ? () => verifyOTP(

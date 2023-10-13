@@ -84,7 +84,7 @@ class SearchPostDelegate extends SearchDelegate{
       error: (error, stackTrace) => ErrorText(
         error: error.toString(),
       ),
-      loading: () => const LoadingScreen(),
+      loading: () => Container(),
     );
   }
 }

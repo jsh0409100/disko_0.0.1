@@ -29,7 +29,7 @@ class My_ProfilePage extends ConsumerStatefulWidget {
   const My_ProfilePage({
     Key? key,
     required this.user,
-    required this.uid, required follow,
+    required this.uid,
   }) : super(key: key);
 
   @override

@@ -90,37 +90,33 @@ class __ProfilePageState extends ConsumerState<Other_ProfilePage> {
   Widget myPost(BuildContext context) {
     return ref.watch(searchMyPostProvider(widget.uid)).when(
       data: (posts) => ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          return FutureBuilder(
-            future: getUserDataByUid(posts[index].uid),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData == false) {
-                return Card(
-                  color: Colors.grey.shade300,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 180,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                      ),
-                      const SizedBox(
-                        height: 11,
-                      )
-                    ],
-                  ),
-                );
-              } else {
-                return Post(
-                  post: posts[index],
-                );
-              }
-            },
-          );
-        },
-      ),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: posts.length,
+          itemBuilder: (context, index) {
+            return FutureBuilder(
+                future: getUserDataByUid(posts[index].uid),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData == false) {
+                    return Card(
+                      color: Colors.grey.shade300,
+                      child: Column(children: [
+                        SizedBox(
+                          height: 180,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                        ),
+                        const SizedBox(
+                          height: 11,
+                        )
+                      ]),
+                    );
+                  } else {
+                    return Post(
+                      post: posts[index],
+                    );
+                  }
+                });
+          }),
       error: (error, stackTrace) => ErrorText(
         error: error.toString(),
       ),

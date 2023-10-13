@@ -38,20 +38,31 @@ Future main() async {
   channel = const AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
-    description: 'This channel is used for important notifications.', // description
+    description:
+        'This channel is used for important notifications.', // description
     importance: Importance.max,
   );
 
-  var initialzationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+  final initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  final DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings();
+  final LinuxInitializationSettings initializationSettingsLinux =
+      LinuxInitializationSettings(defaultActionName: 'Open notification');
 
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
-  var initializationSettings = InitializationSettings(
-    android: initialzationSettingsAndroid,
+  final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+      linux: initializationSettingsLinux);
+  flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
   );
 
   await flutterLocalNotificationsPlugin.initialize(
@@ -64,11 +75,10 @@ Future main() async {
     sound: true,
   );
 
-  FlutterError.onError = (errorDetails){
-    FirebaseCrashlytics.instance
-        .recordFlutterFatalError(errorDetails);
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
-  PlatformDispatcher.instance.onError = (error, stack){
+  PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
@@ -103,8 +113,10 @@ class MyApp extends ConsumerWidget {
           fontFamily: 'Pretendard',
           textTheme: const TextTheme(
             bodyLarge: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
-            headlineMedium:
-                TextStyle(fontSize: 17.0, fontWeight: FontWeight.w700, color: Colors.black),
+            headlineMedium: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.w700,
+                color: Colors.black),
           ),
           dialogTheme: DialogTheme(
             backgroundColor: lightColorScheme.background,

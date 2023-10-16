@@ -9,7 +9,7 @@ import '../../write_post/screens/write_post_page.dart';
 import '../widgets/post.dart';
 
 class HomeFeedPage extends ConsumerStatefulWidget {
-  HomeFeedPage({Key? key}) : super(key: key);
+  const HomeFeedPage({Key? key}) : super(key: key);
 
   @override
   _HomeFeedPageState createState() => _HomeFeedPageState();
@@ -178,7 +178,8 @@ class PostsListBuilder extends StatelessWidget {
                       imagesUrl: posts[index].imagesUrl,
                       time: posts[index].time,
                       isQuestion: posts[index].isQuestion,
-                      commentCount: posts[index].commentCount);
+                      commentCount: posts[index].commentCount,
+                  category:posts[index].category,);
                   return Post(
                     post: post,
                   );

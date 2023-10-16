@@ -32,16 +32,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         ),
       );
     case AppLayoutScreen.routeName:
-      final arguments = settings.arguments as Map<String, dynamic>;
-      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => AppLayoutScreen(user: user),
+        builder: (context) => const AppLayoutScreen(),
       );
     case AccountSettingScreen.routeName:
-      final arguments = settings.arguments as Map<String, dynamic>;
-      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => AccountSettingScreen(user: user),
+        builder: (context) => AccountSettingScreen(),
       );
     case DetailPage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
@@ -58,10 +54,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ChatScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
       final peerUid = arguments['peerUid'];
-      final user = arguments['user'];
       return MaterialPageRoute(
         builder: (context) => ChatScreen(
-          user: user,
           peerUid: peerUid,
         ),
       );
@@ -96,16 +90,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => const FAQPage(),
       );
     case SettingScreen.routeName:
-      final arguments = settings.arguments as Map<String, dynamic>;
-      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => SettingScreen(user: user),
+        builder: (context) => SettingScreen(),
       );
     case EmailEditPage.routeName:
-      final arguments = settings.arguments as Map<String, dynamic>;
-      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => EmailEditPage(user: user),
+        builder: (context) => EmailEditPage(),
       );
     case OtherUserProfilePage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
@@ -116,11 +106,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         ),
       );
     case ProfileEditPage.routeName:
-      final arguments = settings.arguments as Map<String, dynamic>;
-      final user = arguments['user'];
       return MaterialPageRoute(
         builder: (context) => ProfileEditPage(
-          user: user,
         ),
       );
     default:

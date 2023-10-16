@@ -79,7 +79,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
         title: Text(
           whattitle(),
           semanticsLabel: title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w700,
           ),
@@ -91,7 +91,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.close,
             size: 24,
           ),
@@ -283,7 +283,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                   context,
                   verController.text.trim(),
                   countryCode!.dialCode,
-                  widget.itisSignUp,
+                  false,
                 )
                     : null,
                 child: const Text(

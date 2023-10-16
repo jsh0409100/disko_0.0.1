@@ -1,4 +1,6 @@
-class UserModel {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class UserDataModel {
   final String displayName;
   final String phoneNum;
   final String countryCode;
@@ -9,7 +11,7 @@ class UserModel {
   final List<String> tag;
   final List<String> follow;
 
-  UserModel({
+  UserDataModel({
     required this.profilePic,
     required this.email,
     required this.diskoPoint,
@@ -21,7 +23,7 @@ class UserModel {
     required this.follow,
   });
 
-  UserModel.fromJson(Map<String, dynamic> json)
+  UserDataModel.fromJson(Map<String, dynamic> json)
       : phoneNum = json['phoneNumber'],
         displayName = json['displayName'],
         email = json['email'],
@@ -44,3 +46,26 @@ class UserModel {
         'follow': follow,
       };
 }
+
+class UserDataProvider extends StateNotifier<UserDataModel> {
+  UserDataProvider()
+      : super(UserDataModel(
+          profilePic: '',
+          email: '',
+          diskoPoint: 0,
+          displayName: '',
+          phoneNum: '',
+          countryCode: '',
+          tag: [],
+          description: '',
+          follow: [],
+        ));
+
+  void updateUser(UserDataModel userData) {
+    state = userData;
+  }
+}
+
+final userDataProvider = StateNotifierProvider<UserDataProvider, UserDataModel>((ref) {
+  return UserDataProvider();
+});

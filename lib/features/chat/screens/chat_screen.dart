@@ -14,8 +14,7 @@ import '../widgets/message_list.dart';
 class ChatScreen extends ConsumerStatefulWidget {
   static const String routeName = '/chat-screen';
   final String peerUid;
-  final UserModel user;
-  const ChatScreen({Key? key, required this.peerUid, required this.user}) : super(key: key);
+  const ChatScreen({Key? key, required this.peerUid}) : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -112,6 +111,7 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     ref.read(chatControllerProvider).setChatMessageSeen(context, widget.peerUid);
+    final UserDataModel? user = ref.watch(userDataProvider);
     return FutureBuilder(
         future: getUserDataByUid(widget.peerUid),
         builder: (context, snapshot) {
@@ -181,7 +181,7 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
                       receiverUid: widget.peerUid,
                       profilePic: snapshot.data!.profilePic,
                       receiverDisplayName: snapshot.data!.displayName,
-                      user: widget.user,
+                      user: user!,
                     ),
                   ],
                 )),

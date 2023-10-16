@@ -19,13 +19,15 @@ final userDataAuthProvider = FutureProvider((ref) {
 class AuthController {
   final AuthRepository authRepository;
   final ProviderRef ref;
+
   AuthController({
     required this.authRepository,
     required this.ref,
   });
 
-  Future<UserModel?> getUserData() async {
-    UserModel? user = await authRepository.getCurrentUserData();
+  Future<UserDataModel?> getUserData() async {
+    UserDataModel? user = await authRepository.getCurrentUserData();
+    if (user != null) ref.read(userDataProvider.notifier).updateUser(user);
     return user;
   }
 
@@ -45,8 +47,8 @@ class AuthController {
     );
   }
 
-  void saveUserDataToFirebase(
-      BuildContext context, String name, File? profilePic, String countryCode, String description, List<String> follow) {
+  void saveUserDataToFirebase(BuildContext context, String name, File? profilePic,
+      String countryCode, String description, List<String> follow) {
     authRepository.saveUserDataToFirebase(
       name: name,
       profilePic: profilePic,
@@ -84,7 +86,7 @@ class AuthController {
     );
   }
 
-  Stream<UserModel> userDataById(String userId) {
+  Stream<UserDataModel> userDataById(String userId) {
     return authRepository.userData(userId);
   }
 

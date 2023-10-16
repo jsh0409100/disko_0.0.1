@@ -1,18 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../models/user_model.dart';
 import '../../../starting/start_page.dart';
 import 'FAQPage.dart';
 import 'account_setting_page.dart';
 
-class SettingScreen extends StatelessWidget {
-  final UserModel user;
-  const SettingScreen({Key? key, required this.user}) : super(key: key);
+class SettingScreen extends ConsumerWidget {
+  const SettingScreen({Key? key}) : super(key: key);
 
   static const routeName = '/setting-screen';
 
   Future<void> _showMyDialog(BuildContext context) async {
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -87,7 +88,8 @@ class SettingScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final UserDataModel user = ref.watch(userDataProvider);
     bool isSnackbarDisplayed = false;
     return Scaffold(
         appBar: AppBar(

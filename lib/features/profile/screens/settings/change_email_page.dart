@@ -7,11 +7,10 @@ import '../../../../models/user_model.dart';
 import '../../cotroller/profile_controller.dart';
 
 class EmailEditPage extends ConsumerStatefulWidget {
-  final UserModel user;
 
   static const String routeName = 'email-edit-screen';
 
-  const EmailEditPage({Key? key, required this.user}) : super(key: key);
+  const EmailEditPage({Key? key}) : super(key: key);
 
   @override
   ConsumerState<EmailEditPage> createState() => _ChangeEmailPageState();
@@ -19,12 +18,14 @@ class EmailEditPage extends ConsumerStatefulWidget {
 
 class _ChangeEmailPageState extends ConsumerState<EmailEditPage> {
   final TextEditingController emailController = TextEditingController();
+  late final UserDataModel user;
 
   @override
   void initState() {
     super.initState();
-    if (widget.user.email != null) {
-      emailController.text = widget.user.email!;
+    user = ref.watch(userDataProvider);
+    if (user.email != null) {
+      emailController.text = user.email!;
     }
   }
 
@@ -60,6 +61,7 @@ class _ChangeEmailPageState extends ConsumerState<EmailEditPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -69,7 +71,7 @@ class _ChangeEmailPageState extends ConsumerState<EmailEditPage> {
             onPressed: () {
               bool valid = EmailValidator.validate(emailController.text.trim());
               if (valid) {
-                if (widget.user.email == null) increaseDiskoPoint();
+                if (user.email == null) increaseDiskoPoint();
                 updateEmail();
               } else {
                 showSnackBar(content: "올바른 이메일을 입력해 주세요", context: context);

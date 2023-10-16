@@ -30,6 +30,7 @@ class WritePostRepository {
     required String postId,
     required String username,
     required String postTitle,
+    required String category,
     required List<String> imagesUrl,
     required List<String> likes,
     required int commentCount,
@@ -46,6 +47,7 @@ class WritePostRepository {
       postId: postId,
       commentCount: commentCount,
       isQuestion: isQuestion,
+      category: category,
     );
 
     await firestore.collection('posts').doc(postId).set(
@@ -56,7 +58,8 @@ class WritePostRepository {
   void uploadPost({
     required BuildContext context,
     required String text,
-    required UserModel userData,
+    required String category,
+    required UserDataModel userData,
     required String postTitle,
     required List<String> imagesUrl,
     required String postId,
@@ -76,6 +79,7 @@ class WritePostRepository {
         username: userData.displayName,
         commentCount: commentCount,
         isQuestion: isQuestion,
+          category:category,
       );
     } catch (e) {
       // showSnackBar(context: context, content: e.toString());

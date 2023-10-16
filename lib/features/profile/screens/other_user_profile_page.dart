@@ -1,5 +1,4 @@
 import 'package:disko_001/common/utils/utils.dart';
-import 'package:disko_001/features/profile/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/widgets/common_app_bar.dart';

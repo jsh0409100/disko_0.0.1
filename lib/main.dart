@@ -19,6 +19,7 @@ import 'features/auth/controller/auth_controller.dart';
 import 'features/call/screens/call_pickup_screen.dart';
 import 'features/starting/start_page.dart';
 import 'firebase_options.dart';
+import 'models/user_model.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
@@ -131,7 +132,7 @@ class MyApp extends ConsumerWidget {
                     itisSignUp: true,
                   );
                 } else {
-                  return CallPickupScreen(scaffold: AppLayoutScreen(user: user));
+                  return const CallPickupScreen(scaffold: AppLayoutScreen());
                 }
               },
               error: (err, trace) {

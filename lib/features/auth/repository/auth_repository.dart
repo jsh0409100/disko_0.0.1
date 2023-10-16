@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app_layout_screen.dart';
+import '../../../common/utils/utils.dart';
 import '../../../models/user_model.dart';
 import '../screens/signup_page.dart';
 
@@ -27,12 +28,12 @@ class AuthRepository {
     required this.firestore,
   });
 
-  Future<UserModel?> getCurrentUserData() async {
+  Future<UserDataModel?> getCurrentUserData() async {
     var userData = await firestore.collection('users').doc(auth.currentUser?.uid).get();
 
-    UserModel? user;
+    UserDataModel? user;
     if (userData.data() != null) {
-      user = UserModel.fromJson(userData.data()!);
+      user = UserDataModel.fromJson(userData.data()!);
     }
     return user;
   }
@@ -41,7 +42,7 @@ class AuthRepository {
     try {
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
+        verificationCompleted: (PhoneAuthCredential rcedential) async {
           // await auth.signInWithCredential(credential);
         },
         verificationFailed: (e) {
@@ -71,7 +72,9 @@ class AuthRepository {
         smsCode: userOTP,
       );
       await auth.signInWithCredential(credential);
-      if (itis == true) {
+
+      if (itis) {
+        // await auth.signInWithCredential(credential);
         saveUserDataToFirebase(
           name: '신규 유저',
           profilePic: null,
@@ -83,8 +86,8 @@ class AuthRepository {
           follow: [],
         );
       }
-      if (itis == false) {
-        await auth.signInWithCredential(credential);
+      if (!itis) {
+        // await auth.signInWithCredential(credential);
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppLayoutScreen.routeName,
@@ -92,7 +95,7 @@ class AuthRepository {
         );
       }
     } on FirebaseAuthException catch (e) {
-      // showSnackBar(context: context, content: e.message!);
+      showSnackBar(context: context, content: e.message!);
     }
   }
 
@@ -111,7 +114,7 @@ class AuthRepository {
       String photoUrl =
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
 
-      var user = UserModel(
+      var user = UserDataModel(
         phoneNum: auth.currentUser!.phoneNumber!,
         displayName: name,
         countryCode: countryCode,
@@ -123,7 +126,7 @@ class AuthRepository {
         follow: follow,
       );
       await firestore.collection('users').doc(uid).set(user.toJson());
-
+      ref.read(userDataProvider.notifier).updateUser(user);
       if (isUserCreated) {
         Navigator.pushNamedAndRemoveUntil(
           context,
@@ -142,56 +145,56 @@ class AuthRepository {
     }
   }
 
-  void saveloginUserDataToFirebase({
-    required String name,
-    required File? profilePic,
-    required String countryCode,
-    required ProviderRef ref,
-    required BuildContext context,
-    required bool isUserCreated,
-    required String description,
-    required String email,
-    required int diskoPoint,
-  }) async {
-    try {
-      String uid = auth.currentUser!.uid;
-      String photoUrl =
-          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+  // void saveloginUserDataToFirebase({
+  //   required String name,
+  //   required File? profilePic,
+  //   required String countryCode,
+  //   required ProviderRef ref,
+  //   required BuildContext context,
+  //   required bool isUserCreated,
+  //   required String description,
+  //   required String email,
+  //   required int diskoPoint,
+  // }) async {
+  //   try {
+  //     String uid = auth.currentUser!.uid;
+  //     String photoUrl =
+  //         'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+  //
+  //     var user = UserModel(
+  //       phoneNum: auth.currentUser!.phoneNumber!,
+  //       displayName: name,
+  //       countryCode: countryCode,
+  //       profilePic: photoUrl,
+  //       tag: [],
+  //       description: description,
+  //       follow: [],
+  //       email: email,
+  //       diskoPoint: diskoPoint,
+  //     );
+  //     await firestore.collection('users').doc(uid).set(user.toJson());
+  //
+  //     if (isUserCreated) {
+  //       Navigator.pushNamedAndRemoveUntil(
+  //         context,
+  //         LandingPage.routeName,
+  //         (route) => false,
+  //       );
+  //     } else {
+  //       Navigator.pushNamedAndRemoveUntil(
+  //         context,
+  //         AppLayoutScreen.routeName,
+  //         (route) => false,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     //showSnackBar(context: context, content: e.toString());
+  //   }
+  // }
 
-      var user = UserModel(
-        phoneNum: auth.currentUser!.phoneNumber!,
-        displayName: name,
-        countryCode: countryCode,
-        profilePic: photoUrl,
-        tag: [],
-        description: description,
-        follow: [],
-        email: email,
-        diskoPoint: diskoPoint,
-      );
-      await firestore.collection('users').doc(uid).set(user.toJson());
-
-      if (isUserCreated) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          LandingPage.routeName,
-          (route) => false,
-        );
-      } else {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppLayoutScreen.routeName,
-          (route) => false,
-        );
-      }
-    } catch (e) {
-      //showSnackBar(context: context, content: e.toString());
-    }
-  }
-
-  Stream<UserModel> userData(String userId) {
+  Stream<UserDataModel> userData(String userId) {
     return firestore.collection('users').doc(userId).snapshots().map(
-          (event) => UserModel.fromJson(
+          (event) => UserDataModel.fromJson(
             event.data()!,
           ),
         );
@@ -230,7 +233,7 @@ class AuthRepository {
         photoUrl = (doc.data() as Map<String, dynamic>)['profilePic'];
       }
 
-      var user = UserModel(
+      var user = UserDataModel(
         phoneNum: auth.currentUser!.phoneNumber!,
         displayName: name,
         countryCode: countryCode,
@@ -243,7 +246,7 @@ class AuthRepository {
       );
 
       await firestore.collection('users').doc(uid).set(user.toJson());
-
+      ref.read(userDataProvider.notifier).updateUser(user);
       if (isUserCreated) {
         Navigator.pushNamedAndRemoveUntil(
           context,

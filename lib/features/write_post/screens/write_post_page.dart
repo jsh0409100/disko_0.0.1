@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../app_layout_screen.dart';
+import '../../../models/category_list.dart';
 import '../controller/write_post_controller.dart';
 
 class WritePostPage extends ConsumerStatefulWidget {
@@ -29,6 +30,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   final FirebaseStorage _storageRef = FirebaseStorage.instance;
 
   late String postId;
+
   int commentCount = 0;
   bool isQuestion = false;
 
@@ -70,7 +72,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
     setState(() {});
   }
 
-  void _uploadPost() async {
+  void _uploadPost(String category) async {
     ref.read(writePostControllerProvider).uploadPost(
           context,
           postTextController.text,
@@ -79,6 +81,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
           postId,
           commentCount,
           isQuestion,
+          category
         );
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -146,11 +149,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
             ),
             actions: [
               TextButton(
-                  onPressed: () async {
-                    postId = const Uuid().v1();
-                    await uploadFunction(_imageFileList!);
-                    Navigator.of(context).pop();
-                    _uploadPost();
+                  onPressed: () {
+                    categoryDialogBuilder(context);
                   },
                   child: const Text(
                     '완료',
@@ -296,7 +296,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                     postId = const Uuid().v1();
                     Navigator.of(context).pop();
                     await uploadFunction(_imageFileList!);
-                    _uploadPost();
+                    _uploadPost(CategoryList.categories[_CategoryCards.selected]);
                   },
                 ),
               ],

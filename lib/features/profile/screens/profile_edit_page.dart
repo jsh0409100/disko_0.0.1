@@ -8,11 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/user_model.dart';
 
 class ProfileEditPage extends ConsumerStatefulWidget {
-  final UserModel user;
-
   static const String routeName = 'profile-edit-screen';
 
-  const ProfileEditPage({Key? key, required this.user}) : super(key: key);
+  const ProfileEditPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   ConsumerState<ProfileEditPage> createState() => _ProfileEditPageState();
@@ -21,6 +21,7 @@ class ProfileEditPage extends ConsumerStatefulWidget {
 class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   String test = 'test';
   File? image;
+  late final UserDataModel user;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController keywordController = TextEditingController();
@@ -28,8 +29,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   @override
   void initState() {
     super.initState();
-    nameController.text = widget.user.displayName;
-    descriptionController.text = widget.user.description;
+    user = ref.watch(userDataProvider);
+    nameController.text = user.displayName;
+    descriptionController.text = user.description;
   }
 
   @override
@@ -54,12 +56,12 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             context,
             name,
             image,
-            widget.user.countryCode,
-            widget.user.tag,
+            user.countryCode,
+            user.tag,
             description,
-            widget.user.follow,
-            widget.user.email,
-            widget.user.diskoPoint,
+            user.follow,
+            user.email,
+            user.diskoPoint,
           );
     }
   }
@@ -89,7 +91,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                   child: image == null
                       ? CircleAvatar(
                           radius: 60,
-                          backgroundImage: NetworkImage(widget.user.profilePic),
+                          backgroundImage: NetworkImage(user.profilePic),
                         )
                       : CircleAvatar(
                           radius: 60,

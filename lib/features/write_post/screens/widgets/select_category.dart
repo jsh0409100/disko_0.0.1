@@ -9,6 +9,7 @@ class CategoryCards extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+
   @override
   State<CategoryCards> createState() => _CategoryCardsState();
 }
@@ -25,7 +26,7 @@ class _CategoryCardsState extends State<CategoryCards> {
       child: GestureDetector(
         onTap: () {
           setState(() {
-            widget.selected = index;
+           widget.selected = index;
           });
         },
         child: Card(

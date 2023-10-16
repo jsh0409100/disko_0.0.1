@@ -7,7 +7,6 @@ import 'package:disko_001/features/write_post/controller/write_post_controller.d
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../common/widgets/error_text.dart';
@@ -24,7 +23,7 @@ const List<Widget> follow = <Widget>[
 
 class My_ProfilePage extends ConsumerStatefulWidget {
   final String uid;
-  final UserModel user;
+  final UserDataModel user;
 
   const My_ProfilePage({
     Key? key,

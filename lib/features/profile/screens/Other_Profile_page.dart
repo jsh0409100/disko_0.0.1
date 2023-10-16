@@ -22,7 +22,7 @@ const List<Widget> follow = <Widget>[
 
 class Other_ProfilePage extends ConsumerStatefulWidget {
   final String uid;
-  final UserModel user;
+  final UserDataModel user;
 
   const Other_ProfilePage({
     Key? key,

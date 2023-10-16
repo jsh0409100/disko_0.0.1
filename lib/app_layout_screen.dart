@@ -8,22 +8,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/local_notification.dart';
 import 'features/home/screens/home_feed_page.dart';
 import 'features/profile/screens/my_profile_page.dart';
 import 'main.dart';
-import 'models/user_model.dart';
 
-class AppLayoutScreen extends StatefulWidget {
-  final UserModel user;
+class AppLayoutScreen extends ConsumerStatefulWidget {
   static const String routeName = '/my-home';
-  const AppLayoutScreen({Key? key, required this.user}) : super(key: key);
+  const AppLayoutScreen({Key? key}) : super(key: key);
   @override
   MyHomeState createState() => MyHomeState();
 }
 
-class MyHomeState extends State<AppLayoutScreen> {
+class MyHomeState extends ConsumerState<AppLayoutScreen> {
   late final NotificationService notificationService;
   String? mtoken = '';
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -71,7 +70,7 @@ class MyHomeState extends State<AppLayoutScreen> {
       Navigator.pushNamed(
         context,
         ChatScreen.routeName,
-        arguments: {'peerUid': message.data['senderId'], 'user': widget.user},
+        arguments: {'peerUid': message.data['senderId']},
       );
     }
   }
@@ -133,7 +132,6 @@ class MyHomeState extends State<AppLayoutScreen> {
               ChatScreen.routeName,
               arguments: {
                 'peerUid': notification['senderId'],
-                'user': widget.user,
               },
             );
         }
@@ -154,8 +152,8 @@ class MyHomeState extends State<AppLayoutScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      HomeFeedPage(),
-      ChatListPage(user: widget.user),
+      const HomeFeedPage(),
+      const ChatListPage(),
       const MyProfilePage(),
     ];
     return Scaffold(

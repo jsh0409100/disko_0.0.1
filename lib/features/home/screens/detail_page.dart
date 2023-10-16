@@ -16,7 +16,6 @@ import '../../../common/widgets/common_app_bar.dart';
 import '../../../models/post_card_model.dart';
 import '../../../models/user_model.dart';
 import '../../../src/providers.dart';
-import '../../chat/controller/chat_controller.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../profile/screens/other_user_profile_page.dart';
 import '../../report/report_screen.dart';
@@ -142,7 +141,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
     return showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return FutureBuilder<UserModel>(
+        return FutureBuilder<UserDataModel>(
             future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
             builder: (context, snapshot) {
               return StatefulBuilder(builder: (context, setState) {

@@ -16,7 +16,7 @@ import '../../write_post/screens/edit_post_page.dart';
 
 class PostCard extends ConsumerStatefulWidget {
   final PostCardModel post;
-  final UserModel user;
+  final UserDataModel user;
 
   const PostCard({
     Key? key,

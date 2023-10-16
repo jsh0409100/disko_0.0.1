@@ -22,6 +22,7 @@ final postRepositoryProvider = Provider(
 class PostRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
+
   PostRepository({
     required this.firestore,
     required this.auth,
@@ -83,19 +84,20 @@ class PostRepository {
     required String postTitle,
     required List<String> imagesUrl,
     required List<String> likes,
+    required String category,
   }) async {
     final comment = PostCardModel(
-      time: time,
-      userName: username,
-      postTitle: postTitle,
-      postText: text,
-      uid: auth.currentUser!.uid,
-      likes: [],
-      imagesUrl: [],
-      postId: '',
-      commentCount: 0,
-      isQuestion: false,
-    );
+        time: time,
+        userName: username,
+        postTitle: postTitle,
+        postText: text,
+        uid: auth.currentUser!.uid,
+        likes: [],
+        imagesUrl: [],
+        postId: '',
+        commentCount: 0,
+        isQuestion: false,
+        category: category);
 
     final currentComment = firestore.collection('posts').doc(postId);
     final doc = await currentComment.get();
@@ -155,6 +157,7 @@ class PostRepository {
     required String postTitle,
     required List<String> likes,
     required String commentId,
+    required String category,
   }) async {
     final comment = PostCardModel(
       time: time,
@@ -167,6 +170,7 @@ class PostRepository {
       postId: '',
       commentCount: 0,
       isQuestion: false,
+      category: category,
     );
 
     final currentComment =
@@ -188,7 +192,7 @@ class PostRepository {
   void uploadComment({
     required BuildContext context,
     required String text,
-    required UserModel senderUser,
+    required UserDataModel senderUser,
     required postId,
     required List<String> imagesUrl,
     required List<String> likes,
@@ -215,6 +219,7 @@ class PostRepository {
         postTitle: post.postTitle,
         imagesUrl: imagesUrl,
         likes: likes,
+        category: post.category,
       );
 
       saveNotification(
@@ -232,7 +237,7 @@ class PostRepository {
   void uploadNestedComment({
     required BuildContext context,
     required String text,
-    required UserModel senderUser,
+    required UserDataModel senderUser,
     required postId,
     required commentId,
     required List<String> likes,
@@ -260,6 +265,7 @@ class PostRepository {
         postTitle: post.postTitle,
         likes: likes,
         commentId: commentId,
+        category: post.category,
       );
 
       saveNotification(

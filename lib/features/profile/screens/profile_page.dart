@@ -158,7 +158,7 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
               ],
             ),
             descriptionText(),
-            percentage(),
+            // percentage(),
             activeFollow(),
           ],
         ),

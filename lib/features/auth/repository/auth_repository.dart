@@ -38,12 +38,20 @@ class AuthRepository {
     return user;
   }
 
-  void signInWithPhone(BuildContext context, String phoneNumber) async {
+  void signInWithPhone(BuildContext context, ProviderRef ref, String phoneNumber,
+      String countryCode, bool isSignUp) async {
     try {
       await auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential rcedential) async {
-          // await auth.signInWithCredential(credential);
+        phoneNumber: '+${countryCode}$phoneNumber',
+        timeout: const Duration(seconds: 120),
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await auth.signInWithCredential(credential);
+          createUserAndNavigate(
+            context: context,
+            countryCode: countryCode,
+            ref: ref,
+            isSignUp: isSignUp,
+          );
         },
         verificationFailed: (e) {
           throw Exception(e.message);
@@ -64,7 +72,7 @@ class AuthRepository {
     required String userOTP,
     required String countryCode,
     required ProviderRef ref,
-    required bool itis,
+    required bool isSignUp,
   }) async {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -72,59 +80,68 @@ class AuthRepository {
         smsCode: userOTP,
       );
       await auth.signInWithCredential(credential);
-
-      if (itis) {
-        // await auth.signInWithCredential(credential);
-        saveUserDataToFirebase(
-          name: '신규 유저',
-          profilePic: null,
-          context: context,
-          countryCode: countryCode,
-          ref: ref,
-          isUserCreated: true,
-          description: ' ',
-          follow: [],
-        );
-      }
-      if (!itis) {
-        // await auth.signInWithCredential(credential);
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppLayoutScreen.routeName,
-          (route) => false,
-        );
-      }
+      createUserAndNavigate(
+        context: context,
+        countryCode: countryCode,
+        ref: ref,
+        isSignUp: isSignUp,
+      );
     } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: e.message!);
     }
   }
 
-  void saveUserDataToFirebase({
-    required String name,
-    required File? profilePic,
+  Future<void> createUserAndNavigate({
+    required BuildContext context,
     required String countryCode,
     required ProviderRef ref,
-    required BuildContext context,
-    required bool isUserCreated,
-    required String description,
-    required List<String> follow,
+    required bool isSignUp,
   }) async {
-    try {
-      String uid = auth.currentUser!.uid;
-      String photoUrl =
-          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+    String photoUrl =
+        'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
 
+    if (isSignUp) {
       var user = UserDataModel(
         phoneNum: auth.currentUser!.phoneNumber!,
-        displayName: name,
+        displayName: '신규 유저',
         countryCode: countryCode,
         profilePic: photoUrl,
         email: null,
         diskoPoint: 0,
         tag: [],
-        description: description,
-        follow: follow,
+        description: ' ',
+        follow: [],
+        hasAuthority: false,
       );
+
+      ref.read(userDataProvider.notifier).updateUser(user);
+
+      saveUserDataToFirebase(
+        context: context,
+        ref: ref,
+        isUserCreated: true,
+        user: user,
+      );
+    }
+    if (!isSignUp) {
+      final UserDataModel? user = await ref.read(authRepositoryProvider).getCurrentUserData();
+      ref.read(userDataProvider.notifier).updateUser(user!);
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppLayoutScreen.routeName,
+        (route) => false,
+      );
+    }
+  }
+
+  void saveUserDataToFirebase(
+      {required ProviderRef ref,
+      required BuildContext context,
+      required UserDataModel user,
+      required bool isUserCreated}) async {
+    try {
+      String uid = auth.currentUser!.uid;
       await firestore.collection('users').doc(uid).set(user.toJson());
       ref.read(userDataProvider.notifier).updateUser(user);
       if (isUserCreated) {
@@ -243,6 +260,7 @@ class AuthRepository {
         tag: tag,
         description: description,
         follow: follow,
+        hasAuthority: false,
       );
 
       await firestore.collection('users').doc(uid).set(user.toJson());

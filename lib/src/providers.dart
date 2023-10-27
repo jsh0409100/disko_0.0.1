@@ -4,15 +4,17 @@ import 'package:disko_001/src/pagination_state/pagination_state.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../features/home/widgets/post.dart';
+import '../models/user_model.dart';
 
 final postsProvider = StateNotifierProvider<PaginationNotifier<PostCardModel>,
     PaginationState<PostCardModel>>((ref) {
+      final UserDataModel user = ref.watch(userDataProvider);
   return PaginationNotifier(
     itemsPerBatch: 5,
     fetchNextItems: (
       post,
     ) {
-      return ref.read(PostDatabaseProvider).fetchPosts(post);
+      return ref.read(PostDatabaseProvider).fetchPosts(post, user);
     },
   )..init();
 });

@@ -2,9 +2,9 @@ import 'package:disko_001/features/auth/screens/signup_page.dart';
 import 'package:flutter/material.dart';
 
 class StartPage extends StatelessWidget {
-  final bool itisSignUp;
+  final bool isSignUp;
 
-  const StartPage({required this.itisSignUp, Key? key}) : super(key: key);
+  const StartPage({required this.isSignUp, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class StartPage extends StatelessWidget {
                   ),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => SignUpScreen(itisSignUp: true)));
+                        builder: (BuildContext context) => SignUpScreen(isSignUp: true)));
                   },
                   child: Text(
                     '🥳  회원가입  →',
@@ -60,7 +60,7 @@ class StartPage extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => SignUpScreen(itisSignUp: false)));
+                      builder: (BuildContext context) => SignUpScreen(isSignUp: false)));
                 },
                 child: Text(
                   '로그인',

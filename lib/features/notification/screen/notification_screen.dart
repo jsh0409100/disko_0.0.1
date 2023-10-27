@@ -1,3 +1,4 @@
+import 'package:disko_001/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,6 +29,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final UserDataModel user =ref.watch(userDataProvider);
     return DefaultTabController(
       initialIndex: 0,
       length: 1,
@@ -73,7 +75,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                       itemBuilder: (context, index) {
                         notificationList = snapshot.data!;
                         return FutureBuilder(
-                            future: getPostByPostId(snapshot.data![index].postId),
+                            future: getPostByPostId(user, snapshot.data![index].postId),
                             builder: (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData == false) {
                                 //TODO 더이상 존재하지 않는 포스트일때 표시 생각하기

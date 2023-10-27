@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/write_post/screens/widgets/select_category.dart';
+import 'package:disko_001/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
     setState(() {});
   }
 
-  void _uploadPost(String category) async {
+  void _uploadPost(String category, WidgetRef ref) async {
     ref.read(writePostControllerProvider).uploadPost(
           context,
           postTextController.text,
@@ -81,7 +82,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
           postId,
           commentCount,
           isQuestion,
-          category
+          category,
+      ref,
         );
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -296,7 +298,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                     postId = const Uuid().v1();
                     Navigator.of(context).pop();
                     await uploadFunction(_imageFileList!);
-                    _uploadPost(CategoryList.categories[_CategoryCards.selected]);
+                    _uploadPost(CategoryList.categories[_CategoryCards.selected], ref);
                   },
                 ),
               ],

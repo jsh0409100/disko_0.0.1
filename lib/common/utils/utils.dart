@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../models/post_card_model.dart';
 import '../../models/user_model.dart';
+import '../enums/country_enum.dart';
 
 Future<String> getDisplayNameByUid(String uid) async {
   var UserDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
@@ -36,8 +37,8 @@ Stream<UserDataModel> getUserStreamByUid(String uid) {
       .map((snapshot) => UserDataModel.fromJson(snapshot.data()!));
 }
 
-Future<PostCardModel> getPostByPostId(String postId) async {
-  var postDataMap = await FirebaseFirestore.instance.collection('posts').doc(postId).get();
+Future<PostCardModel> getPostByPostId(UserDataModel user, String postId) async {
+  var postDataMap = await FirebaseFirestore.instance.collection('posts').doc(countries[user.countryCode]).collection(countries[user.countryCode]!).doc(postId).get();
   return PostCardModel.fromJson(postDataMap.data()!);
 }
 

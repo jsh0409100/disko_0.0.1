@@ -85,6 +85,7 @@ class _ConsumerEditPostPageState extends ConsumerState<EditPostScreen> {
           widget.post.commentCount,
           isQuestion,
           category,
+      ref,
         );
     Navigator.pushNamedAndRemoveUntil(
       context,

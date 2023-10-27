@@ -35,7 +35,7 @@ class WritePostController {
   });
 
   void uploadPost(BuildContext context, String text, String postTitle, List<String> imagesUrl,
-      String postId, int commentCount, bool isQuestion, String category) {
+      String postId, int commentCount, bool isQuestion, String category, WidgetRef ref) {
     ref.read(userDataAuthProvider).whenData(
           (value) => writePostRepository.uploadPost(
             context: context,
@@ -47,6 +47,7 @@ class WritePostController {
             commentCount: commentCount,
             isQuestion: isQuestion,
               category:category,
+            ref:ref,
           ),
         );
   }

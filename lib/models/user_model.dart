@@ -10,6 +10,7 @@ class UserDataModel {
   final String description;
   final List<String> tag;
   final List<String> follow;
+  final bool hasAuthority;
 
   UserDataModel({
     required this.profilePic,
@@ -21,6 +22,7 @@ class UserDataModel {
     required this.tag,
     required this.description,
     required this.follow,
+    required this.hasAuthority,
   });
 
   UserDataModel.fromJson(Map<String, dynamic> json)
@@ -32,6 +34,7 @@ class UserDataModel {
         countryCode = json['countryCode'],
         description = json['description'],
         tag = json['tag'].cast<String>(),
+        hasAuthority = json['hasAuthority'],
         follow = json['follow'].cast<String>();
 
   Map<String, dynamic> toJson() => {
@@ -43,7 +46,8 @@ class UserDataModel {
         'profilePic': profilePic,
         'description': description,
         'tag': tag,
-        'follow': follow,
+    'follow': follow,
+    'hasAuthority': hasAuthority,
       };
 }
 
@@ -59,6 +63,7 @@ class UserDataProvider extends StateNotifier<UserDataModel> {
           tag: [],
           description: '',
           follow: [],
+      hasAuthority: false,
         ));
 
   void updateUser(UserDataModel userData) {

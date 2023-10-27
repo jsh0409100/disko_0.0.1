@@ -28,7 +28,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case SignUpScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const SignUpScreen(
-          itisSignUp: true,
+          isSignUp: true,
         ),
       );
     case AppLayoutScreen.routeName:
@@ -105,9 +105,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           uid: uid,
         ),
       );
+
     case ProfileEditPage.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final user = arguments['user'];
       return MaterialPageRoute(
         builder: (context) => ProfileEditPage(
+            user:user,
         ),
       );
     default:

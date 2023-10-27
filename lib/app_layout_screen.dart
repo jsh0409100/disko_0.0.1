@@ -177,7 +177,7 @@ class MyHomeState extends ConsumerState<AppLayoutScreen> {
           },
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
+              icon: Icon(Icons.home_rounded),
               activeIcon: Icon(Icons.home_rounded),
               label: '홈',
             ),

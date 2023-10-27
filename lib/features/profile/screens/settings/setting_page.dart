@@ -64,7 +64,7 @@ class SettingScreen extends ConsumerWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) => StartPage(
-                                        itisSignUp: false,
+                                        isSignUp: false,
                                       )),
                               (route) => false);
                         },

@@ -9,8 +9,10 @@ import '../../../models/user_model.dart';
 
 class ProfileEditPage extends ConsumerStatefulWidget {
   static const String routeName = 'profile-edit-screen';
+  final UserDataModel user;
 
   const ProfileEditPage({
+    required this.user,
     Key? key,
   }) : super(key: key);
 
@@ -21,7 +23,6 @@ class ProfileEditPage extends ConsumerStatefulWidget {
 class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   String test = 'test';
   File? image;
-  late final UserDataModel user;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController keywordController = TextEditingController();
@@ -29,9 +30,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   @override
   void initState() {
     super.initState();
-    user = ref.watch(userDataProvider);
-    nameController.text = user.displayName;
-    descriptionController.text = user.description;
+    nameController.text = widget.user.displayName;
+    descriptionController.text = widget.user.description;
   }
 
   @override
@@ -56,12 +56,12 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
             context,
             name,
             image,
-            user.countryCode,
-            user.tag,
+            widget.user.countryCode,
+            widget.user.tag,
             description,
-            user.follow,
-            user.email,
-            user.diskoPoint,
+            widget.user.follow,
+            widget.user.email,
+            widget.user.diskoPoint,
           );
     }
   }
@@ -91,7 +91,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                   child: image == null
                       ? CircleAvatar(
                           radius: 60,
-                          backgroundImage: NetworkImage(user.profilePic),
+                          backgroundImage: NetworkImage(widget.user.profilePic),
                         )
                       : CircleAvatar(
                           radius: 60,

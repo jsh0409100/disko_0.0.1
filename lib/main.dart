@@ -129,7 +129,7 @@ class MyApp extends ConsumerWidget {
               data: (user) {
                 if (user == null) {
                   return const StartPage(
-                    itisSignUp: true,
+                    isSignUp: true,
                   );
                 } else {
                   return const CallPickupScreen(scaffold: AppLayoutScreen());

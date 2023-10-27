@@ -29,10 +29,10 @@ class PostCard extends ConsumerStatefulWidget {
 }
 
 class _PostCardState extends ConsumerState<PostCard> {
-  final user = FirebaseAuth.instance.currentUser;
   final uid = FirebaseAuth.instance.currentUser!.uid;
   CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
-  CollectionReference scrapCollection = FirebaseFirestore.instance.collection('users')
+  CollectionReference scrapCollection = FirebaseFirestore.instance
+      .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection('Scrap');
   bool _isLiked = false;
@@ -44,7 +44,8 @@ class _PostCardState extends ConsumerState<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.post.likes.contains(user!.uid)) {
+    final UserDataModel user = ref.watch(userDataProvider);
+    if (widget.post.likes.contains(uid)) {
       likeColor = Theme.of(context).colorScheme.primary;
       likeIcon = const Icon(
         Icons.favorite,
@@ -123,16 +124,16 @@ class _PostCardState extends ConsumerState<PostCard> {
       );
     }
 
-    Future _shareSheet(){
+    Future _shareSheet() {
       return showModalBottomSheet(
         context: context,
-        builder: (BuildContext context){
+        builder: (BuildContext context) {
           return SizedBox(
             height: 500,
             child: Center(
               child: ElevatedButton(
                 child: const Text('Close'),
-                onPressed: (){
+                onPressed: () {
                   Navigator.pop(context);
                 },
               ),
@@ -142,23 +143,27 @@ class _PostCardState extends ConsumerState<PostCard> {
       );
     }
 
+    void makeAnnouncement(String postId) {
+      ref.read(postControllerProvider).toggleAnnouncemnet(widget.post.postId);
+    }
+
     void showMenu(String value) {
       switch (value) {
-        case '스크랩' :
+        case '스크랩':
           Map<String, dynamic> scrapData = {
-            'time' : Timestamp.now(),
-            'postID' : widget.post.postId,
+            'time': Timestamp.now(),
+            'postID': widget.post.postId,
           };
 
-          isPostScrapped().then((isScrapped){
-            if(isScrapped){
+          isPostScrapped().then((isScrapped) {
+            if (isScrapped) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('스크랩이 이미 되었습니다!'),
                   duration: Duration(seconds: 1),
                 ),
               );
-            } else{
+            } else {
               saveToScrap(scrapData);
             }
           });
@@ -187,6 +192,9 @@ class _PostCardState extends ConsumerState<PostCard> {
           break;
         case '앱 내 공유':
           _shareSheet();
+          break;
+        case '공지등록':
+          makeAnnouncement(widget.post.postId);
           break;
       }
     }
@@ -261,8 +269,8 @@ class _PostCardState extends ConsumerState<PostCard> {
                           PopupMenuButton<String>(
                             onSelected: showMenu,
                             itemBuilder: (BuildContext context) {
-                              return (widget.post.uid != user!.uid)
-                                  ? {'메세지 보내기','스크랩', '신고하기'}.map((String choice) {
+                              return (widget.post.uid != uid)
+                                  ? {'메세지 보내기', '스크랩', '신고하기'}.map((String choice) {
                                       return PopupMenuItem<String>(
                                         value: choice,
                                         child: choice == '신고하기'
@@ -274,18 +282,32 @@ class _PostCardState extends ConsumerState<PostCard> {
                                             : Text(choice),
                                       );
                                     }).toList()
-                                  : {'글 수정', '글 삭제','스크랩', '앱 내 공유'}.map((String choice) {
-                                      return PopupMenuItem<String>(
-                                        value: choice,
-                                        child: choice == '글 삭제'
-                                            ? Text(
-                                                choice,
-                                                style: TextStyle(
-                                                    color: Theme.of(context).colorScheme.error),
-                                              )
-                                            : Text(choice),
-                                      );
-                                    }).toList();
+                                  : (user.hasAuthority)
+                                      ? {'글 수정', '글 삭제', '스크랩', '앱 내 공유', '공지등록'}
+                                          .map((String choice) {
+                                          return PopupMenuItem<String>(
+                                            value: choice,
+                                            child: choice == '글 삭제'
+                                                ? Text(
+                                                    choice,
+                                                    style: TextStyle(
+                                                        color: Theme.of(context).colorScheme.error),
+                                                  )
+                                                : Text(choice),
+                                          );
+                                        }).toList()
+                                      : {'글 수정', '글 삭제', '스크랩', '앱 내 공유'}.map((String choice) {
+                                          return PopupMenuItem<String>(
+                                            value: choice,
+                                            child: choice == '글 삭제'
+                                                ? Text(
+                                                    choice,
+                                                    style: TextStyle(
+                                                        color: Theme.of(context).colorScheme.error),
+                                                  )
+                                                : Text(choice),
+                                          );
+                                        }).toList();
                             },
                           ),
                         ],
@@ -378,13 +400,13 @@ class _PostCardState extends ConsumerState<PostCard> {
                                 .collection('posts')
                                 .doc(widget.post.postId)
                                 .get();
-                            if (widget.post.likes.contains(user!.uid)) {
-                              widget.post.likes.remove(user!.uid);
+                            if (widget.post.likes.contains(uid)) {
+                              widget.post.likes.remove(uid);
                               setState(() {
                                 _isLiked = false;
                               });
                             } else {
-                              widget.post.likes.add(user!.uid);
+                              widget.post.likes.add(uid);
                               setState(() {
                                 _isLiked = true;
                               });
@@ -462,10 +484,10 @@ class _PostCardState extends ConsumerState<PostCard> {
     );
   }
 
-  Future<bool> isPostScrapped() async{
+  Future<bool> isPostScrapped() async {
     String userUID = uid;
     QuerySnapshot snapshot =
-      await FirebaseFirestore.instance.collection('users/$userUID/Scrap').get();
+        await FirebaseFirestore.instance.collection('users/$userUID/Scrap').get();
 
     List<dynamic> scrappedPostIDs = snapshot.docs.map((doc) => doc['postID']).toList();
     List<String> cast = scrappedPostIDs.cast<String>().toList();

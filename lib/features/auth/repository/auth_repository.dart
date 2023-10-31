@@ -38,6 +38,7 @@ class AuthRepository {
     return user;
   }
 
+
   void signInWithPhone(BuildContext context, ProviderRef ref, String phoneNumber,
       String countryCode, bool isSignUp) async {
     try {
@@ -45,13 +46,13 @@ class AuthRepository {
         phoneNumber: '+${countryCode}$phoneNumber',
         timeout: const Duration(seconds: 120),
         verificationCompleted: (PhoneAuthCredential credential) async {
-          await auth.signInWithCredential(credential);
-          createUserAndNavigate(
-            context: context,
-            countryCode: countryCode,
-            ref: ref,
-            isSignUp: isSignUp,
-          );
+            await auth.signInWithCredential(credential);
+            createUserAndNavigate(
+              context: context,
+              countryCode: countryCode,
+              ref: ref,
+              isSignUp: isSignUp,
+            );
         },
         verificationFailed: (e) {
           throw Exception(e.message);
@@ -123,7 +124,7 @@ class AuthRepository {
         user: user,
       );
     }
-    if (!isSignUp) {
+    else {
       final UserDataModel? user = await ref.read(authRepositoryProvider).getCurrentUserData();
       ref.read(userDataProvider.notifier).updateUser(user!);
 
@@ -148,12 +149,6 @@ class AuthRepository {
         Navigator.pushNamedAndRemoveUntil(
           context,
           LandingPage.routeName,
-          (route) => false,
-        );
-      } else {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppLayoutScreen.routeName,
           (route) => false,
         );
       }

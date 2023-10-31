@@ -92,8 +92,6 @@ Future main() async {
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  // This widget is the root of yo
-  // ur application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return KeyboardVisibilityProvider(

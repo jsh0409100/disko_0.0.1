@@ -17,6 +17,7 @@ import 'features/profile/screens/settings/change_email_page.dart';
 import 'features/report/report_screen.dart';
 import 'features/search/screens/search.dart';
 import 'features/write_post/screens/write_post_page.dart';
+import 'main.dart';
 import 'models/post_card_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -37,7 +38,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case AccountSettingScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => AccountSettingScreen(),
+        builder: (context) => const AccountSettingScreen(),
       );
     case DetailPage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
@@ -91,11 +92,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case SettingScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => SettingScreen(),
+        builder: (context) => const SettingScreen(),
       );
     case EmailEditPage.routeName:
       return MaterialPageRoute(
-        builder: (context) => EmailEditPage(),
+        builder: (context) => const EmailEditPage(),
       );
     case OtherUserProfilePage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;

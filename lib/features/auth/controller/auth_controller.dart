@@ -16,6 +16,7 @@ final userDataAuthProvider = FutureProvider((ref) {
   return authController.getUserData();
 });
 
+
 class AuthController {
   final AuthRepository authRepository;
   final ProviderRef ref;
@@ -30,6 +31,12 @@ class AuthController {
     if (user != null) ref.read(userDataProvider.notifier).updateUser(user);
     return user;
   }
+  //
+  // Future<UserDataModel?> updateUserData() async {
+  //   UserDataModel? user = await authRepository.getCurrentUserData();
+  //   if (user != null) ref.read(userDataProvider.notifier).updateUser(user);
+  //   return user;
+  // }
 
   void signInWithPhone(BuildContext context, String phoneNumber, String countryCode, bool isSignUp) {
     authRepository.signInWithPhone(context, ref, phoneNumber, countryCode, isSignUp);

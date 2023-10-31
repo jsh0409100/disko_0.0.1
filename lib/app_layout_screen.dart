@@ -11,13 +11,18 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/local_notification.dart';
+import 'common/widgets/error_screen.dart';
+import 'common/widgets/loading_screen.dart';
+import 'features/auth/controller/auth_controller.dart';
 import 'features/home/screens/home_feed_page.dart';
 import 'features/profile/screens/my_profile_page.dart';
 import 'main.dart';
 
 class AppLayoutScreen extends ConsumerStatefulWidget {
   static const String routeName = '/my-home';
+
   const AppLayoutScreen({Key? key}) : super(key: key);
+
   @override
   MyHomeState createState() => MyHomeState();
 }
@@ -156,40 +161,50 @@ class MyHomeState extends ConsumerState<AppLayoutScreen> {
       const ChatListPage(),
       const MyProfilePage(),
     ];
-    return Scaffold(
-        body: PageView(
-          controller: pageController,
-          children: pages,
-          onPageChanged: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
+    return ref.watch(userDataAuthProvider).when(
+          data: (user) {
+            return Scaffold(
+                body: PageView(
+                  controller: pageController,
+                  children: pages,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                ),
+                bottomNavigationBar: BottomNavigationBar(
+                  currentIndex: _selectedIndex,
+                  selectedItemColor: Theme.of(context).colorScheme.primary,
+                  onTap: (index) {
+                    pageController.jumpToPage(index);
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home_rounded),
+                      activeIcon: Icon(Icons.home_rounded),
+                      label: '홈',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.chat_outlined),
+                      label: '채팅',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person_outline),
+                      label: '내정보',
+                    ),
+                  ],
+                ));
           },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          selectedItemColor: Theme.of(context).colorScheme.primary,
-          onTap: (index) {
-            pageController.jumpToPage(index);
-            setState(() {
-              _selectedIndex = index;
-            });
+          error: (err, trace) {
+            return ErrorScreen(
+              error: err.toString(),
+            );
           },
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
-              activeIcon: Icon(Icons.home_rounded),
-              label: '홈',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_outlined),
-              label: '채팅',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              label: '내정보',
-            ),
-          ],
-        ));
+          loading: () => const LoadingScreen(),
+        );
   }
 }

@@ -19,6 +19,7 @@ final postControllerProvider = Provider((ref) {
 class PostController {
   final PostRepository postRepository;
   final ProviderRef ref;
+
   PostController({
     required this.postRepository,
     required this.ref,
@@ -46,6 +47,14 @@ class PostController {
             senderUser: value!,
             imagesUrl: imagesUrl,
             likes: likes,
+            postId: postId,
+          ),
+        );
+  }
+
+  void toggleAnnouncemnet(String postId) {
+    ref.read(userDataAuthProvider).whenData(
+          (value) => postRepository.toggleAnnouncement(
             postId: postId,
           ),
         );

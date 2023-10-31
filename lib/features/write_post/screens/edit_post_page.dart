@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../app_layout_screen.dart';
+import '../../../models/category_list.dart';
 import '../../../models/post_card_model.dart';
 import '../controller/write_post_controller.dart';
 
@@ -74,7 +75,7 @@ class _ConsumerEditPostPageState extends ConsumerState<EditPostScreen> {
     setState(() {});
   }
 
-  void _uploadPost() async {
+  void _uploadPost(String category) async {
     ref.read(writePostControllerProvider).uploadPost(
           context,
           postTextController.text,
@@ -83,6 +84,8 @@ class _ConsumerEditPostPageState extends ConsumerState<EditPostScreen> {
           widget.post.postId,
           widget.post.commentCount,
           isQuestion,
+          category,
+      ref,
         );
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -159,9 +162,7 @@ class _ConsumerEditPostPageState extends ConsumerState<EditPostScreen> {
             actions: [
               TextButton(
                   onPressed: () async {
-                    Navigator.of(context).pop();
-                    await uploadFunction(_imageFileList!);
-                    _uploadPost();
+                    categoryDialogBuilder(context);
                   },
                   child: const Text(
                     '완료',
@@ -304,7 +305,7 @@ class _ConsumerEditPostPageState extends ConsumerState<EditPostScreen> {
                     postId = const Uuid().v1();
                     Navigator.of(context).pop();
                     await uploadFunction(_imageFileList!);
-                    _uploadPost();
+                    _uploadPost(CategoryList.categories[_CategoryCards.selected]);
                   },
                 ),
               ],

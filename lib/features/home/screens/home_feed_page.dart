@@ -1,15 +1,21 @@
+import 'package:disko_001/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/enums/country_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/common_app_bar.dart';
+import '../../../models/category_list.dart';
 import '../../../models/post_card_model.dart';
 import '../../../src/providers.dart';
 import '../../write_post/screens/write_post_page.dart';
+import '../widgets/persistent_header.dart';
 import '../widgets/post.dart';
 
+final selectedIndexProvider = StateProvider<int>((ref) => 999);
+
 class HomeFeedPage extends ConsumerStatefulWidget {
-  HomeFeedPage({Key? key}) : super(key: key);
+  const HomeFeedPage({Key? key}) : super(key: key);
 
   @override
   _HomeFeedPageState createState() => _HomeFeedPageState();
@@ -17,6 +23,36 @@ class HomeFeedPage extends ConsumerStatefulWidget {
 
 class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
+  int? _value;
+
+  List<Widget> techChips() {
+    List<Widget> chips = [];
+    for (int i = 0; i < CategoryList.categories.length; i++) {
+      Widget item = Padding(
+        padding: const EdgeInsets.only(left: 10, right: 5),
+        child: ChoiceChip(
+          shape: const StadiumBorder(side: BorderSide(width: 0.5)),
+          label: Text(CategoryList.categories[i]),
+          labelStyle: const TextStyle(color: Colors.black),
+          backgroundColor: Theme.of(context).colorScheme.background,
+          selectedColor: Theme.of(context).colorScheme.primary,
+          selected: _value == i,
+          onSelected: (bool selected) {
+            if (selected) {
+              ref.read(selectedIndexProvider.notifier).update((state) => i);
+            } else {
+              ref.read(selectedIndexProvider.notifier).update((state) => 999);
+            }
+            setState(() {
+              _value = selected ? i : null;
+            });
+          },
+        ),
+      );
+      chips.add(item);
+    }
+    return chips;
+  }
 
   Future<void> reloadPage() async {
     setState(() {});
@@ -27,6 +63,7 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
 
   @override
   Widget build(BuildContext context) {
+    final UserDataModel user = ref.watch(userDataProvider);
     super.build(context);
     scrollController.addListener(() {
       double maxScroll = scrollController.position.maxScrollExtent;
@@ -38,7 +75,7 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
     });
     return Scaffold(
       appBar: CommonAppBar(
-        title: '',
+        title: countries[user.countryCode]!,
         appBar: AppBar(),
       ),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -49,7 +86,11 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
           child: CustomScrollView(
             controller: scrollController,
             restorationId: "posts List",
-            slivers: const [
+            slivers: [
+              SliverPersistentHeader(
+                  delegate: PersistentHeaderList(
+                widget: techChips(),
+              )),
               PostsList(),
               NoMorePosts(),
               OnGoingBottomWidget(),
@@ -103,10 +144,10 @@ class PostsList extends StatelessWidget {
         },
         loading: () => SliverToBoxAdapter(child: Center(child: Container())),
         error: (e, stk) {
-          return SliverToBoxAdapter(
+          return const SliverToBoxAdapter(
             child: Center(
               child: Column(
-                children: const [
+                children: [
                   Icon(Icons.info),
                   SizedBox(
                     height: 20,
@@ -137,7 +178,7 @@ class PostsList extends StatelessWidget {
   }
 }
 
-class PostsListBuilder extends StatelessWidget {
+class PostsListBuilder extends ConsumerStatefulWidget {
   const PostsListBuilder({
     Key? key,
     required this.posts,
@@ -146,46 +187,140 @@ class PostsListBuilder extends StatelessWidget {
   final List<PostCardModel> posts;
 
   @override
+  ConsumerState<PostsListBuilder> createState() => _PostsListBuilderState();
+}
+
+class _PostsListBuilderState extends ConsumerState<PostsListBuilder> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(selectedIndexProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         addAutomaticKeepAlives: true,
         (context, index) {
-          return FutureBuilder(
-              future: getUserDataByUid(posts[index].uid),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData == false) {
-                  return Card(
-                    color: Colors.grey.shade300,
-                    child: Column(children: [
-                      SizedBox(
-                        height: 180,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                      ),
-                      const SizedBox(
-                        height: 11,
-                      )
-                    ]),
-                  );
-                } else {
-                  PostCardModel post = PostCardModel(
+          final selectedIndex = ref.watch(selectedIndexProvider);
+          if (selectedIndex == 999) {
+            return FutureBuilder(
+                future: getUserDataByUid(widget.posts[index].uid),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData == false) {
+                    return Card(
+                      color: Colors.grey.shade300,
+                      child: Column(children: [
+                        SizedBox(
+                          height: 180,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                        ),
+                        const SizedBox(
+                          height: 11,
+                        )
+                      ]),
+                    );
+                  } else {
+                    PostCardModel post = PostCardModel(
                       userName: snapshot.data.displayName,
-                      postTitle: posts[index].postTitle,
-                      postText: posts[index].postText,
-                      uid: posts[index].uid,
-                      postId: posts[index].postId,
-                      likes: posts[index].likes,
-                      imagesUrl: posts[index].imagesUrl,
-                      time: posts[index].time,
-                      isQuestion: posts[index].isQuestion,
-                      commentCount: posts[index].commentCount);
-                  return Post(
-                    post: post,
-                  );
-                }
-              });
+                      postTitle: widget.posts[index].postTitle,
+                      postText: widget.posts[index].postText,
+                      uid: widget.posts[index].uid,
+                      postId: widget.posts[index].postId,
+                      likes: widget.posts[index].likes,
+                      imagesUrl: widget.posts[index].imagesUrl,
+                      time: widget.posts[index].time,
+                      isQuestion: widget.posts[index].isQuestion,
+                      commentCount: widget.posts[index].commentCount,
+                      category: widget.posts[index].category,
+                      isAnnouncement: widget.posts[index].isAnnouncement,
+                    );
+                    return Post(
+                      post: post,
+                    );
+                  }
+                });
+          }  else if (widget.posts[index].category == CategoryList.categories[selectedIndex]) {
+            return FutureBuilder(
+                future: getUserDataByUid(widget.posts[index].uid),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData == false) {
+                    return Card(
+                      color: Colors.grey.shade300,
+                      child: Column(children: [
+                        SizedBox(
+                          height: 180,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                        ),
+                        const SizedBox(
+                          height: 11,
+                        )
+                      ]),
+                    );
+                  } else {
+                    PostCardModel post = PostCardModel(
+                      userName: snapshot.data.displayName,
+                      postTitle: widget.posts[index].postTitle,
+                      postText: widget.posts[index].postText,
+                      uid: widget.posts[index].uid,
+                      postId: widget.posts[index].postId,
+                      likes: widget.posts[index].likes,
+                      imagesUrl: widget.posts[index].imagesUrl,
+                      time: widget.posts[index].time,
+                      isQuestion: widget.posts[index].isQuestion,
+                      commentCount: widget.posts[index].commentCount,
+                      category: widget.posts[index].category,
+                      isAnnouncement: widget.posts[index].isAnnouncement,
+                    );
+                    return Post(
+                      post: post,
+                    );
+                  }
+                });
+          } else if(selectedIndex == 0 && widget.posts[index].isAnnouncement){
+              return FutureBuilder(
+                  future: getUserDataByUid(widget.posts[index].uid),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData == false) {
+                      return Card(
+                        color: Colors.grey.shade300,
+                        child: Column(children: [
+                          SizedBox(
+                            height: 180,
+                            width: MediaQuery.of(context).size.width * 0.9,
+                          ),
+                          const SizedBox(
+                            height: 11,
+                          )
+                        ]),
+                      );
+                    } else {
+                      PostCardModel post = PostCardModel(
+                        userName: snapshot.data.displayName,
+                        postTitle: widget.posts[index].postTitle,
+                        postText: widget.posts[index].postText,
+                        uid: widget.posts[index].uid,
+                        postId: widget.posts[index].postId,
+                        likes: widget.posts[index].likes,
+                        imagesUrl: widget.posts[index].imagesUrl,
+                        time: widget.posts[index].time,
+                        isQuestion: widget.posts[index].isQuestion,
+                        commentCount: widget.posts[index].commentCount,
+                        category: widget.posts[index].category,
+                        isAnnouncement: widget.posts[index].isAnnouncement,
+                      );
+                      return Post(
+                        post: post,
+                      );
+                    }
+                  });
+
+          } else {
+            return const SizedBox();
+          }
         },
-        childCount: posts.length,
+        childCount: widget.posts.length,
       ),
     );
   }
@@ -204,9 +339,9 @@ class OnGoingBottomWidget extends StatelessWidget {
           return state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
             onGoingLoading: (posts) => const Center(child: CircularProgressIndicator()),
-            onGoingError: (posts, e, stk) => Center(
+            onGoingError: (posts, e, stk) => const Center(
               child: Column(
-                children: const [
+                children: [
                   Icon(Icons.info),
                   SizedBox(
                     height: 20,

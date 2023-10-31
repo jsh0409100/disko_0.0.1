@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../app_layout_screen.dart';
+import '../../../main.dart';
 
 class LandingPage extends StatefulWidget {
   static const routeName = '/landing-screen';

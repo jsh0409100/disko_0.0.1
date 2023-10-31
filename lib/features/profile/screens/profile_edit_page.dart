@@ -8,11 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/user_model.dart';
 
 class ProfileEditPage extends ConsumerStatefulWidget {
-  final UserModel user;
-
   static const String routeName = 'profile-edit-screen';
+  final UserDataModel user;
 
-  const ProfileEditPage({Key? key, required this.user}) : super(key: key);
+  const ProfileEditPage({
+    required this.user,
+    Key? key,
+  }) : super(key: key);
 
   @override
   ConsumerState<ProfileEditPage> createState() => _ProfileEditPageState();

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/home/widgets/post_card.dart';
+import 'package:disko_001/models/user_model.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/enums/country_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../../models/post_card_model.dart';
 import '../screens/detail_page.dart';
@@ -58,8 +60,8 @@ class _PostState extends State<Post> with AutomaticKeepAliveClientMixin {
 }
 
 class PostsDatabase {
-  Future<List<PostCardModel>> fetchPosts(PostCardModel? post) async {
-    final postsCollectionRef = FirebaseFirestore.instance.collection('posts');
+  Future<List<PostCardModel>> fetchPosts(PostCardModel? post, UserDataModel user) async {
+    final postsCollectionRef = FirebaseFirestore.instance.collection('posts').doc(countries[user.countryCode]).collection(countries[user.countryCode]!);
     if (post == null) {
       final documentSnapshot =
           await postsCollectionRef.orderBy('time', descending: true).limit(5).get();

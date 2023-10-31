@@ -16,46 +16,41 @@ final userDataAuthProvider = FutureProvider((ref) {
   return authController.getUserData();
 });
 
+
 class AuthController {
   final AuthRepository authRepository;
   final ProviderRef ref;
+
   AuthController({
     required this.authRepository,
     required this.ref,
   });
 
-  Future<UserModel?> getUserData() async {
-    UserModel? user = await authRepository.getCurrentUserData();
+  Future<UserDataModel?> getUserData() async {
+    UserDataModel? user = await authRepository.getCurrentUserData();
+    if (user != null) ref.read(userDataProvider.notifier).updateUser(user);
     return user;
   }
+  //
+  // Future<UserDataModel?> updateUserData() async {
+  //   UserDataModel? user = await authRepository.getCurrentUserData();
+  //   if (user != null) ref.read(userDataProvider.notifier).updateUser(user);
+  //   return user;
+  // }
 
-  void signInWithPhone(BuildContext context, String phoneNumber) {
-    authRepository.signInWithPhone(context, phoneNumber);
+  void signInWithPhone(BuildContext context, String phoneNumber, String countryCode, bool isSignUp) {
+    authRepository.signInWithPhone(context, ref, phoneNumber, countryCode, isSignUp);
   }
 
   void verifyOTP(BuildContext context, String verificationId, String userOTP, String countryCode,
-      bool itisSignUp) {
+      bool isSignUp) {
     authRepository.verifyOTP(
       context: context,
       verificationId: verificationId,
       userOTP: userOTP,
       countryCode: countryCode,
       ref: ref,
-      itis: itisSignUp,
-    );
-  }
-
-  void saveUserDataToFirebase(
-      BuildContext context, String name, File? profilePic, String countryCode, String description, List<String> follow) {
-    authRepository.saveUserDataToFirebase(
-      name: name,
-      profilePic: profilePic,
-      context: context,
-      ref: ref,
-      countryCode: countryCode,
-      isUserCreated: false,
-      description: description,
-      follow: follow,
+      isSignUp: isSignUp,
     );
   }
 
@@ -84,7 +79,7 @@ class AuthController {
     );
   }
 
-  Stream<UserModel> userDataById(String userId) {
+  Stream<UserDataModel> userDataById(String userId) {
     return authRepository.userData(userId);
   }
 

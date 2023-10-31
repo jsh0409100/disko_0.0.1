@@ -6,15 +6,16 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../models/post_card_model.dart';
 import '../../models/user_model.dart';
+import '../enums/country_enum.dart';
 
 Future<String> getDisplayNameByUid(String uid) async {
   var UserDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
   return UserDoc.data()!['displayName'];
 }
 
-Future<UserModel> getUserDataByUid(String uid) async {
+Future<UserDataModel> getUserDataByUid(String uid) async {
   var userDataMap = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-  return UserModel.fromJson(userDataMap.data()!);
+  return UserDataModel.fromJson(userDataMap.data()!);
 }
 
 Future<List<String>> getFollowByUid(String uid) async{
@@ -28,22 +29,22 @@ Future<List<DocumentSnapshot>> getScrapListByUid(String uid) async{
 }
 
 
-Stream<UserModel> getUserStreamByUid(String uid) {
+Stream<UserDataModel> getUserStreamByUid(String uid) {
   return FirebaseFirestore.instance
       .collection('users')
       .doc(uid)
       .snapshots()
-      .map((snapshot) => UserModel.fromJson(snapshot.data()!));
+      .map((snapshot) => UserDataModel.fromJson(snapshot.data()!));
 }
 
-Future<PostCardModel> getPostByPostId(String postId) async {
-  var postDataMap = await FirebaseFirestore.instance.collection('posts').doc(postId).get();
+Future<PostCardModel> getPostByPostId(UserDataModel user, String postId) async {
+  var postDataMap = await FirebaseFirestore.instance.collection('posts').doc(countries[user.countryCode]).collection(countries[user.countryCode]!).doc(postId).get();
   return PostCardModel.fromJson(postDataMap.data()!);
 }
 
-Stream<UserModel> getUserDataByUidStream(String Uid) async* {
+Stream<UserDataModel> getUserDataByUidStream(String Uid) async* {
   var userDataMap = await FirebaseFirestore.instance.collection('users').doc(Uid).get();
-  yield UserModel.fromJson(userDataMap.data()!);
+  yield UserDataModel.fromJson(userDataMap.data()!);
 }
 
 String getChatName(String receiverUid, String myUid) {

@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/utils.dart';
-import '../../../models/user_model.dart';
 import '../controller/chat_controller.dart';
 import 'chat_item.dart';
 
 class ChatList extends ConsumerStatefulWidget {
-  final UserModel user;
   const ChatList({
     Key? key,
-    required this.user,
   }) : super(key: key);
 
   @override
@@ -64,7 +61,6 @@ class _ChatListState extends ConsumerState<ChatList> {
                       timeSent: chatDocs[index].timeSent,
                       unreadMessageCount:
                           (currentIsSender) ? 0 : chatDocs[index].unreadMessageCount,
-                      user: widget.user,
                     );
                   });
             });

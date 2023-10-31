@@ -2,13 +2,10 @@ import 'package:disko_001/features/chat/widgets/chat_list.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/widgets/common_app_bar.dart';
-import '../../../models/user_model.dart';
 
 class ChatListPage extends StatefulWidget {
-  final UserModel user;
   const ChatListPage({
     Key? key,
-    required this.user,
   }) : super(key: key);
 
   @override
@@ -27,12 +24,10 @@ class _ChatListPageState extends State<ChatListPage> with AutomaticKeepAliveClie
         title: '채팅',
         appBar: AppBar(),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(child: ChatList(user: widget.user)),
-          ],
-        ),
+      body: const Column(
+        children: [
+          Expanded(child: ChatList()),
+        ],
       ),
     );
   }

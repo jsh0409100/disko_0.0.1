@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../features/chat/screens/chat_screen.dart';
-import '../../../models/user_model.dart';
 import '../../profile/screens/other_user_profile_page.dart';
 
 class ChatItem extends StatefulWidget {
@@ -11,7 +10,6 @@ class ChatItem extends StatefulWidget {
   final String text;
   final Timestamp timeSent;
   final int unreadMessageCount;
-  final UserModel user;
 
   const ChatItem({
     Key? key,
@@ -21,7 +19,7 @@ class ChatItem extends StatefulWidget {
     required this.unreadMessageCount,
     required this.peerUid,
     required this.profilePic,
-    required this.user,
+
   }) : super(key: key);
 
   @override
@@ -41,7 +39,6 @@ class _ChatItemState extends State<ChatItem> {
           ChatScreen.routeName,
           arguments: {
             'peerUid': widget.peerUid,
-            'user': widget.user,
           },
         );
       },

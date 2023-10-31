@@ -8,22 +8,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/local_notification.dart';
+import 'common/widgets/error_screen.dart';
+import 'common/widgets/loading_screen.dart';
+import 'features/auth/controller/auth_controller.dart';
 import 'features/home/screens/home_feed_page.dart';
 import 'features/profile/screens/my_profile_page.dart';
 import 'main.dart';
-import 'models/user_model.dart';
 
-class AppLayoutScreen extends StatefulWidget {
-  final UserModel user;
+class AppLayoutScreen extends ConsumerStatefulWidget {
   static const String routeName = '/my-home';
-  const AppLayoutScreen({Key? key, required this.user}) : super(key: key);
+
+  const AppLayoutScreen({Key? key}) : super(key: key);
+
   @override
   MyHomeState createState() => MyHomeState();
 }
 
-class MyHomeState extends State<AppLayoutScreen> {
+class MyHomeState extends ConsumerState<AppLayoutScreen> {
   late final NotificationService notificationService;
   String? mtoken = '';
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -71,7 +75,7 @@ class MyHomeState extends State<AppLayoutScreen> {
       Navigator.pushNamed(
         context,
         ChatScreen.routeName,
-        arguments: {'peerUid': message.data['senderId'], 'user': widget.user},
+        arguments: {'peerUid': message.data['senderId']},
       );
     }
   }
@@ -133,7 +137,6 @@ class MyHomeState extends State<AppLayoutScreen> {
               ChatScreen.routeName,
               arguments: {
                 'peerUid': notification['senderId'],
-                'user': widget.user,
               },
             );
         }
@@ -154,44 +157,54 @@ class MyHomeState extends State<AppLayoutScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      HomeFeedPage(),
-      ChatListPage(user: widget.user),
+      const HomeFeedPage(),
+      const ChatListPage(),
       const MyProfilePage(),
     ];
-    return Scaffold(
-        body: PageView(
-          controller: pageController,
-          children: pages,
-          onPageChanged: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
+    return ref.watch(userDataAuthProvider).when(
+          data: (user) {
+            return Scaffold(
+                body: PageView(
+                  controller: pageController,
+                  children: pages,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                ),
+                bottomNavigationBar: BottomNavigationBar(
+                  currentIndex: _selectedIndex,
+                  selectedItemColor: Theme.of(context).colorScheme.primary,
+                  onTap: (index) {
+                    pageController.jumpToPage(index);
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home_rounded),
+                      activeIcon: Icon(Icons.home_rounded),
+                      label: '홈',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.chat_outlined),
+                      label: '채팅',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person_outline),
+                      label: '내정보',
+                    ),
+                  ],
+                ));
           },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          selectedItemColor: Theme.of(context).colorScheme.primary,
-          onTap: (index) {
-            pageController.jumpToPage(index);
-            setState(() {
-              _selectedIndex = index;
-            });
+          error: (err, trace) {
+            return ErrorScreen(
+              error: err.toString(),
+            );
           },
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home_rounded),
-              label: '홈',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_outlined),
-              label: '채팅',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              label: '내정보',
-            ),
-          ],
-        ));
+          loading: () => const LoadingScreen(),
+        );
   }
 }

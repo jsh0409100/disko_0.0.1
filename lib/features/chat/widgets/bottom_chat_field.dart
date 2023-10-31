@@ -16,15 +16,15 @@ import '../screens/make_appointment_screen.dart';
 import 'message_category_card.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
-  const BottomChatField(
-      {Key? key,
-      required this.receiverUid,
-      required this.profilePic,
-      required this.receiverDisplayName,
-      required this.user})
-      : super(key: key);
+  const BottomChatField({
+    Key? key,
+    required this.receiverUid,
+    required this.profilePic,
+    required this.receiverDisplayName,
+    required this.user,
+  }) : super(key: key);
   final String receiverUid, profilePic, receiverDisplayName;
-  final UserModel user;
+  final UserDataModel user;
 
   @override
   ConsumerState<BottomChatField> createState() => _SendMessageState();
@@ -164,6 +164,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   }
 
   void showKeyboard() => focusNode.requestFocus();
+
   void hideKeyboard() => focusNode.unfocus();
 
   void toggleOptionsContainer() {

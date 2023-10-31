@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../../common/utils/utils.dart';
 import '../../profile/screens/other_user_profile_page.dart';
-import '../controller/post_controller.dart';
-import 'bottom_nestedcomment_field.dart';
 
 class NestedComment extends StatefulWidget {
   final String userName, text, uid, postId, commentId, nestedcommentId;

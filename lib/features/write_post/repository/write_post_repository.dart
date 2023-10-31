@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../common/enums/country_enum.dart';
 import '../../../models/post_card_model.dart';
 import '../../../models/user_model.dart';
 
@@ -30,10 +31,12 @@ class WritePostRepository {
     required String postId,
     required String username,
     required String postTitle,
+    required String category,
     required List<String> imagesUrl,
     required List<String> likes,
     required int commentCount,
     required bool isQuestion,
+    required WidgetRef ref,
   }) async {
     final message = PostCardModel(
       uid: auth.currentUser!.uid,
@@ -46,9 +49,13 @@ class WritePostRepository {
       postId: postId,
       commentCount: commentCount,
       isQuestion: isQuestion,
+      category: category,
+      isAnnouncement: false,
     );
+    final UserDataModel user = ref.watch(userDataProvider);
+    final String countryCode = user.countryCode;
 
-    await firestore.collection('posts').doc(postId).set(
+    await firestore.collection('posts').doc(countries[countryCode]).collection(countries[countryCode]!).doc(postId).set(
           message.toJson(),
         );
   }
@@ -56,12 +63,14 @@ class WritePostRepository {
   void uploadPost({
     required BuildContext context,
     required String text,
-    required UserModel userData,
+    required String category,
+    required UserDataModel userData,
     required String postTitle,
     required List<String> imagesUrl,
     required String postId,
     required int commentCount,
     required bool isQuestion,
+    required WidgetRef ref
   }) async {
     try {
       var time = Timestamp.now();
@@ -76,6 +85,8 @@ class WritePostRepository {
         username: userData.displayName,
         commentCount: commentCount,
         isQuestion: isQuestion,
+          category:category,
+        ref:ref,
       );
     } catch (e) {
       // showSnackBar(context: context, content: e.toString());

@@ -17,6 +17,7 @@ import 'features/profile/screens/settings/change_email_page.dart';
 import 'features/report/report_screen.dart';
 import 'features/search/screens/search.dart';
 import 'features/write_post/screens/write_post_page.dart';
+import 'main.dart';
 import 'models/post_card_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -28,20 +29,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case SignUpScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const SignUpScreen(
-          itisSignUp: true,
+          isSignUp: true,
         ),
       );
     case AppLayoutScreen.routeName:
-      final arguments = settings.arguments as Map<String, dynamic>;
-      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => AppLayoutScreen(user: user),
+        builder: (context) => const AppLayoutScreen(),
       );
     case AccountSettingScreen.routeName:
-      final arguments = settings.arguments as Map<String, dynamic>;
-      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => AccountSettingScreen(user: user),
+        builder: (context) => const AccountSettingScreen(),
       );
     case DetailPage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
@@ -58,10 +55,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ChatScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
       final peerUid = arguments['peerUid'];
-      final user = arguments['user'];
       return MaterialPageRoute(
         builder: (context) => ChatScreen(
-          user: user,
           peerUid: peerUid,
         ),
       );
@@ -96,16 +91,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => const FAQPage(),
       );
     case SettingScreen.routeName:
-      final arguments = settings.arguments as Map<String, dynamic>;
-      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => SettingScreen(user: user),
+        builder: (context) => const SettingScreen(),
       );
     case EmailEditPage.routeName:
-      final arguments = settings.arguments as Map<String, dynamic>;
-      final user = arguments['user'];
       return MaterialPageRoute(
-        builder: (context) => EmailEditPage(user: user),
+        builder: (context) => const EmailEditPage(),
       );
     case OtherUserProfilePage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
@@ -115,12 +106,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           uid: uid,
         ),
       );
+
     case ProfileEditPage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
       final user = arguments['user'];
       return MaterialPageRoute(
         builder: (context) => ProfileEditPage(
-          user: user,
+            user:user,
         ),
       );
     default:

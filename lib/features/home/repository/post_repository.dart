@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../common/enums/country_enum.dart';
 import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../../models/comment_model.dart';
@@ -16,19 +17,24 @@ final postRepositoryProvider = Provider(
   (ref) => PostRepository(
     firestore: FirebaseFirestore.instance,
     auth: FirebaseAuth.instance,
+    user: ref.watch(userDataProvider),
   ),
 );
 
 class PostRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
+  final UserDataModel user;
+
   PostRepository({
     required this.firestore,
     required this.auth,
+    required this.user,
   });
 
   Stream<List<CommentModel>> getCommentStream(String postId) {
-    final String collectionPath = 'posts/$postId/comment';
+    final String collectionPath =
+        'posts/${countries[user.countryCode]}/${countries[user.countryCode]}/$postId/comment';
 
     return firestore.collection(collectionPath).orderBy('time').snapshots().map((event) {
       List<CommentModel> comment = [];
@@ -40,7 +46,8 @@ class PostRepository {
   }
 
   Stream<List<NestedCommentModel>> getNestedCommentStream(String postId, String commentId) {
-    final String collectionPath = 'posts/$postId/comment/$commentId/nestedcomment';
+    final String collectionPath =
+        'posts/${countries[user.countryCode]}/${countries[user.countryCode]}/$postId/comment/$commentId/nestedcomment';
 
     return firestore.collection(collectionPath).orderBy('time').snapshots().map((event) {
       List<NestedCommentModel> nestedcomment = [];
@@ -83,6 +90,8 @@ class PostRepository {
     required String postTitle,
     required List<String> imagesUrl,
     required List<String> likes,
+    required String category,
+    required bool isAnnouncement,
   }) async {
     final comment = PostCardModel(
       time: time,
@@ -95,9 +104,15 @@ class PostRepository {
       postId: '',
       commentCount: 0,
       isQuestion: false,
+      category: category,
+      isAnnouncement: isAnnouncement,
     );
 
-    final currentComment = firestore.collection('posts').doc(postId);
+    final currentComment = firestore
+        .collection('posts')
+        .doc(countries[user.countryCode])
+        .collection(countries[user.countryCode]!)
+        .doc(postId);
     final doc = await currentComment.get();
 
     if (doc.exists) {
@@ -155,6 +170,8 @@ class PostRepository {
     required String postTitle,
     required List<String> likes,
     required String commentId,
+    required String category,
+    required bool isAnnouncement,
   }) async {
     final comment = PostCardModel(
       time: time,
@@ -167,6 +184,8 @@ class PostRepository {
       postId: '',
       commentCount: 0,
       isQuestion: false,
+      category: category,
+      isAnnouncement: isAnnouncement,
     );
 
     final currentComment =
@@ -188,7 +207,7 @@ class PostRepository {
   void uploadComment({
     required BuildContext context,
     required String text,
-    required UserModel senderUser,
+    required UserDataModel senderUser,
     required postId,
     required List<String> imagesUrl,
     required List<String> likes,
@@ -196,7 +215,7 @@ class PostRepository {
     try {
       var time = Timestamp.now();
       var commentId = const Uuid().v1();
-      var post = await getPostByPostId(postId);
+      var post = await getPostByPostId(senderUser, postId);
       _saveComment(
         userName: senderUser.displayName,
         text: text,
@@ -215,6 +234,8 @@ class PostRepository {
         postTitle: post.postTitle,
         imagesUrl: imagesUrl,
         likes: likes,
+        category: post.category,
+        isAnnouncement: post.isAnnouncement,
       );
 
       saveNotification(
@@ -232,7 +253,7 @@ class PostRepository {
   void uploadNestedComment({
     required BuildContext context,
     required String text,
-    required UserModel senderUser,
+    required UserDataModel senderUser,
     required postId,
     required commentId,
     required List<String> likes,
@@ -240,7 +261,7 @@ class PostRepository {
     try {
       var time = Timestamp.now();
       var nestedcommentId = const Uuid().v1();
-      var post = await getPostByPostId(postId);
+      var post = await getPostByPostId(senderUser, postId);
       _saveNestedComment(
         userName: senderUser.displayName,
         text: text,
@@ -260,6 +281,8 @@ class PostRepository {
         postTitle: post.postTitle,
         likes: likes,
         commentId: commentId,
+        category: post.category,
+        isAnnouncement: post.isAnnouncement,
       );
 
       saveNotification(
@@ -272,6 +295,24 @@ class PostRepository {
     } catch (e) {
       // showSnackBar(context: context, content: e.toString());
     }
+  }
+
+  void toggleAnnouncement({required String postId}) async {
+    final currentPost = firestore
+        .collection('posts')
+        .doc(countries[user.countryCode])
+        .collection(countries[user.countryCode]!)
+        .doc(postId);
+    final doc = await currentPost.get();
+
+    final data = doc.get('isAnnouncement');
+    (data == true)
+        ? currentPost.update({
+            'isAnnouncement': false,
+          })
+        : currentPost.update({
+            'isAnnouncement': true,
+          });
   }
 
   void saveNotification({

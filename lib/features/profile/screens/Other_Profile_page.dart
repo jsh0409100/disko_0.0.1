@@ -22,7 +22,7 @@ const List<Widget> follow = <Widget>[
 
 class Other_ProfilePage extends ConsumerStatefulWidget {
   final String uid;
-  final UserModel user;
+  final UserDataModel user;
 
   const Other_ProfilePage({
     Key? key,
@@ -160,9 +160,7 @@ class __ProfilePageState extends ConsumerState<Other_ProfilePage> {
                     ],
                   ),
                 ),
-                widget.uid == FirebaseAuth.instance.currentUser!.uid
-                    ? editChip()
-                    : followChip(checkFollow())
+                 followChip(checkFollow())
               ],
             ),
             descriptionText(),
@@ -219,22 +217,6 @@ class __ProfilePageState extends ConsumerState<Other_ProfilePage> {
         ),
       ),
     );
-  }
-
-  Widget editChip() {
-    return ElevatedButton(
-        onPressed: () {
-          Navigator.pushNamed(context, ProfileEditPage.routeName, arguments: {'user': widget.user});
-        },
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.white54),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ))),
-        child: const Text(
-          '수정',
-          style: TextStyle(color: Colors.black),
-        ));
   }
 
   void checkFollow() async {

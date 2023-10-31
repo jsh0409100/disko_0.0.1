@@ -1,6 +1,6 @@
 class CategoryList {
   static final List<String> categories = [
-    "",
+    "중요공지",
     "현지생활",
     "중고거래",
     "구인구직",
@@ -10,5 +10,6 @@ class CategoryList {
     "고민상담",
     "교통/날씨",
     "유학생활",
+
   ];
 }

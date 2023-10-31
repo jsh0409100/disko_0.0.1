@@ -10,13 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../common/enums/country_enum.dart';
 import '../../../common/enums/notification_enum.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/widgets/common_app_bar.dart';
 import '../../../models/post_card_model.dart';
 import '../../../models/user_model.dart';
 import '../../../src/providers.dart';
-import '../../chat/controller/chat_controller.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../profile/screens/other_user_profile_page.dart';
 import '../../report/report_screen.dart';
@@ -42,11 +42,10 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   List<String> checkUser = [];
   late PostCardModel post;
   final replyController = TextEditingController();
-  final user = FirebaseAuth.instance.currentUser;
-  CollectionReference postsCollection =
-      FirebaseFirestore.instance.collection('posts');
+
   CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
+  String currUid = FirebaseAuth.instance.currentUser!.uid;
   bool _isLiked = false;
   Color likeColor = Colors.black;
   Icon likeIcon = const Icon(Icons.favorite_border);
@@ -142,7 +141,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
     return showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return FutureBuilder<UserModel>(
+        return FutureBuilder<UserDataModel>(
             future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
             builder: (context, snapshot) {
               return StatefulBuilder(builder: (context, setState) {
@@ -304,14 +303,17 @@ class _DetailPageState extends ConsumerState<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userDataProvider);
+    CollectionReference postsCollection =
+    FirebaseFirestore.instance.collection('posts').doc(countries[user.countryCode]).collection(countries[user.countryCode]!);
     return FutureBuilder(
-        future: getPostByPostId(widget.post.postId),
+        future: getPostByPostId(user, widget.post.postId),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
           }
           post = snapshot.data!;
-          if (post.likes.contains(user!.uid)) {
+          if (post.likes.contains(currUid)) {
             likeColor = Theme.of(context).colorScheme.primary;
             likeIcon = const Icon(
               Icons.favorite,
@@ -408,7 +410,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                 PopupMenuButton<String>(
                                   onSelected: showMenu,
                                   itemBuilder: (BuildContext context) {
-                                    return (post.uid != user!.uid)
+                                    return (post.uid != currUid)
                                         ? {'메세지 보내기', '신고하기'}
                                             .map((String choice) {
                                             return PopupMenuItem<String>(
@@ -540,13 +542,13 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                       .collection('posts')
                                       .doc(post.postId)
                                       .get();
-                                  if (post.likes.contains(user!.uid)) {
-                                    post.likes.remove(user!.uid);
+                                  if (post.likes.contains(currUid)) {
+                                    post.likes.remove(currUid);
                                     setState(() {
                                       _isLiked = false;
                                     });
                                   } else {
-                                    post.likes.add(user!.uid);
+                                    post.likes.add(currUid);
                                     setState(() {
                                       _isLiked = true;
                                     });
@@ -556,7 +558,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                       .update({
                                     'likes': post.likes,
                                   });
-                                  if (post.uid != user!.uid) {
+                                  if (post.uid != currUid) {
                                     saveNotification(
                                       peerUid: post.uid,
                                       postId: post.postId,

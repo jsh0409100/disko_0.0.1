@@ -7,10 +7,10 @@ import '../controller/auth_controller.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   static const routeName = '/signup-screen';
-  final bool itisSignUp;
+  final bool isSignUp;
 
   const SignUpScreen({
-    required this.itisSignUp,
+    required this.isSignUp,
     Key? key,
   }) : super(key: key);
 
@@ -29,15 +29,14 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
   TextEditingController phoneNumController = TextEditingController();
 
   var phone = "";
-  // CollectionReference users = FirebaseFirestore.instance.collection('users');
   CountryCode? countryCode;
 
-  void sendPhoneNumber() {
+  void sendPhoneNumber(bool isSignUp,) {
     String phoneNumber = phoneNumController.text.trim();
     if (phoneNumber.isNotEmpty) {
       ref
           .read(authControllerProvider)
-          .signInWithPhone(context, '+${countryCode!.dialCode}$phoneNumber');
+          .signInWithPhone(context, phoneNumber, countryCode!.dialCode, isSignUp);
       setState(() {
         _isVisible = true;
       });
@@ -54,18 +53,18 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
   }
 
   void verifyOTP(WidgetRef ref, BuildContext context, String userOTP,
-      String countryCode, bool itisSignUp) {
+      String countryCode, bool isSignUp) {
     ref.read(authControllerProvider).verifyOTP(
           context,
           SignUpScreen.verificationId,
           userOTP,
           countryCode,
-          itisSignUp,
+          isSignUp,
         );
   }
 
   String whattitle() {
-    if (widget.itisSignUp == true) {
+    if (widget.isSignUp == true) {
       return "회원가입";
     } else {
       return "로그인";
@@ -80,7 +79,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
         title: Text(
           whattitle(),
           semanticsLabel: title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w700,
           ),
@@ -92,7 +91,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.close,
             size: 24,
           ),
@@ -213,7 +212,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
               ),
               onPressed: (phone.trim().isEmpty || phone.trim() == '')
                   ? null
-                  : sendPhoneNumber,
+                  : () => sendPhoneNumber(widget.isSignUp),
               child: const Text(
                 '인증문자 받기',
                 style: TextStyle(
@@ -291,7 +290,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                           context,
                           verController.text.trim(),
                           countryCode!.dialCode,
-                          widget.itisSignUp,
+                          widget.isSignUp,
                         )
                     : null,
                 child: const Text(

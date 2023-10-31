@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app_layout_screen.dart';
+import '../../../common/utils/utils.dart';
 import '../../../models/user_model.dart';
 import '../screens/signup_page.dart';
 
@@ -27,22 +28,31 @@ class AuthRepository {
     required this.firestore,
   });
 
-  Future<UserModel?> getCurrentUserData() async {
+  Future<UserDataModel?> getCurrentUserData() async {
     var userData = await firestore.collection('users').doc(auth.currentUser?.uid).get();
 
-    UserModel? user;
+    UserDataModel? user;
     if (userData.data() != null) {
-      user = UserModel.fromJson(userData.data()!);
+      user = UserDataModel.fromJson(userData.data()!);
     }
     return user;
   }
 
-  void signInWithPhone(BuildContext context, String phoneNumber) async {
+
+  void signInWithPhone(BuildContext context, ProviderRef ref, String phoneNumber,
+      String countryCode, bool isSignUp) async {
     try {
       await auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
+        phoneNumber: '+${countryCode}$phoneNumber',
+        timeout: const Duration(seconds: 120),
         verificationCompleted: (PhoneAuthCredential credential) async {
-          // await auth.signInWithCredential(credential);
+            await auth.signInWithCredential(credential);
+            createUserAndNavigate(
+              context: context,
+              countryCode: countryCode,
+              ref: ref,
+              isSignUp: isSignUp,
+            );
         },
         verificationFailed: (e) {
           throw Exception(e.message);
@@ -63,7 +73,7 @@ class AuthRepository {
     required String userOTP,
     required String countryCode,
     required ProviderRef ref,
-    required bool itis,
+    required bool isSignUp,
   }) async {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -71,69 +81,74 @@ class AuthRepository {
         smsCode: userOTP,
       );
       await auth.signInWithCredential(credential);
-      if (itis == true) {
-        saveUserDataToFirebase(
-          name: '신규 유저',
-          profilePic: null,
-          context: context,
-          countryCode: countryCode,
-          ref: ref,
-          isUserCreated: true,
-          description: ' ',
-          follow: [],
-        );
-      }
-      if (itis == false) {
-        await auth.signInWithCredential(credential);
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppLayoutScreen.routeName,
-          (route) => false,
-        );
-      }
+      createUserAndNavigate(
+        context: context,
+        countryCode: countryCode,
+        ref: ref,
+        isSignUp: isSignUp,
+      );
     } on FirebaseAuthException catch (e) {
-      // showSnackBar(context: context, content: e.message!);
+      showSnackBar(context: context, content: e.message!);
     }
   }
 
-  void saveUserDataToFirebase({
-    required String name,
-    required File? profilePic,
+  Future<void> createUserAndNavigate({
+    required BuildContext context,
     required String countryCode,
     required ProviderRef ref,
-    required BuildContext context,
-    required bool isUserCreated,
-    required String description,
-    required List<String> follow,
+    required bool isSignUp,
   }) async {
-    try {
-      String uid = auth.currentUser!.uid;
-      String photoUrl =
-          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+    String photoUrl =
+        'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
 
-      var user = UserModel(
+    if (isSignUp) {
+      var user = UserDataModel(
         phoneNum: auth.currentUser!.phoneNumber!,
-        displayName: name,
+        displayName: '신규 유저',
         countryCode: countryCode,
         profilePic: photoUrl,
         email: null,
         diskoPoint: 0,
         tag: [],
-        description: description,
-        follow: follow,
+        description: ' ',
+        follow: [],
+        hasAuthority: false,
       );
-      await firestore.collection('users').doc(uid).set(user.toJson());
 
+      ref.read(userDataProvider.notifier).updateUser(user);
+
+      saveUserDataToFirebase(
+        context: context,
+        ref: ref,
+        isUserCreated: true,
+        user: user,
+      );
+    }
+    else {
+      final UserDataModel? user = await ref.read(authRepositoryProvider).getCurrentUserData();
+      ref.read(userDataProvider.notifier).updateUser(user!);
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppLayoutScreen.routeName,
+        (route) => false,
+      );
+    }
+  }
+
+  void saveUserDataToFirebase(
+      {required ProviderRef ref,
+      required BuildContext context,
+      required UserDataModel user,
+      required bool isUserCreated}) async {
+    try {
+      String uid = auth.currentUser!.uid;
+      await firestore.collection('users').doc(uid).set(user.toJson());
+      ref.read(userDataProvider.notifier).updateUser(user);
       if (isUserCreated) {
         Navigator.pushNamedAndRemoveUntil(
           context,
           LandingPage.routeName,
-          (route) => false,
-        );
-      } else {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppLayoutScreen.routeName,
           (route) => false,
         );
       }
@@ -142,56 +157,56 @@ class AuthRepository {
     }
   }
 
-  void saveloginUserDataToFirebase({
-    required String name,
-    required File? profilePic,
-    required String countryCode,
-    required ProviderRef ref,
-    required BuildContext context,
-    required bool isUserCreated,
-    required String description,
-    required String email,
-    required int diskoPoint,
-  }) async {
-    try {
-      String uid = auth.currentUser!.uid;
-      String photoUrl =
-          'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+  // void saveloginUserDataToFirebase({
+  //   required String name,
+  //   required File? profilePic,
+  //   required String countryCode,
+  //   required ProviderRef ref,
+  //   required BuildContext context,
+  //   required bool isUserCreated,
+  //   required String description,
+  //   required String email,
+  //   required int diskoPoint,
+  // }) async {
+  //   try {
+  //     String uid = auth.currentUser!.uid;
+  //     String photoUrl =
+  //         'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+  //
+  //     var user = UserModel(
+  //       phoneNum: auth.currentUser!.phoneNumber!,
+  //       displayName: name,
+  //       countryCode: countryCode,
+  //       profilePic: photoUrl,
+  //       tag: [],
+  //       description: description,
+  //       follow: [],
+  //       email: email,
+  //       diskoPoint: diskoPoint,
+  //     );
+  //     await firestore.collection('users').doc(uid).set(user.toJson());
+  //
+  //     if (isUserCreated) {
+  //       Navigator.pushNamedAndRemoveUntil(
+  //         context,
+  //         LandingPage.routeName,
+  //         (route) => false,
+  //       );
+  //     } else {
+  //       Navigator.pushNamedAndRemoveUntil(
+  //         context,
+  //         AppLayoutScreen.routeName,
+  //         (route) => false,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     //showSnackBar(context: context, content: e.toString());
+  //   }
+  // }
 
-      var user = UserModel(
-        phoneNum: auth.currentUser!.phoneNumber!,
-        displayName: name,
-        countryCode: countryCode,
-        profilePic: photoUrl,
-        tag: [],
-        description: description,
-        follow: [],
-        email: email,
-        diskoPoint: diskoPoint,
-      );
-      await firestore.collection('users').doc(uid).set(user.toJson());
-
-      if (isUserCreated) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          LandingPage.routeName,
-          (route) => false,
-        );
-      } else {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppLayoutScreen.routeName,
-          (route) => false,
-        );
-      }
-    } catch (e) {
-      //showSnackBar(context: context, content: e.toString());
-    }
-  }
-
-  Stream<UserModel> userData(String userId) {
+  Stream<UserDataModel> userData(String userId) {
     return firestore.collection('users').doc(userId).snapshots().map(
-          (event) => UserModel.fromJson(
+          (event) => UserDataModel.fromJson(
             event.data()!,
           ),
         );
@@ -230,7 +245,7 @@ class AuthRepository {
         photoUrl = (doc.data() as Map<String, dynamic>)['profilePic'];
       }
 
-      var user = UserModel(
+      var user = UserDataModel(
         phoneNum: auth.currentUser!.phoneNumber!,
         displayName: name,
         countryCode: countryCode,
@@ -240,10 +255,11 @@ class AuthRepository {
         tag: tag,
         description: description,
         follow: follow,
+        hasAuthority: false,
       );
 
       await firestore.collection('users').doc(uid).set(user.toJson());
-
+      ref.read(userDataProvider.notifier).updateUser(user);
       if (isUserCreated) {
         Navigator.pushNamedAndRemoveUntil(
           context,

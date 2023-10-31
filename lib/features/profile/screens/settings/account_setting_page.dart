@@ -1,17 +1,18 @@
 import 'package:disko_001/common/utils/utils.dart';
 import 'package:disko_001/models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'change_email_page.dart';
 
-class AccountSettingScreen extends StatelessWidget {
-  final UserModel user;
-  const AccountSettingScreen({Key? key, required this.user}) : super(key: key);
+class AccountSettingScreen extends ConsumerWidget {
+  const AccountSettingScreen({Key? key}) : super(key: key);
 
   static const routeName = '/account-setting-screen';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final UserDataModel user = ref.watch(userDataProvider);
     return Scaffold(
         appBar: AppBar(
           title: const Text('계정/정보 관리'),

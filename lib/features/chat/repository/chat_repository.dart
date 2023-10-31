@@ -130,7 +130,7 @@ class ChatRepository {
     required BuildContext context,
     required String text,
     required String receiverUid,
-    required UserModel senderUser,
+    required UserDataModel senderUser,
   }) async {
     try {
       var timeSent = Timestamp.now();
@@ -162,7 +162,7 @@ class ChatRepository {
     required BuildContext context,
     required String text,
     required String receiverUid,
-    required UserModel senderUser,
+    required UserDataModel senderUser,
   }) async {
     try {
       var timeSent = Timestamp.now();
@@ -215,7 +215,7 @@ class ChatRepository {
     required BuildContext context,
     required File file,
     required String receiverUid,
-    required UserModel senderUser,
+    required UserDataModel senderUser,
     required ProviderRef ref,
     required MessageEnum messageEnum,
   }) async {
@@ -271,7 +271,7 @@ class ChatRepository {
     required BuildContext context,
     required Uint8List imageBytes,
     required String receiverUid,
-    required UserModel senderUser,
+    required UserDataModel senderUser,
     required ProviderRef ref,
     required LatLng coordinates,
   }) async {
@@ -305,7 +305,7 @@ class ChatRepository {
     required BuildContext context,
     required String gifUrl,
     required String receiverUid,
-    required UserModel senderUser,
+    required UserDataModel senderUser,
   }) async {
     try {
       var timeSent = Timestamp.now();

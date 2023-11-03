@@ -23,6 +23,7 @@ class _ChatListPageState extends State<ChatListPage> with AutomaticKeepAliveClie
       appBar: CommonAppBar(
         title: '채팅',
         appBar: AppBar(),
+        showActions: false,
       ),
       body: const Column(
         children: [

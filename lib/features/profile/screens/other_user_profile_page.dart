@@ -28,6 +28,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
             appBar: CommonAppBar(
               title: '',
               appBar: AppBar(),
+              showActions: false,
             ),
             body: Other_ProfilePage(
               user: snapshot.data,

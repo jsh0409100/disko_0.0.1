@@ -25,10 +25,10 @@ import '../controller/post_controller.dart';
 import '../widgets/custom_image_provider.dart';
 
 class DetailPage extends ConsumerStatefulWidget {
-  final PostCardModel post;
+  final String postId;
   const DetailPage({
     Key? key,
-    required this.post,
+    required this.postId,
   }) : super(key: key);
 
   static const routeName = '/detail-screen';
@@ -307,7 +307,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
     CollectionReference postsCollection =
     FirebaseFirestore.instance.collection('posts').doc(countries[user.countryCode]).collection(countries[user.countryCode]!);
     return FutureBuilder(
-        future: getPostByPostId(user, widget.post.postId),
+        future: getPostByPostId(user, widget.postId),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData == false) {
             return const Center(child: CircularProgressIndicator());
@@ -335,6 +335,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
             appBar: CommonAppBar(
               title: '',
               appBar: AppBar(),
+              showActions: false,
             ),
             body: FutureBuilder(
                 future: getUserDataByUid(post.uid),
@@ -399,7 +400,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                           context,
                                           OtherUserProfilePage.routeName,
                                           arguments: {
-                                            'uid': widget.post.uid,
+                                            'uid': post.uid,
                                           },
                                         );
                                       },

@@ -47,6 +47,9 @@ class AuthRepository {
         timeout: const Duration(seconds: 120),
         verificationCompleted: (PhoneAuthCredential credential) async {
             await auth.signInWithCredential(credential);
+
+            showSnackBar(context: context, content: "인증이 완료되었습니다!");
+
             createUserAndNavigate(
               context: context,
               countryCode: countryCode,

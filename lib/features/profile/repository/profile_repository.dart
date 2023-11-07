@@ -74,4 +74,8 @@ class ProfileRepository {
       'email': newEmail,
     });
   }
+
+  void updateFolloe({required String uid}){
+
+}
 }

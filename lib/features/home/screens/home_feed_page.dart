@@ -77,6 +77,7 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
       appBar: CommonAppBar(
         title: countries[user.countryCode]!,
         appBar: AppBar(),
+        showActions: true,
       ),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       body: RefreshIndicator(

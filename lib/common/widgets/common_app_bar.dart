@@ -7,10 +7,12 @@ import 'notification_button.dart';
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final AppBar appBar;
+  final bool showActions;
   const CommonAppBar({
     Key? key,
     required this.title,
     required this.appBar,
+    required this.showActions,
   }) : super(key: key);
 
   @override
@@ -18,7 +20,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(title),
       centerTitle: true,
-      actions: [
+      actions: showActions ? [
         IconButton(
           onPressed: () {
             Navigator.pushNamed(context, SearchScreen.routeName);
@@ -45,7 +47,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           const UnreadNotificationCounter(),
         ]),
-      ],
+      ] : null,
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       surfaceTintColor: Theme.of(context).colorScheme.onPrimary,
       elevation: 0,

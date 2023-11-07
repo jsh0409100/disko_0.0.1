@@ -42,9 +42,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case DetailPage.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
-      final PostCardModel post = arguments['post'];
+      final String postId = arguments['postId'];
       return MaterialPageRoute(
-        builder: (context) => DetailPage(post: post),
+        builder: (context) => DetailPage(postId: postId),
       );
     case TestScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;

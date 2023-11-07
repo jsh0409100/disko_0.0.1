@@ -102,46 +102,46 @@ class SettingScreen extends ConsumerWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              color: Color(0xFFF9F9F9),
-              padding: const EdgeInsets.all(8.0),
-              child: Text("알림설정",
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black)),
-            ),
-            SettingOption(
-              option: "알림 및 소리",
-              action: () {
-                if (!isSnackbarDisplayed) {
-                  isSnackbarDisplayed = true;
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                        const SnackBar(
-                          content: Text("아직 지원하지 않는 기능입니다"),
-                          duration: Duration(seconds: 3),
-                        ),
-                      )
-                      .closed
-                      .then((reason) {
-                    // Snackbar is dismissed
-                    isSnackbarDisplayed = false;
-                  });
-                }
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('방해금지 시간 설정',
-                    style:
-                        Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black)),
-                Switch(
-                  value: false,
-                  onChanged: (value) {},
-                  inactiveThumbColor: Theme.of(context).colorScheme.outline,
-                ),
-              ],
-            ),
+            // Container(
+            //   width: double.infinity,
+            //   color: Color(0xFFF9F9F9),
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Text("알림설정",
+            //       style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black)),
+            // ),
+            // SettingOption(
+            //   option: "알림 및 소리",
+            //   action: () {
+            //     if (!isSnackbarDisplayed) {
+            //       isSnackbarDisplayed = true;
+            //       ScaffoldMessenger.of(context)
+            //           .showSnackBar(
+            //             const SnackBar(
+            //               content: Text("아직 지원하지 않는 기능입니다"),
+            //               duration: Duration(seconds: 3),
+            //             ),
+            //           )
+            //           .closed
+            //           .then((reason) {
+            //         // Snackbar is dismissed
+            //         isSnackbarDisplayed = false;
+            //       });
+            //     }
+            //   },
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text('방해금지 시간 설정',
+            //         style:
+            //             Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black)),
+            //     Switch(
+            //       value: false,
+            //       onChanged: (value) {},
+            //       inactiveThumbColor: Theme.of(context).colorScheme.outline,
+            //     ),
+            //   ],
+            // ),
             Container(
               width: double.infinity,
               color: Color(0xFFF9F9F9),
@@ -156,26 +156,26 @@ class SettingScreen extends ConsumerWidget {
                     arguments: {'user': user});
               },
             ),
-            SettingOption(
-              option: "차단 사용자 관리",
-              action: () {
-                if (!isSnackbarDisplayed) {
-                  isSnackbarDisplayed = true;
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                        const SnackBar(
-                          content: Text("아직 지원하지 않는 기능입니다"),
-                          duration: Duration(seconds: 3),
-                        ),
-                      )
-                      .closed
-                      .then((reason) {
-                    // Snackbar is dismissed
-                    isSnackbarDisplayed = false;
-                  });
-                }
-              },
-            ),
+            // SettingOption(
+            //   option: "차단 사용자 관리",
+            //   action: () {
+            //     if (!isSnackbarDisplayed) {
+            //       isSnackbarDisplayed = true;
+            //       ScaffoldMessenger.of(context)
+            //           .showSnackBar(
+            //             const SnackBar(
+            //               content: Text("아직 지원하지 않는 기능입니다"),
+            //               duration: Duration(seconds: 3),
+            //             ),
+            //           )
+            //           .closed
+            //           .then((reason) {
+            //         // Snackbar is dismissed
+            //         isSnackbarDisplayed = false;
+            //       });
+            //     }
+            //   },
+            // ),
             Container(
               width: double.infinity,
               color: const Color(0xFFF9F9F9),
@@ -189,46 +189,46 @@ class SettingScreen extends ConsumerWidget {
                 Navigator.pushNamed(context, FAQPage.routeName);
               },
             ),
-            SettingOption(
-              option: "국가변경",
-              action: () {
-                if (!isSnackbarDisplayed) {
-                  isSnackbarDisplayed = true;
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                        const SnackBar(
-                          content: Text("아직 지원하지 않는 기능입니다"),
-                          duration: Duration(seconds: 3),
-                        ),
-                      )
-                      .closed
-                      .then((reason) {
-                    // Snackbar is dismissed
-                    isSnackbarDisplayed = false;
-                  });
-                }
-              },
-            ),
-            SettingOption(
-              option: "업데이트",
-              action: () {
-                if (!isSnackbarDisplayed) {
-                  isSnackbarDisplayed = true;
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                        const SnackBar(
-                          content: Text("아직 지원하지 않는 기능입니다"),
-                          duration: Duration(seconds: 3),
-                        ),
-                      )
-                      .closed
-                      .then((reason) {
-                    // Snackbar is dismissed
-                    isSnackbarDisplayed = false;
-                  });
-                }
-              },
-            ),
+            // SettingOption(
+            //   option: "국가변경",
+            //   action: () {
+            //     if (!isSnackbarDisplayed) {
+            //       isSnackbarDisplayed = true;
+            //       ScaffoldMessenger.of(context)
+            //           .showSnackBar(
+            //             const SnackBar(
+            //               content: Text("아직 지원하지 않는 기능입니다"),
+            //               duration: Duration(seconds: 3),
+            //             ),
+            //           )
+            //           .closed
+            //           .then((reason) {
+            //         // Snackbar is dismissed
+            //         isSnackbarDisplayed = false;
+            //       });
+            //     }
+            //   },
+            // ),
+            // SettingOption(
+            //   option: "업데이트",
+            //   action: () {
+            //     if (!isSnackbarDisplayed) {
+            //       isSnackbarDisplayed = true;
+            //       ScaffoldMessenger.of(context)
+            //           .showSnackBar(
+            //             const SnackBar(
+            //               content: Text("아직 지원하지 않는 기능입니다"),
+            //               duration: Duration(seconds: 3),
+            //             ),
+            //           )
+            //           .closed
+            //           .then((reason) {
+            //         // Snackbar is dismissed
+            //         isSnackbarDisplayed = false;
+            //       });
+            //     }
+            //   },
+            // ),
             SettingOption(
                 option: "로그아웃",
                 action: () async {

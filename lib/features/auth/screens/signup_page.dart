@@ -217,7 +217,9 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                       controller: phoneNumController,
                       keyboardType: TextInputType.phone,
                       onChanged: (value) {
-                        phone = value;
+                        setState(() {
+                          phone = value.trim();
+                        });
                       },
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
@@ -225,6 +227,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                         ),
                         hintText: '휴대폰 번호를 입력해주세요.',
                       ),
+
                     ),
                   ),
                 ),
@@ -235,10 +238,8 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
               style: ElevatedButton.styleFrom(
                 elevation: 0,
                 minimumSize: const Size(double.maxFinite, 49),
-                backgroundColor: const Color(0xff4E4E4E),
+                backgroundColor: phone.trim().isEmpty? const Color(0xff4e4e4e4d) : const Color(0xff4E4E4E),
                 foregroundColor: Colors.white,
-                disabledBackgroundColor: const Color(0xff4e4e4e4d),
-                disabledForegroundColor: Colors.white,
               ),
               onPressed: (phone.trim().isEmpty || phone.trim() == '')
                   ? null

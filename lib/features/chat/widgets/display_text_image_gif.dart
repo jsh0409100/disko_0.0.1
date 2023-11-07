@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:disko_001/features/chat/widgets/video_player_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../common/enums/message_enum.dart';
@@ -17,7 +18,13 @@ class DisplayTextImageGIF extends StatelessWidget {
     required this.type,
     required this.isSender,
   }) : super(key: key);
-
+  static final customCacheManager = CacheManager(
+    Config(
+      'customCacheKey',
+      stalePeriod: const Duration(days:15),
+      maxNrOfCacheObjects: 20,
+    ),
+  );
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -116,6 +123,13 @@ class DisplayTextImageGIF extends StatelessWidget {
                               ),
                             )
                             : CachedNetworkImage(
+                                cacheManager:  customCacheManager,
+                                errorWidget: (context, url, error) => Container(
+                                  color: Colors.black12,
+                                  child: const Icon(Icons.error, color: Colors.red, size:30),
+                                ),
+                                placeholder: (context, url) => Container(color: Colors.black12),
+                                key: UniqueKey(),
                                 imageUrl: message,
                               ),
                       ),

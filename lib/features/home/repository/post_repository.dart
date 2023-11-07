@@ -77,7 +77,14 @@ class PostRepository {
       commentCount: 0,
       postId: postId,
     );
-    return firestore.collection('posts').doc(postId).collection('comment').doc(commentId).set(
+    print("댓글 올림");
+    return firestore.collection('posts')
+        .doc(user.countryCode)
+        .collection(user.countryCode)
+        .doc(postId)
+        .collection('comment')
+        .doc(commentId)
+        .set(
           comment.toJson(),
         );
   }
@@ -148,6 +155,8 @@ class PostRepository {
     );
     return firestore
         .collection('posts')
+        .doc(user.countryCode)
+        .collection(user.countryCode)
         .doc(postId)
         .collection('comment')
         .doc(commentId)
@@ -159,7 +168,7 @@ class PostRepository {
   }
 
   void deletePost(postId) async {
-    firestore.collection('posts').doc(postId).delete();
+    firestore.collection('posts').doc(user.countryCode).collection(user.countryCode).doc(postId).delete();
   }
 
   void _saveNestedCommentCount({
@@ -189,7 +198,12 @@ class PostRepository {
     );
 
     final currentComment =
-        firestore.collection('posts').doc(postId).collection('comment').doc(commentId);
+        firestore.collection('posts')
+            .doc(user.countryCode)
+            .collection(user.countryCode)
+            .doc(postId)
+            .collection('comment')
+            .doc(commentId);
     final doc = await currentComment.get();
 
     if (doc.exists) {

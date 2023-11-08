@@ -79,8 +79,8 @@ class PostRepository {
     );
     print("댓글 올림");
     return firestore.collection('posts')
-        .doc(user.countryCode)
-        .collection(user.countryCode)
+        .doc(countries[user.countryCode])
+        .collection(countries[user.countryCode]!)
         .doc(postId)
         .collection('comment')
         .doc(commentId)
@@ -155,8 +155,8 @@ class PostRepository {
     );
     return firestore
         .collection('posts')
-        .doc(user.countryCode)
-        .collection(user.countryCode)
+        .doc(countries[user.countryCode])
+        .collection(countries[user.countryCode]!)
         .doc(postId)
         .collection('comment')
         .doc(commentId)
@@ -168,7 +168,7 @@ class PostRepository {
   }
 
   void deletePost(postId) async {
-    firestore.collection('posts').doc(user.countryCode).collection(user.countryCode).doc(postId).delete();
+    firestore.collection('posts').doc(countries[user.countryCode]).collection(countries[user.countryCode]!).doc(postId).delete();
   }
 
   void _saveNestedCommentCount({
@@ -199,8 +199,8 @@ class PostRepository {
 
     final currentComment =
         firestore.collection('posts')
-            .doc(user.countryCode)
-            .collection(user.countryCode)
+            .doc(countries[user.countryCode])
+            .collection(countries[user.countryCode]!)
             .doc(postId)
             .collection('comment')
             .doc(commentId);

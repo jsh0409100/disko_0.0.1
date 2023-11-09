@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/enums/country_enum.dart';
+import '../../../common/utils/utils.dart';
 import '../../../models/post_card_model.dart';
 import '../../../models/user_model.dart';
 
@@ -13,17 +14,26 @@ final writePostRepositoryProvider = Provider(
   (ref) => WritePostRepository(
     firestore: FirebaseFirestore.instance,
     auth: FirebaseAuth.instance,
+    ref : ref,
   ),
 );
 
 class WritePostRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
+  final ProviderRef<Object?> ref;
 
   WritePostRepository({
     required this.firestore,
     required this.auth,
+    required this.ref,
   });
+
+  String getCode(){
+    final UserDataModel user = ref.watch(userDataProvider);
+    final String countryCode = user.countryCode;
+    return countryCode;
+  }
 
   void _savePost({
     required String text,
@@ -203,7 +213,8 @@ class WritePostRepository {
     });
   }
 
-  CollectionReference get _posts => firestore.collection('posts');
+
+  CollectionReference get _posts => firestore.collection('posts').doc(countries[getCode()]).collection(countries[getCode()]!);
 
   Query<Map<String, dynamic>> get _comment =>
       firestore.collectionGroup('comment');

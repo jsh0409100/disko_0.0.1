@@ -13,6 +13,11 @@ Future<String> getDisplayNameByUid(String uid) async {
   return UserDoc.data()!['displayName'];
 }
 
+Future<String> getCountryCodeByUid(String uid) async{
+  var userCountry = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+  return userCountry.data()!['countryCode'];
+}
+
 Future<UserDataModel> getUserDataByUid(String uid) async {
   var userDataMap = await FirebaseFirestore.instance.collection('users').doc(uid).get();
   return UserDataModel.fromJson(userDataMap.data()!);

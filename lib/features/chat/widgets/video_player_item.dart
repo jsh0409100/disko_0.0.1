@@ -50,6 +50,9 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
               videoPlayerController: _videoPlayerController,
               aspectRatio: _videoPlayerController.value.aspectRatio,
               showControlsOnInitialize: false,
+              placeholder: Container(
+                color: Colors.black12,
+              )
             );
           }),
         );

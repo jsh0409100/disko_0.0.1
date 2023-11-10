@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disko_001/common/utils/utils.dart';
 import 'package:disko_001/features/write_post/screens/widgets/select_category.dart';
 import 'package:disko_001/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -106,6 +107,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
         _arrImageUrls.add(imageUrl.toString());
       }
 
+      showSnackBar(context: context, content: "Uploading Complete!!!");
 
       if (mounted) {
         setState(() {

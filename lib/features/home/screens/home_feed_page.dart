@@ -54,10 +54,6 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
     return chips;
   }
 
-  Future<void> reloadPage() async {
-    setState(() {});
-  }
-
   @override
   bool get wantKeepAlive => true;
 

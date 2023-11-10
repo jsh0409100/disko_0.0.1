@@ -6,10 +6,10 @@
     <uses-permission  android:name="android.permission.CAMERA"  />
     <uses-permission  android:name="android.permission.MODIFY_AUDIO_SETTINGS"  />
     <uses-permission  android:name="android.permission.ACCESS_NETWORK_STATE"  />
-<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->
-<!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-<!--    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>-->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission  android:name="android.permission.BLUETOOTH"  />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -20,7 +20,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyDQLZiffFU2m1ALcqoObSHJFyq4blZdrTg"/>
+           android:value="AIzaSyBQEa8w3ODXXyWiPj6ChL8n_7VjXuLfoE0"/>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="high_importance_channel" />

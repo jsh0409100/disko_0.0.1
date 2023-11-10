@@ -28,7 +28,7 @@ class CallScreen extends ConsumerStatefulWidget {
 class _CallScreenState extends ConsumerState<CallScreen> {
   String token = AgoraConfig.token;
   int tokenRole = 1; // use 1 for Host/Broadcaster, 2 for Subscriber/Audience
-  String serverUrl = "https://agora-token-service-production-b53a.up.railway.app";
+  String serverUrl = "https://agora-token-server-9n6o.onrender.com/";
   int tokenExpireTime = 45; // Expire time in Seconds.
   bool isTokenExpiring = false; // Set to true when the token is about to expire
   String channelName = "disko-call";

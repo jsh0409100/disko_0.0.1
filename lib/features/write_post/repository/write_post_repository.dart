@@ -84,7 +84,10 @@ class WritePostRepository {
   }) async {
     try {
       var time = Timestamp.now();
-
+      print(userData);
+      print(userData);
+      print(userData);
+      print(userData);
       _savePost(
         postId: postId,
         postTitle: postTitle,

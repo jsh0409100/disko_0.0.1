@@ -11,12 +11,14 @@ class DisplayTextImageGIF extends StatelessWidget {
   final String message;
   final MessageEnum type;
   final bool isSender;
+  final bool isUploading;
 
   const DisplayTextImageGIF({
     Key? key,
     required this.message,
     required this.type,
     required this.isSender,
+    required this.isUploading,
   }) : super(key: key);
   static final customCacheManager = CacheManager(
     Config(

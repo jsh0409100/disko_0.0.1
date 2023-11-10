@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/common/repositories/common_firebase_storage_repository.dart';
+import 'package:disko_001/features/auth/controller/auth_controller.dart';
 import 'package:disko_001/features/starting/landing_pages/landing_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +120,7 @@ class AuthRepository {
       );
 
       ref.read(userDataProvider.notifier).updateUser(user);
-
+      ref.invalidate(userDataAuthProvider);
       saveUserDataToFirebase(
         context: context,
         ref: ref,

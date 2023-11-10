@@ -157,12 +157,12 @@ class MyHomeState extends ConsumerState<AppLayoutScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      HomeFeedPage(isLoading: false, LoadingVisible: false),
+      const HomeFeedPage(isLoading: false, LoadingVisible: false),
       const ChatListPage(),
       const MyProfilePage(),
     ];
-    return ref.watch(userDataAuthProvider).when(
-          data: (user) {
+    // return ref.refresh(userDataAuthProvider).when(
+    //       data: (user) {
             return Scaffold(
                 body: PageView(
                   controller: pageController,
@@ -198,13 +198,13 @@ class MyHomeState extends ConsumerState<AppLayoutScreen> {
                     ),
                   ],
                 ));
-          },
-          error: (err, trace) {
-            return ErrorScreen(
-              error: err.toString(),
-            );
-          },
-          loading: () => const LoadingScreen(),
-        );
+          // },
+          // error: (err, trace) {
+          //   return ErrorScreen(
+          //     error: err.toString(),
+          //   );
+          // },
+          // loading: () => const LoadingScreen(),
+        // );
   }
 }

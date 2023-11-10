@@ -1,9 +1,6 @@
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
-import 'package:telephony/telephony.dart';
 
 import '../../../common/utils/utils.dart';
 import '../controller/auth_controller.dart';
@@ -30,10 +27,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
   bool _isVisible = false;
   final countryPicker = const FlCountryCodePicker();
 
-  Telephony telephony = Telephony.instance;
-  OtpFieldController verController = OtpFieldController();
-
-  // TextEditingController verController = TextEditingController();
+  TextEditingController verController = TextEditingController();
   TextEditingController phoneNumController = TextEditingController();
 
   var phone = "";
@@ -74,30 +68,6 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
     }
   }
 
-  @override
-  void initState() {
-    telephony.listenIncomingSms(
-      onNewMessage: (SmsMessage message) {
-        print(message.address);
-        print(message.body);
-
-        String sms = message.body.toString();
-
-        if (message.body!.contains('disko001.firebaseapp.com')) {
-          String otpcode = sms.replaceAll(RegExp(r'[^0-9]'), '');
-          verController.set(otpcode.split(""));
-
-          setState(() {
-            // refresh UI
-          });
-        } else {
-          print("error");
-        }
-      },
-      listenInBackground: false,
-    );
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -225,7 +195,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
                         ),
-                        hintText: '휴대폰 번호를 입력해주세요.',
+                        hintText: '휴대폰 번호를 입력하세요.',
                       ),
 
                     ),
@@ -257,18 +227,21 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
               visible: _isVisible,
               child: SizedBox(
                 height: 44,
-                child: OTPTextField(
-                  outlineBorderRadius: 10,
+                child: TextFormField(
                   controller: verController,
-                  length: 6,
-                  width: MediaQuery.of(context).size.width,
-                  fieldWidth: 50,
-                  style: const TextStyle(fontSize: 17),
-                  textFieldAlignment: MainAxisAlignment.spaceAround,
-                  fieldStyle: FieldStyle.box,
-                  onCompleted: (pin) {
-                    otp = pin;
+                  keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                  onChanged: (value) {
+                    setState(() {
+                      otp = value.trim();
+                    });
                   },
+                  decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
+                    ),
+                    hintText: '인증번호를 입력하세요.',
+                  ),
+
                 ),
               ),
             ),

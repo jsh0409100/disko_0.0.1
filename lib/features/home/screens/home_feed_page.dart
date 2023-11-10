@@ -63,10 +63,6 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage>
     return chips;
   }
 
-  Future<void> reloadPage() async {
-    setState(() {});
-  }
-
   @override
   bool get wantKeepAlive => true;
 
@@ -86,6 +82,7 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage>
       appBar: CommonAppBar(
         title: countries[user.countryCode]!,
         appBar: AppBar(),
+        showActions: true,
       ),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       body: RefreshIndicator(

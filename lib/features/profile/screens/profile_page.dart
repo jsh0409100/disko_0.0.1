@@ -21,21 +21,21 @@ const List<Widget> follow = <Widget>[
   Text('스크랩'),
 ];
 
-class My_ProfilePage extends ConsumerStatefulWidget {
+class ProfilePageFrame extends ConsumerStatefulWidget {
   final String uid;
   final UserDataModel user;
 
-  const My_ProfilePage({
+  const ProfilePageFrame({
     Key? key,
     required this.user,
     required this.uid,
   }) : super(key: key);
 
   @override
-  ConsumerState<My_ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<ProfilePageFrame> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends ConsumerState<My_ProfilePage> {
+class _ProfilePageState extends ConsumerState<ProfilePageFrame> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   CollectionReference currUser = FirebaseFirestore.instance.collection("users");
   String test = 'test';
@@ -122,46 +122,44 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
   }
 
   Widget topWidget() {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                image == null
-                    ? CircleAvatar(
-                        radius: 35,
-                        backgroundImage: NetworkImage(widget.user.profilePic),
-                      )
-                    : CircleAvatar(
-                        radius: 35,
-                        backgroundImage: FileImage(
-                          image!,
-                        ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              image == null
+                  ? CircleAvatar(
+                      radius: 35,
+                      backgroundImage: NetworkImage(widget.user.profilePic),
+                    )
+                  : CircleAvatar(
+                      radius: 35,
+                      backgroundImage: FileImage(
+                        image!,
                       ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.15, left: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      profileNameText(widget.user.displayName),
-                      verEmailText(),
-                    ],
-                  ),
+                    ),
+              Padding(
+                padding:
+                    EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.15, left: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    profileNameText(widget.user.displayName),
+                    verEmailText(),
+                  ],
                 ),
-                widget.uid == FirebaseAuth.instance.currentUser!.uid
-                    ? editChip()
-                    : followChip(checkFollow())
-              ],
-            ),
-            descriptionText(),
-            // percentage(),
-            activeFollow(),
-          ],
-        ),
+              ),
+              widget.uid == FirebaseAuth.instance.currentUser!.uid
+                  ? editChip()
+                  : followChip(checkFollow())
+            ],
+          ),
+          descriptionText(),
+          // percentage(),
+          activeFollow(),
+        ],
       ),
     );
   }
@@ -444,9 +442,9 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: posts.length,
                           itemBuilder: (context, index) {
@@ -469,7 +467,7 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
                           },
                         ),
                         // 스크랩 항목과 항목 사이의 간격
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                       ],
                     );
                   },
@@ -496,9 +494,9 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
         .get();
 
     List<String> scrappedPostIDs = [];
-    querySnapshot.docs.forEach((doc){
+    for (var doc in querySnapshot.docs) {
       scrappedPostIDs.add(doc['postID']);
-    });
+    }
 
     return scrappedPostIDs;
   }
@@ -506,17 +504,17 @@ class _ProfilePageState extends ConsumerState<My_ProfilePage> {
   Widget decideWidgetBasedOnState(String state, BuildContext context) {
     switch (state) {
       case '팔로우':
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height / 2.3,
           child: followList(context),
         );
       case '스크랩':
-         return Container(
+         return SizedBox(
           height: MediaQuery.of(context).size.height / 2.3,
           child: scrap(context),
         );
       default:
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height / 2.3,
           child: myPost(context),
         );

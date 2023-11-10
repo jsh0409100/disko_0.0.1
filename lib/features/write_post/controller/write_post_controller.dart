@@ -34,6 +34,7 @@ class WritePostController {
     required this.ref,
   });
 
+
   void uploadPost(BuildContext context, String text, String postTitle, List<String> imagesUrl,
       String postId, int commentCount, bool isQuestion, String category, WidgetRef ref) {
     ref.read(userDataAuthProvider).whenData(

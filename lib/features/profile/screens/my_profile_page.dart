@@ -1,19 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/profile/screens/profile_page.dart';
 import 'package:disko_001/features/profile/screens/settings/setting_page.dart';
+import 'package:disko_001/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/utils.dart';
 
-class MyProfilePage extends StatefulWidget {
+class MyProfilePage extends ConsumerStatefulWidget {
   const MyProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<MyProfilePage> createState() => _MyProfilePageState();
+  ConsumerState<MyProfilePage> createState() => _MyProfilePageState();
 }
 
-class _MyProfilePageState extends State<MyProfilePage> {
+class _MyProfilePageState extends ConsumerState<MyProfilePage> {
   Future signOut() async{
     try {
       print('sign out complete!');
@@ -36,19 +38,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getUserDataByUid(FirebaseAuth.instance.currentUser!.uid),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData == false) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return Scaffold(
+    final UserDataModel user = ref.watch(userDataProvider);
+    return Scaffold(
             appBar: AppBar(
               actions: [
                 IconButton(
                     onPressed: () {
                       Navigator.pushNamed(context, SettingScreen.routeName,
-                          arguments: {'user': snapshot.data});
+                          arguments: {'user': user});
                     },
                     icon: const Icon(
                       Icons.settings_outlined,
@@ -56,12 +53,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     )),
               ],
             ),
-            body: My_ProfilePage(
-              user: snapshot.data,
+            body: ProfilePageFrame(
+              user: user,
               uid: FirebaseAuth.instance.currentUser!.uid,
             ),
           );
-        });
   }
 
   Widget mirrorballbuilder() {

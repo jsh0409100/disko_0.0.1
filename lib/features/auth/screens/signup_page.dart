@@ -1,6 +1,9 @@
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:otp_text_field/otp_field.dart';
+import 'package:otp_text_field/style.dart';
+import 'package:telephony/telephony.dart';
 
 import '../../../common/utils/utils.dart';
 import '../controller/auth_controller.dart';
@@ -21,17 +24,24 @@ class SignUpScreen extends ConsumerStatefulWidget {
 }
 
 class SignUpScreenState extends ConsumerState<SignUpScreen> {
-  bool _isVisible = false;
+  String otp = '';
   String title = '';
+
+  bool _isVisible = false;
   final countryPicker = const FlCountryCodePicker();
 
-  TextEditingController verController = TextEditingController();
+  Telephony telephony = Telephony.instance;
+  OtpFieldController verController = OtpFieldController();
+
+  // TextEditingController verController = TextEditingController();
   TextEditingController phoneNumController = TextEditingController();
 
   var phone = "";
   CountryCode? countryCode;
 
-  void sendPhoneNumber(bool isSignUp,) {
+  void sendPhoneNumber(
+    bool isSignUp,
+  ) {
     String phoneNumber = phoneNumController.text.trim();
     if (phoneNumber.isNotEmpty) {
       ref
@@ -45,15 +55,8 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    phoneNumController.dispose();
-    verController.dispose();
-  }
-
-  void verifyOTP(WidgetRef ref, BuildContext context, String userOTP,
-      String countryCode, bool isSignUp) {
+  void verifyOTP(
+      WidgetRef ref, BuildContext context, String userOTP, String countryCode, bool isSignUp) {
     ref.read(authControllerProvider).verifyOTP(
           context,
           SignUpScreen.verificationId,
@@ -69,6 +72,37 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
     } else {
       return "로그인";
     }
+  }
+
+  @override
+  void initState() {
+    telephony.listenIncomingSms(
+      onNewMessage: (SmsMessage message) {
+        print(message.address);
+        print(message.body);
+
+        String sms = message.body.toString();
+
+        if (message.body!.contains('disko001.firebaseapp.com')) {
+          String otpcode = sms.replaceAll(RegExp(r'[^0-9]'), '');
+          verController.set(otpcode.split(""));
+
+          setState(() {
+            // refresh UI
+          });
+        } else {
+          print("error");
+        }
+      },
+      listenInBackground: false,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    phoneNumController.dispose();
   }
 
   @override
@@ -139,8 +173,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                   flex: 1,
                   child: GestureDetector(
                     onTap: () async {
-                      final code =
-                          await countryPicker.showPicker(context: context);
+                      final code = await countryPicker.showPicker(context: context);
                       setState(() {
                         countryCode = code;
                       });
@@ -152,8 +185,7 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                             width: 1,
                             color: const Color(0xffC4C4C4),
                           ),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5.0))),
+                          borderRadius: const BorderRadius.all(Radius.circular(5.0))),
                       child: Row(
                         children: [
                           const SizedBox(width: 10),
@@ -185,16 +217,17 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                       controller: phoneNumController,
                       keyboardType: TextInputType.phone,
                       onChanged: (value) {
-                        phone = value;
+                        setState(() {
+                          phone = value.trim();
+                        });
                       },
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1,
-                              color: Color(0xffC4C4C4)), //<-- SEE HERE
+                          borderSide: BorderSide(width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
                         ),
                         hintText: '휴대폰 번호를 입력해주세요.',
                       ),
+
                     ),
                   ),
                 ),
@@ -205,10 +238,8 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
               style: ElevatedButton.styleFrom(
                 elevation: 0,
                 minimumSize: const Size(double.maxFinite, 49),
-                backgroundColor: const Color(0xff4E4E4E),
+                backgroundColor: phone.trim().isEmpty? const Color(0xff4e4e4e4d) : const Color(0xff4E4E4E),
                 foregroundColor: Colors.white,
-                disabledBackgroundColor: const Color(0xff4e4e4e4d),
-                disabledForegroundColor: Colors.white,
               ),
               onPressed: (phone.trim().isEmpty || phone.trim() == '')
                   ? null
@@ -221,21 +252,23 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
             Visibility(
               visible: _isVisible,
               child: SizedBox(
                 height: 44,
-                child: TextFormField(
-                  keyboardType: TextInputType.phone,
+                child: OTPTextField(
+                  outlineBorderRadius: 10,
                   controller: verController,
-                  decoration: const InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 1, color: Color(0xffC4C4C4)), //<-- SEE HERE
-                    ),
-                    hintText: '인증번호를 입력해 주세요.',
-                  ),
+                  length: 6,
+                  width: MediaQuery.of(context).size.width,
+                  fieldWidth: 50,
+                  style: const TextStyle(fontSize: 17),
+                  textFieldAlignment: MainAxisAlignment.spaceAround,
+                  fieldStyle: FieldStyle.box,
+                  onCompleted: (pin) {
+                    otp = pin;
+                  },
                 ),
               ),
             ),
@@ -281,14 +314,13 @@ class SignUpScreenState extends ConsumerState<SignUpScreen> {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.maxFinite, 51),
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  disabledBackgroundColor:
-                      Theme.of(context).colorScheme.primary.withAlpha(90),
+                  disabledBackgroundColor: Theme.of(context).colorScheme.primary.withAlpha(90),
                 ),
-                onPressed: verController.text != ""
+                onPressed: otp != ""
                     ? () => verifyOTP(
                           ref,
                           context,
-                          verController.text.trim(),
+                          otp,
                           countryCode!.dialCode,
                           widget.isSignUp,
                         )

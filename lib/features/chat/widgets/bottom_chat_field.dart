@@ -13,6 +13,7 @@ import '../../../models/user_model.dart';
 import '../../call/controller/call_controller.dart';
 import '../controller/chat_controller.dart';
 import '../screens/make_appointment_screen.dart';
+import '../screens/send_location_screen.dart';
 import 'message_category_card.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
@@ -139,16 +140,16 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     }
   }
 
-  // void showMap() {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => SendLocationMapScreen(
-  //         receiverUid: widget.receiverUid,
-  //       ),
-  //     ),
-  //   );
-  // }
+  void showMap() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SendLocationMapScreen(
+          receiverUid: widget.receiverUid,
+        ),
+      ),
+    );
+  }
 
   void makeAppointment() {
     Navigator.push(
@@ -282,24 +283,24 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                         ),
                       ]),
                   const SizedBox(height: 15),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       // const MessageCategoryCard(categoryIcon: Icons.mic, categoryName: '음성메세지'),
-                      // GestureDetector(
-                      //   onTap: () => makeCall(ref, context),
-                      //   child: const MessageCategoryCard(
-                      //       categoryIcon: Icons.video_call_outlined, categoryName: '영상통화'),
-                      // ),
-                      // GestureDetector(
-                      //   onTap: showMap,
-                      //   child: const MessageCategoryCard(
-                      //       categoryIcon: Icons.location_on_outlined, categoryName: '위치 보내기'),
-                      // ),
+                      GestureDetector(
+                        onTap: () => makeCall(ref, context),
+                        child: const MessageCategoryCard(
+                            categoryIcon: Icons.video_call_outlined, categoryName: '영상통화'),
+                      ),
+                      GestureDetector(
+                        onTap: showMap,
+                        child: const MessageCategoryCard(
+                            categoryIcon: Icons.location_on_outlined, categoryName: '위치 보내기'),
+                      ),
                       // GestureDetector(
                       //   onTap: makeAppointment,
                       //   child: const MessageCategoryCard(
-                      //       categoryIcon: Icons.location_on_outlined, categoryName: '위치 보내기'),
+                      //       categoryIcon: Icons.location_on_outlined, categoryName: '약속 잡기'),
                       // ),
                     ],
                   ),

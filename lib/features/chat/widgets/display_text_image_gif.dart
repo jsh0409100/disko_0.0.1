@@ -1,30 +1,39 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:disko_001/features/chat/widgets/video_player_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../common/enums/message_enum.dart';
 import '../../home/screens/detail_page.dart';
 
-class DisplayTextImageGIF extends StatelessWidget {
+class DisplayTextImageGIF extends ConsumerStatefulWidget {
   final String message;
   final MessageEnum type;
   final bool isSender;
+  final bool isUploading;
 
   const DisplayTextImageGIF({
     Key? key,
     required this.message,
     required this.type,
     required this.isSender,
+    required this.isUploading,
   }) : super(key: key);
 
+  @override
+  ConsumerState<DisplayTextImageGIF> createState() =>
+      _DisplayTextImageGIFState();
+}
+
+class _DisplayTextImageGIFState extends ConsumerState<DisplayTextImageGIF> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.8,
           maxHeight: MediaQuery.of(context).size.width * 0.8),
-      child: type == MessageEnum.text
+      child: widget.type == MessageEnum.text
           ? Container(
               decoration: const BoxDecoration(
                 color: Color(0xFFECECEC),
@@ -33,9 +42,9 @@ class DisplayTextImageGIF extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               child: Text(
-                message,
+                widget.message,
                 style: TextStyle(
-                  color: isSender ? Colors.white : Colors.black,
+                  color: widget.isSender ? Colors.white : Colors.black,
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
@@ -43,7 +52,7 @@ class DisplayTextImageGIF extends StatelessWidget {
           : Container(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              child: type == MessageEnum.video
+              child: widget.type == MessageEnum.video
                   ? Container(
                       decoration: const BoxDecoration(
                         color: Color(0xFFECECEC),
@@ -52,7 +61,7 @@ class DisplayTextImageGIF extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(
                           vertical: 4, horizontal: 8),
                       child: VideoPlayerItem(
-                        videoUrl: message,
+                        videoUrl: widget.message,
                         dataSourceType: DataSourceType.network,
                       ))
                   : GestureDetector(
@@ -61,12 +70,12 @@ class DisplayTextImageGIF extends StatelessWidget {
                     context,
                     DetailPage.routeName,
                     arguments: {
-                      'postId': message,
+                      'postId': widget.message,
                     },
                   );
                 },
                     child: Container(
-                        child: type == MessageEnum.share
+                        child: widget.type == MessageEnum.share
                             ? Container(
                                 margin: const EdgeInsets.only(bottom: 10, top: 25),
                                 height: MediaQuery.of(context).size.height*0.25,
@@ -116,7 +125,7 @@ class DisplayTextImageGIF extends StatelessWidget {
                               ),
                             )
                             : CachedNetworkImage(
-                                imageUrl: message,
+                                imageUrl: widget.message,
                               ),
                       ),
                   ),

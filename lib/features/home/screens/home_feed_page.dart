@@ -15,16 +15,25 @@ import '../widgets/post.dart';
 final selectedIndexProvider = StateProvider<int>((ref) => 999);
 
 class HomeFeedPage extends ConsumerStatefulWidget {
-  const HomeFeedPage({Key? key}) : super(key: key);
+  final bool isLoading;
+  final bool LoadingVisible;
+
+  const HomeFeedPage({
+    Key? key,
+    required this.isLoading,
+    required this.LoadingVisible,
+  }) : super(key: key);
 
   @override
   _HomeFeedPageState createState() => _HomeFeedPageState();
 }
 
-class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepAliveClientMixin {
+class _HomeFeedPageState extends ConsumerState<HomeFeedPage>
+    with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
   int? _value;
 
+  @override
   List<Widget> techChips() {
     List<Widget> chips = [];
     for (int i = 0; i < CategoryList.categories.length; i++) {
@@ -91,6 +100,47 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
                   delegate: PersistentHeaderList(
                 widget: techChips(),
               )),
+              if (widget.LoadingVisible)
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: Colors.white, // 예시로 설정한 배경색
+                            borderRadius: BorderRadius.circular(10.0),
+                            border:
+                                Border.all(width: 1, color: Color(0xffE7E0EC)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromRGBO(0, 0, 0, 0.05),
+                                offset: Offset(0, 2), //(x,y)
+                                blurRadius: 1.0,
+                              ),
+                            ]),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              widget.isLoading
+                                  ? 'Uploading......'
+                                  : 'Complete!!!',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
               PostsList(),
               NoMorePosts(),
               OnGoingBottomWidget(),
@@ -113,9 +163,16 @@ class _HomeFeedPageState extends ConsumerState<HomeFeedPage> with AutomaticKeepA
   }
 }
 
-class PostsList extends StatelessWidget {
-  const PostsList({Key? key}) : super(key: key);
+class PostsList extends StatefulWidget {
+  PostsList({
+    Key? key,
+  }) : super(key: key);
 
+  @override
+  State<PostsList> createState() => _PostsListState();
+}
+
+class _PostsListState extends State<PostsList> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
@@ -241,7 +298,8 @@ class _PostsListBuilderState extends ConsumerState<PostsListBuilder> {
                     );
                   }
                 });
-          }  else if (widget.posts[index].category == CategoryList.categories[selectedIndex]) {
+          } else if (widget.posts[index].category ==
+              CategoryList.categories[selectedIndex]) {
             return FutureBuilder(
                 future: getUserDataByUid(widget.posts[index].uid),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -278,44 +336,43 @@ class _PostsListBuilderState extends ConsumerState<PostsListBuilder> {
                     );
                   }
                 });
-          } else if(selectedIndex == 0 && widget.posts[index].isAnnouncement){
-              return FutureBuilder(
-                  future: getUserDataByUid(widget.posts[index].uid),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData == false) {
-                      return Card(
-                        color: Colors.grey.shade300,
-                        child: Column(children: [
-                          SizedBox(
-                            height: 180,
-                            width: MediaQuery.of(context).size.width * 0.9,
-                          ),
-                          const SizedBox(
-                            height: 11,
-                          )
-                        ]),
-                      );
-                    } else {
-                      PostCardModel post = PostCardModel(
-                        userName: snapshot.data.displayName,
-                        postTitle: widget.posts[index].postTitle,
-                        postText: widget.posts[index].postText,
-                        uid: widget.posts[index].uid,
-                        postId: widget.posts[index].postId,
-                        likes: widget.posts[index].likes,
-                        imagesUrl: widget.posts[index].imagesUrl,
-                        time: widget.posts[index].time,
-                        isQuestion: widget.posts[index].isQuestion,
-                        commentCount: widget.posts[index].commentCount,
-                        category: widget.posts[index].category,
-                        isAnnouncement: widget.posts[index].isAnnouncement,
-                      );
-                      return Post(
-                        post: post,
-                      );
-                    }
-                  });
-
+          } else if (selectedIndex == 0 && widget.posts[index].isAnnouncement) {
+            return FutureBuilder(
+                future: getUserDataByUid(widget.posts[index].uid),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData == false) {
+                    return Card(
+                      color: Colors.grey.shade300,
+                      child: Column(children: [
+                        SizedBox(
+                          height: 180,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                        ),
+                        const SizedBox(
+                          height: 11,
+                        )
+                      ]),
+                    );
+                  } else {
+                    PostCardModel post = PostCardModel(
+                      userName: snapshot.data.displayName,
+                      postTitle: widget.posts[index].postTitle,
+                      postText: widget.posts[index].postText,
+                      uid: widget.posts[index].uid,
+                      postId: widget.posts[index].postId,
+                      likes: widget.posts[index].likes,
+                      imagesUrl: widget.posts[index].imagesUrl,
+                      time: widget.posts[index].time,
+                      isQuestion: widget.posts[index].isQuestion,
+                      commentCount: widget.posts[index].commentCount,
+                      category: widget.posts[index].category,
+                      isAnnouncement: widget.posts[index].isAnnouncement,
+                    );
+                    return Post(
+                      post: post,
+                    );
+                  }
+                });
           } else {
             return const SizedBox();
           }
@@ -338,7 +395,8 @@ class OnGoingBottomWidget extends StatelessWidget {
           final state = ref.watch(postsProvider);
           return state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
-            onGoingLoading: (posts) => const Center(child: CircularProgressIndicator()),
+            onGoingLoading: (posts) =>
+                const Center(child: CircularProgressIndicator()),
             onGoingError: (posts, e, stk) => const Center(
               child: Column(
                 children: [

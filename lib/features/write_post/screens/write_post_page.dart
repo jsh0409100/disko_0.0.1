@@ -13,6 +13,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../app_layout_screen.dart';
 import '../../../models/category_list.dart';
+import '../../home/screens/home_feed_page.dart';
 import '../controller/write_post_controller.dart';
 
 class WritePostPage extends ConsumerStatefulWidget {
@@ -41,6 +42,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
   final posts = FirebaseFirestore.instance.collection('posts');
 
   bool _isLoading = false;
+  bool _LoadingVisible = false;
 
   Future<void> selectImageFromGallery() async {
     if (_imageFileList != null) {
@@ -83,7 +85,7 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
           commentCount,
           isQuestion,
           category,
-      ref,
+          ref,
         );
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -96,14 +98,24 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
     if (mounted) {
       setState(() {
         _isLoading = true;
+        _LoadingVisible = true;
       });
+
       for (int i = 0; i < _images.length; i++) {
         var imageUrl = await uploadFile(_images[i]);
         _arrImageUrls.add(imageUrl.toString());
       }
-      setState(() {
-        _isLoading = false;
-      });
+
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        setState(() {
+          _LoadingVisible = false;
+        });
+      }
     }
   }
 
@@ -139,7 +151,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
     bool isVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
     return Scaffold(
         appBar: AppBar(
-            shape: const Border(bottom: BorderSide(color: Colors.black, width: 0.5)),
+            shape: const Border(
+                bottom: BorderSide(color: Colors.black, width: 0.5)),
             centerTitle: true,
             title: const Text(
               '글쓰기',
@@ -173,10 +186,12 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                         controller: postTitleController,
                         maxLength: 15,
                         decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 24),
                           hintText: '제목',
                         ),
-                        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                        style: const TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w700),
                       ),
                       Expanded(
                         flex: 70,
@@ -186,8 +201,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                           maxLines: null,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.only(top: 10, left: 24, right: 24, bottom: 0),
+                            contentPadding: EdgeInsets.only(
+                                top: 10, left: 24, right: 24, bottom: 0),
                             hintText: '글작성',
                           ),
                           style: const TextStyle(fontSize: 16),
@@ -202,8 +217,9 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                               flex: 15,
                               child: GridView.builder(
                                 itemCount: _imageFileList?.length,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 4),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 4),
                                 itemBuilder: (BuildContext context, int index) {
                                   return Padding(
                                     padding: const EdgeInsets.all(2),
@@ -249,7 +265,8 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                                   child: Row(
                                     children: [
                                       IconButton(
-                                        icon: const Icon(Icons.photo_camera_outlined),
+                                        icon: const Icon(
+                                            Icons.photo_camera_outlined),
                                         onPressed: selectImageFromCamera,
                                       ),
                                       IconButton(
@@ -296,9 +313,17 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
                   child: const Text('게시'),
                   onPressed: () async {
                     postId = const Uuid().v1();
-                    Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeFeedPage(
+                            isLoading: _isLoading,
+                            LoadingVisible: _LoadingVisible),
+                      ),
+                    );
                     await uploadFunction(_imageFileList!);
-                    _uploadPost(CategoryList.categories[_CategoryCards.selected], ref);
+                    _uploadPost(
+                        CategoryList.categories[_CategoryCards.selected], ref);
                   },
                 ),
               ],

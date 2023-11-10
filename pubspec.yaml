@@ -83,6 +83,7 @@ dependencies:
   easy_image_viewer: ^1.2.1
   email_validator: ^2.1.17
   firebase_crashlytics: ^3.3.5
+  url_launcher: ^6.1.14
 
 
 dev_dependencies:

@@ -14,7 +14,10 @@ import '../widgets/message_list.dart';
 class ChatScreen extends ConsumerStatefulWidget {
   static const String routeName = '/chat-screen';
   final String peerUid;
-  const ChatScreen({Key? key, required this.peerUid}) : super(key: key);
+  bool isUploading = false;
+
+  ChatScreen({Key? key, required this.peerUid, required this.isUploading})
+      : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -22,11 +25,34 @@ class ChatScreen extends ConsumerStatefulWidget {
 
 class _ChatPageState extends ConsumerState<ChatScreen> {
   var currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+  late final ScrollController messageController;
+
+  void scrollToBottom() {
+    if (messageController.hasClients) {
+      messageController.animateTo(
+        messageController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   void dispose() {
     super.dispose();
     // print('user left chat');
     // ref.read(chatControllerProvider).toggleUserOnline(context, currentUserUid);
+  }
+
+  void _updateisUploading(bool value) {
+    setState(() {
+      widget.isUploading = value;
+    });
   }
 
   Future<void> _showMyDialog() async {
@@ -68,19 +94,23 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
                     ),
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed(ReportScreen.routeName, arguments: {
+                          Navigator.of(context)
+                              .pushNamed(ReportScreen.routeName, arguments: {
                             'reportedUid': widget.peerUid,
                             'reportedDisplayName': '',
                           });
                         },
                         style: TextButton.styleFrom(
                           elevation: 2,
-                          backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         child: Text(
                           '예, 신고할게요',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: Colors.white),
                         )),
                   ],
                 ),
@@ -110,7 +140,9 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.read(chatControllerProvider).setChatMessageSeen(context, widget.peerUid);
+    ref
+        .read(chatControllerProvider)
+        .setChatMessageSeen(context, widget.peerUid);
     final UserDataModel? user = ref.watch(userDataProvider);
     return FutureBuilder(
         future: getUserDataByUid(widget.peerUid),
@@ -120,71 +152,92 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
           }
           return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
-            child: Scaffold(
-                appBar: AppBar(
-                  centerTitle: true,
-                  title: GestureDetector(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(snapshot.data!.profilePic),
-                          radius: 20,
-                        ),
-                        const SizedBox(
-                          width: 6,
-                        ),
-                        Text(
-                          snapshot.data!.displayName,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        OtherUserProfilePage.routeName,
-                        arguments: {
-                          'uid': widget.peerUid,
-                        },
-                      );
-                    },
-                  ),
-                  actions: [
-                    PopupMenuButton<String>(
-                      onSelected: showMenu,
-                      itemBuilder: (BuildContext context) {
-                        return {'신고하기', '차단하기', '알림끄기', '채팅방 나가기'}.map((String choice) {
-                          return PopupMenuItem<String>(
-                            value: choice,
-                            child: choice == '신고하기'
-                                ? Text(
-                                    choice,
-                                    style: TextStyle(color: Theme.of(context).colorScheme.error),
-                                  )
-                                : Text(choice),
-                          );
-                        }).toList();
+            child: Stack(children: [
+              Scaffold(
+                  appBar: AppBar(
+                    centerTitle: true,
+                    title: GestureDetector(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(snapshot.data!.profilePic),
+                            radius: 20,
+                          ),
+                          const SizedBox(
+                            width: 6,
+                          ),
+                          Text(
+                            snapshot.data!.displayName,
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          OtherUserProfilePage.routeName,
+                          arguments: {
+                            'uid': widget.peerUid,
+                          },
+                        );
                       },
                     ),
-                  ],
-                  backgroundColor: Colors.white,
-                  elevation: 0,
-                ),
-                body: Column(
-                  children: [
-                    Expanded(
-                        child: ChatMessage(
-                      receiverUid: widget.peerUid,
-                    )),
-                    BottomChatField(
-                      receiverUid: widget.peerUid,
-                      profilePic: snapshot.data!.profilePic,
-                      receiverDisplayName: snapshot.data!.displayName,
-                      user: user!,
+                    actions: [
+                      PopupMenuButton<String>(
+                        onSelected: showMenu,
+                        itemBuilder: (BuildContext context) {
+                          return {'신고하기', '차단하기', '알림끄기', '채팅방 나가기'}
+                              .map((String choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: choice == '신고하기'
+                                  ? Text(
+                                      choice,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error),
+                                    )
+                                  : Text(choice),
+                            );
+                          }).toList();
+                        },
+                      ),
+                    ],
+                    backgroundColor: Colors.white,
+                    elevation: 0,
+                  ),
+                  body: Column(
+                    children: [
+                      Expanded(
+                          child: ChatMessage(
+                        receiverUid: widget.peerUid,
+                        isUploading: widget.isUploading,
+                      )),
+                      BottomChatField(
+                        receiverUid: widget.peerUid,
+                        profilePic: snapshot.data!.profilePic,
+                        receiverDisplayName: snapshot.data!.displayName,
+                        user: user!,
+                        isUploading: widget.isUploading,
+                        saveisUploading: _updateisUploading,
+                        scrollToBottom: scrollToBottom,
+                        uploadedFileURL: '',
+                      ),
+                    ],
+                  )),
+              Visibility(
+                  visible: widget.isUploading == true,
+                  child: Container(
+                    color: Colors.black.withOpacity(0.7), // Opacity and color
+                    child: const Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ],
-                )),
+                  ))
+            ]),
           );
         });
   }

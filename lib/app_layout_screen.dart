@@ -157,7 +157,7 @@ class MyHomeState extends ConsumerState<AppLayoutScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      const HomeFeedPage(),
+      HomeFeedPage(isLoading: false, LoadingVisible: false),
       const ChatListPage(),
       const MyProfilePage(),
     ];

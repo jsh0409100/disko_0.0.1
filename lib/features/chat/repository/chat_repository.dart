@@ -68,6 +68,7 @@ class ChatRepository {
     required String messageId,
     required String username,
     required LatLng? coordinates,
+    required saveisUploading,
   }) async {
     final message = ChatMessageModel(
       senderId: auth.currentUser!.uid,
@@ -83,6 +84,7 @@ class ChatRepository {
     await firestore.collection('messages').doc(chatName).collection(chatName).doc(messageId).set(
           message.toJson(),
         );
+    saveisUploading(false);
   }
 
   void _saveMessageToLatestMessage({
@@ -144,6 +146,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: null,
+        saveisUploading: false,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,
@@ -176,6 +179,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: null,
+        saveisUploading: false,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,
@@ -218,6 +222,7 @@ class ChatRepository {
     required UserDataModel senderUser,
     required ProviderRef ref,
     required MessageEnum messageEnum,
+    required saveisUploading,
   }) async {
     try {
       var timeSent = Timestamp.now();
@@ -253,6 +258,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: null,
+        saveisUploading: false,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,
@@ -287,6 +293,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: coordinates,
+        saveisUploading: false,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,
@@ -320,6 +327,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: null,
+        saveisUploading: false,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,

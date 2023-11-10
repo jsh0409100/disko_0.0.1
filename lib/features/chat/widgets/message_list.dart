@@ -14,7 +14,13 @@ import 'chat_bubble.dart';
 
 class ChatMessage extends ConsumerStatefulWidget {
   final String receiverUid;
-  const ChatMessage({super.key, required this.receiverUid});
+  final bool isUploading;
+
+  const ChatMessage({
+    super.key,
+    required this.receiverUid,
+    required this.isUploading,
+  });
 
   @override
   ConsumerState<ChatMessage> createState() => _ChatMessageState();
@@ -22,6 +28,16 @@ class ChatMessage extends ConsumerStatefulWidget {
 
 class _ChatMessageState extends ConsumerState<ChatMessage> {
   final ScrollController messageController = ScrollController();
+
+  void scrollToBottom() {
+    if (messageController.hasClients) {
+      messageController.animateTo(
+        messageController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -59,6 +75,7 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
                       showTime: showTime,
                       isDayPassed: isDayPassed,
                       chatDocs: chatDocs,
+                      scrollToBottom: scrollToBottom,
                       message: LocationItem(
                         locationImageString: chatDocs.text,
                         timeSent: chatDocs.timeSent,
@@ -69,17 +86,27 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
                       showTime: showTime,
                       chatDocs: chatDocs,
                       isDayPassed: isDayPassed,
+                      scrollToBottom: scrollToBottom,
                       message: MyChatBubble(
-                          text: chatDocs.text, timeSent: chatDocs.timeSent, type: chatDocs.type));
+                        text: chatDocs.text,
+                        timeSent: chatDocs.timeSent,
+                        type: chatDocs.type,
+                        isUploading: widget.isUploading,
+                      ));
                 }
               }
               return BubbleWtihDayBreak(
                   showTime: showTime,
                   chatDocs: chatDocs,
                   isDayPassed: isDayPassed,
+                  scrollToBottom: scrollToBottom,
                   message: PeerChatBubble(
-                      text: chatDocs.text, timeSent: chatDocs.timeSent, type: chatDocs.type));
-            },
+                    text: chatDocs.text,
+                    timeSent: chatDocs.timeSent,
+                    type: chatDocs.type,
+                    isUploading: widget.isUploading,
+                  ));
+              },
           );
         });
   }
@@ -92,12 +119,14 @@ class BubbleWtihDayBreak extends StatelessWidget {
     required this.chatDocs,
     required this.message,
     required this.isDayPassed,
+    required this.scrollToBottom,
   }) : super(key: key);
 
   final String showTime;
   final ChatMessageModel chatDocs;
   final bool isDayPassed;
   final Widget message;
+  final Function() scrollToBottom;
 
   @override
   Widget build(BuildContext context) {

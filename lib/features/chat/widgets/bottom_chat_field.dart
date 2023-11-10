@@ -16,15 +16,23 @@ import '../screens/make_appointment_screen.dart';
 import 'message_category_card.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
-  const BottomChatField({
+  BottomChatField({
     Key? key,
     required this.receiverUid,
     required this.profilePic,
     required this.receiverDisplayName,
     required this.user,
+    required this.isUploading,
+    required this.uploadedFileURL,
+    required this.saveisUploading,
+    required this.scrollToBottom,
   }) : super(key: key);
   final String receiverUid, profilePic, receiverDisplayName;
   final UserDataModel user;
+  final Function(bool) saveisUploading;
+  final Function() scrollToBottom;
+  bool isUploading = false;
+  String uploadedFileURL = '';
 
   @override
   ConsumerState<BottomChatField> createState() => _SendMessageState();
@@ -92,6 +100,7 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
           file,
           widget.receiverUid,
           messageEnum,
+          widget.saveisUploading,
         );
     notificationService.sendChatNotification(
       senderDisplayName: widget.user.displayName,
@@ -103,6 +112,9 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void selectImage() async {
     File? image = await pickImageFromGallery(context);
     if (image != null) {
+      setState(() {
+        widget.saveisUploading(true);
+      });
       sendFileMessage(image, MessageEnum.image);
     }
   }
@@ -110,6 +122,9 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void selectVideo() async {
     File? video = await pickVideoFromGallery(context);
     if (video != null) {
+      setState(() {
+        widget.saveisUploading(true);
+      });
       sendFileMessage(video, MessageEnum.video);
     }
   }
@@ -117,6 +132,9 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void takePhoto() async {
     File? image = await pickImageFromCamera(context);
     if (image != null) {
+      setState(() {
+        widget.saveisUploading(true);
+      });
       sendFileMessage(image, MessageEnum.image);
     }
   }
@@ -199,12 +217,14 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
             Expanded(
               child: TextField(
                 focusNode: focusNode,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 controller: controller,
                 maxLines: null,
                 decoration: const InputDecoration(
                   isDense: true,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
@@ -218,7 +238,8 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
               ),
             ),
             IconButton(
-              onPressed: (_userEnterMessage.trim().isEmpty || _userEnterMessage.trim() == '')
+              onPressed: (_userEnterMessage.trim().isEmpty ||
+                      _userEnterMessage.trim() == '')
                   ? null
                   : _sendMessage,
               icon: Icon(
@@ -238,23 +259,28 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                    GestureDetector(
-                      onTap: selectImage,
-                      child: const MessageCategoryCard(
-                          categoryIcon: Icons.add_photo_alternate_outlined, categoryName: '사진 보내기'),
-                    ),
-                    GestureDetector(
-                      onTap: selectVideo,
-                      child: const MessageCategoryCard(
-                          categoryIcon: Icons.video_file_outlined, categoryName: '영상 보내기'),
-                    ),
-                    GestureDetector(
-                      onTap: takePhoto,
-                      child: const MessageCategoryCard(
-                          categoryIcon: Icons.camera_alt_outlined, categoryName: '카메라'),
-                    ),
-                  ]),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: selectImage,
+                          child: const MessageCategoryCard(
+                              categoryIcon: Icons.add_photo_alternate_outlined,
+                              categoryName: '사진 보내기'),
+                        ),
+                        GestureDetector(
+                          onTap: selectVideo,
+                          child: const MessageCategoryCard(
+                              categoryIcon: Icons.video_file_outlined,
+                              categoryName: '영상 보내기'),
+                        ),
+                        GestureDetector(
+                          onTap: takePhoto,
+                          child: const MessageCategoryCard(
+                              categoryIcon: Icons.camera_alt_outlined,
+                              categoryName: '카메라'),
+                        ),
+                      ]),
                   const SizedBox(height: 15),
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

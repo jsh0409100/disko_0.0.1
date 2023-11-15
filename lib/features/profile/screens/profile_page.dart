@@ -359,7 +359,7 @@ class _ProfilePageState extends ConsumerState<ProfilePageFrame> {
         fillColor: Colors.white,
         constraints: BoxConstraints(
           minHeight: 80,
-          minWidth: MediaQuery.of(context).size.width - 300,
+          minWidth: (MediaQuery.of(context).size.width-100)/3,
         ),
         textStyle: const TextStyle(
             //fontWeight: FontWeight.w500,

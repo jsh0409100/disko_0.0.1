@@ -287,27 +287,27 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
                         ),
                       ]),
                   const SizedBox(height: 15),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: [
-                  //     // const MessageCategoryCard(categoryIcon: Icons.mic, categoryName: '음성메세지'),
-                  //     GestureDetector(
-                  //       onTap: () => makeCall(ref, context),
-                  //       child: const MessageCategoryCard(
-                  //           categoryIcon: Icons.video_call_outlined, categoryName: '영상통화'),
-                  //     ),
-                  //     GestureDetector(
-                  //       onTap: showMap,
-                  //       child: const MessageCategoryCard(
-                  //           categoryIcon: Icons.location_on_outlined, categoryName: '위치 보내기'),
-                  //     ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // const MessageCategoryCard(categoryIcon: Icons.mic, categoryName: '음성메세지'),
+                      GestureDetector(
+                        onTap: () => makeCall(ref, context),
+                        child: const MessageCategoryCard(
+                            categoryIcon: Icons.video_call_outlined, categoryName: '영상통화'),
+                      ),
+                      GestureDetector(
+                        onTap: showMap,
+                        child: const MessageCategoryCard(
+                            categoryIcon: Icons.location_on_outlined, categoryName: '위치 보내기'),
+                      ),
                       // GestureDetector(
                       //   onTap: makeAppointment,
                       //   child: const MessageCategoryCard(
                       //       categoryIcon: Icons.location_on_outlined, categoryName: '약속 잡기'),
                       // ),
-                  //   ],
-                  // ),
+                    ],
+                  ),
                   const SizedBox(height: 10),
                 ]),
           ),

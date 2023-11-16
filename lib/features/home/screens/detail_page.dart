@@ -341,7 +341,6 @@ class _DetailPageState extends ConsumerState<DetailPage> {
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
                     child: FutureBuilder(
                         future: getUserDataByUid(post.uid),
                         builder: (context, snapshot) {
@@ -608,7 +607,6 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                                     postId: post.postId,
                                   ),
                                 ),
-
                               ],
                             ),
                           );

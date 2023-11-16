@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class CustomImageProvider extends EasyImageProvider {
 
   @override
   ImageProvider<Object> imageBuilder(BuildContext context, int index) {
-    return NetworkImage(imageUrls[index]);
+    return CachedNetworkImageProvider(imageUrls[index]);
   }
 
   @override

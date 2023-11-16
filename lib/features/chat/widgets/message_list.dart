@@ -14,19 +14,19 @@ import 'chat_bubble.dart';
 
 class ChatMessage extends ConsumerStatefulWidget {
   final String receiverUid;
-  final bool isUploading;
+  // final bool isUploading;
 
   const ChatMessage({
     super.key,
     required this.receiverUid,
-    required this.isUploading,
+    // required this.isUploading,
   });
 
   @override
   ConsumerState<ChatMessage> createState() => _ChatMessageState();
 }
 
-class _ChatMessageState extends ConsumerState<ChatMessage> {
+class _ChatMessageState extends ConsumerState<ChatMessage> with AutomaticKeepAliveClientMixin{
   final ScrollController messageController = ScrollController();
 
   void scrollToBottom() {
@@ -47,6 +47,7 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return StreamBuilder<List<ChatMessageModel>>(
         stream: ref.read(chatControllerProvider).chatStream(widget.receiverUid),
         builder: (context, snapshot) {
@@ -60,6 +61,7 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
           DateTime? time;
 
           return ListView.builder(
+            cacheExtent: 100000,
             controller: messageController,
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
@@ -91,7 +93,7 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
                         text: chatDocs.text,
                         timeSent: chatDocs.timeSent,
                         type: chatDocs.type,
-                        isUploading: widget.isUploading,
+                        // isUploading: widget.isUploading,
                       ));
                 }
               }
@@ -104,12 +106,16 @@ class _ChatMessageState extends ConsumerState<ChatMessage> {
                     text: chatDocs.text,
                     timeSent: chatDocs.timeSent,
                     type: chatDocs.type,
-                    isUploading: widget.isUploading,
+                    // isUploading: widget.isUploading,
                   ));
               },
           );
         });
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class BubbleWtihDayBreak extends StatelessWidget {

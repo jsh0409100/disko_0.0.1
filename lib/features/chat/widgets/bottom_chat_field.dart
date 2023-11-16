@@ -23,16 +23,16 @@ class BottomChatField extends ConsumerStatefulWidget {
     required this.profilePic,
     required this.receiverDisplayName,
     required this.user,
-    required this.isUploading,
+    // required this.isUploading,
     required this.uploadedFileURL,
-    required this.saveisUploading,
+    // required this.saveisUploading,
     required this.scrollToBottom,
   }) : super(key: key);
   final String receiverUid, profilePic, receiverDisplayName;
   final UserDataModel user;
-  final Function(bool) saveisUploading;
+  // final Function(bool) saveisUploading;
   final Function() scrollToBottom;
-  bool isUploading = false;
+  // bool isUploading = false;
   String uploadedFileURL = '';
 
   @override
@@ -96,12 +96,13 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
     File file,
     MessageEnum messageEnum,
   ) {
+    showSnackBar(context: context, content: "file is being sent");
     ref.read(chatControllerProvider).sendFileMessage(
           context,
           file,
           widget.receiverUid,
           messageEnum,
-          widget.saveisUploading,
+          // widget.saveisUploading,
         );
     notificationService.sendChatNotification(
       senderDisplayName: widget.user.displayName,
@@ -113,9 +114,9 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void selectImage() async {
     File? image = await pickImageFromGallery(context);
     if (image != null) {
-      setState(() {
-        widget.saveisUploading(true);
-      });
+      // setState(() {
+      //   widget.saveisUploading(true);
+      // });
       sendFileMessage(image, MessageEnum.image);
     }
   }
@@ -123,9 +124,11 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void selectVideo() async {
     File? video = await pickVideoFromGallery(context);
     if (video != null) {
-      setState(() {
-        widget.saveisUploading(true);
-      });
+      // setState(() {
+      //   widget.saveisUploading(true);
+      // });
+      showSnackBar(context: context, content: "Image is being sent");
+
       sendFileMessage(video, MessageEnum.video);
     }
   }
@@ -133,9 +136,10 @@ class _SendMessageState extends ConsumerState<BottomChatField> {
   void takePhoto() async {
     File? image = await pickImageFromCamera(context);
     if (image != null) {
-      setState(() {
-        widget.saveisUploading(true);
-      });
+      // setState(() {
+      //   widget.saveisUploading(true);
+      // });
+      showSnackBar(context: context, content: "Image is being sent");
       sendFileMessage(image, MessageEnum.image);
     }
   }

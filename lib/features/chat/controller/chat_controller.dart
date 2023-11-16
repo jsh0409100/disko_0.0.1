@@ -81,7 +81,7 @@ class ChatController {
     File file,
     String receiverUid,
     MessageEnum messageEnum,
-    saveisUploading,
+    // saveisUploading,
   ) {
     ref.read(userDataAuthProvider).whenData(
           (value) => chatRepository.sendFileMessage(
@@ -91,7 +91,7 @@ class ChatController {
             senderUser: value!,
             messageEnum: messageEnum,
             ref: ref,
-            saveisUploading: saveisUploading,
+            // saveisUploading: saveisUploading,
           ),
         );
   }

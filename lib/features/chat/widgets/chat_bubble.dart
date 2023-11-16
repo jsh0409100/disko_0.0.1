@@ -9,13 +9,13 @@ class MyChatBubble extends StatelessWidget {
   final MessageEnum type;
   final String text;
   final Timestamp timeSent;
-  final bool isUploading;
+  // final bool isUploading;
 
   const MyChatBubble({
     required this.text,
     required this.timeSent,
     required this.type,
-    required this.isUploading,
+    // required this.isUploading,
     Key? key,
   }) : super(key: key);
 
@@ -30,10 +30,10 @@ class MyChatBubble extends StatelessWidget {
       children: [
         Text(showTime),
         DisplayTextImageGIF(
-          isSender: false,
+          isSender: true,
           message: text,
           type: type,
-          isUploading: isUploading,
+          // isUploading: isUploading,
         ),
       ],
     );
@@ -44,13 +44,13 @@ class PeerChatBubble extends StatelessWidget {
   final MessageEnum type;
   final String text;
   final Timestamp timeSent;
-  final bool isUploading;
+  // final bool isUploading;
 
   const PeerChatBubble({
     required this.text,
     required this.timeSent,
     required this.type,
-    required this.isUploading,
+    // required this.isUploading,
     Key? key,
   }) : super(key: key);
 
@@ -67,7 +67,7 @@ class PeerChatBubble extends StatelessWidget {
           isSender: false,
           message: text,
           type: type,
-          isUploading: isUploading,
+          // isUploading: isUploading,
         ),
         Text('$showTime'),
       ],

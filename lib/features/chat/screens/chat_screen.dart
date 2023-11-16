@@ -14,16 +14,15 @@ import '../widgets/message_list.dart';
 class ChatScreen extends ConsumerStatefulWidget {
   static const String routeName = '/chat-screen';
   final String peerUid;
-  bool isUploading = false;
 
-  ChatScreen({Key? key, required this.peerUid, required this.isUploading})
+  ChatScreen({Key? key, required this.peerUid,})
       : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
 }
 
-class _ChatPageState extends ConsumerState<ChatScreen> {
+class _ChatPageState extends ConsumerState<ChatScreen> with AutomaticKeepAliveClientMixin{
   var currentUserUid = FirebaseAuth.instance.currentUser!.uid;
   late final ScrollController messageController;
 
@@ -38,6 +37,10 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+
+  @override
   void initState() {
     super.initState();
   }
@@ -49,11 +52,11 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
     // ref.read(chatControllerProvider).toggleUserOnline(context, currentUserUid);
   }
 
-  void _updateisUploading(bool value) {
-    setState(() {
-      widget.isUploading = value;
-    });
-  }
+  // void _updateisUploading(bool value) {
+  //   setState(() {
+  //     widget.isUploading = value;
+  //   });
+  // }
 
   Future<void> _showMyDialog() async {
     return showDialog<void>(
@@ -140,6 +143,7 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     ref
         .read(chatControllerProvider)
         .setChatMessageSeen(context, widget.peerUid);
@@ -215,28 +219,28 @@ class _ChatPageState extends ConsumerState<ChatScreen> {
                       Expanded(
                           child: ChatMessage(
                         receiverUid: widget.peerUid,
-                        isUploading: widget.isUploading,
+                        // isUploading: widget.isUploading,
                       )),
                       BottomChatField(
                         receiverUid: widget.peerUid,
                         profilePic: snapshot.data!.profilePic,
                         receiverDisplayName: snapshot.data!.displayName,
                         user: user!,
-                        isUploading: widget.isUploading,
-                        saveisUploading: _updateisUploading,
+                        // isUploading: widget.isUploading,
+                        // saveisUploading: _updateisUploading,
                         scrollToBottom: scrollToBottom,
                         uploadedFileURL: '',
                       ),
                     ],
                   )),
-              Visibility(
-                  visible: widget.isUploading == true,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.7), // Opacity and color
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ))
+              // Visibility(
+              //     visible: widget.isUploading == true,
+              //     child: Container(
+              //       color: Colors.black.withOpacity(0.7), // Opacity and color
+              //       child: const Center(
+              //         child: CircularProgressIndicator(),
+              //       ),
+              //     ))
             ]),
           );
         });

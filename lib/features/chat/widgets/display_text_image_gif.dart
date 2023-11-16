@@ -11,14 +11,14 @@ class DisplayTextImageGIF extends StatelessWidget {
   final String message;
   final MessageEnum type;
   final bool isSender;
-  final bool isUploading;
+  // final bool isUploading;
 
   const DisplayTextImageGIF({
     Key? key,
     required this.message,
     required this.type,
     required this.isSender,
-    required this.isUploading,
+    // required this.isUploading,
   }) : super(key: key);
   static final customCacheManager = CacheManager(
     Config(
@@ -35,9 +35,9 @@ class DisplayTextImageGIF extends StatelessWidget {
           maxHeight: MediaQuery.of(context).size.width * 0.8),
       child: type == MessageEnum.text
           ? Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFECECEC),
-                borderRadius: BorderRadius.all(Radius.circular(15)),
+              decoration: BoxDecoration(
+                color: isSender ?const Color(0xFF363f93) : const Color(0xFFECECEC),
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
               ),
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
@@ -50,14 +50,13 @@ class DisplayTextImageGIF extends StatelessWidget {
                 ),
               ))
           : Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               child: type == MessageEnum.video
                   ? Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFECECEC),
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                      ),
+                      // decoration: const BoxDecoration(
+                      //   color: Color(0xFFECECEC),
+                      //   borderRadius: BorderRadius.all(Radius.circular(15)),
+                      // ),
                       margin: const EdgeInsets.symmetric(
                           vertical: 4, horizontal: 8),
                       child: VideoPlayerItem(
@@ -87,8 +86,8 @@ class DisplayTextImageGIF extends StatelessWidget {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Color(0xFF363f93).withOpacity(0.3),
-                                      offset: Offset(-10.0,0),
+                                      color: const Color(0xFF363f93).withOpacity(0.3),
+                                      offset: const Offset(-10.0,0),
                                       blurRadius: 20.0,
                                       spreadRadius: 4.0,
                                     ),

@@ -256,6 +256,7 @@ class _PostsListBuilderState extends ConsumerState<PostsListBuilder> {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         addAutomaticKeepAlives: true,
+        childCount: widget.posts.length,
         (context, index) {
           final selectedIndex = ref.watch(selectedIndexProvider);
           if (selectedIndex == 999) {
@@ -374,7 +375,7 @@ class _PostsListBuilderState extends ConsumerState<PostsListBuilder> {
             return const SizedBox();
           }
         },
-        childCount: widget.posts.length,
+
       ),
     );
   }

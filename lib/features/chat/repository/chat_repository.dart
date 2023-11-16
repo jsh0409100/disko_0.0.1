@@ -68,7 +68,7 @@ class ChatRepository {
     required String messageId,
     required String username,
     required LatLng? coordinates,
-    required saveisUploading,
+    required BuildContext context,
   }) async {
     final message = ChatMessageModel(
       senderId: auth.currentUser!.uid,
@@ -84,7 +84,9 @@ class ChatRepository {
     await firestore.collection('messages').doc(chatName).collection(chatName).doc(messageId).set(
           message.toJson(),
         );
-    saveisUploading(false);
+    if(messageType != MessageEnum.text) {
+      showSnackBar(context: context, content: "Message Sent!");
+    }
   }
 
   void _saveMessageToLatestMessage({
@@ -146,7 +148,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: null,
-        saveisUploading: false,
+        context: context,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,
@@ -179,7 +181,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: null,
-        saveisUploading: false,
+        context: context,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,
@@ -222,7 +224,7 @@ class ChatRepository {
     required UserDataModel senderUser,
     required ProviderRef ref,
     required MessageEnum messageEnum,
-    required saveisUploading,
+    // required saveisUploading,
   }) async {
     try {
       var timeSent = Timestamp.now();
@@ -258,7 +260,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: null,
-        saveisUploading: false,
+        context: context,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,
@@ -293,7 +295,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: coordinates,
-        saveisUploading: false,
+        context: context,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,
@@ -327,7 +329,7 @@ class ChatRepository {
         timeSent: timeSent,
         username: senderUser.displayName,
         coordinates: null,
-        saveisUploading: false,
+        context: context,
       );
       _saveMessageToLatestMessage(
         receiverUid: receiverUid,

@@ -11,9 +11,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/utils/local_notification.dart';
-import 'common/widgets/error_screen.dart';
-import 'common/widgets/loading_screen.dart';
-import 'features/auth/controller/auth_controller.dart';
+
 import 'features/home/screens/home_feed_page.dart';
 import 'features/profile/screens/my_profile_page.dart';
 import 'main.dart';

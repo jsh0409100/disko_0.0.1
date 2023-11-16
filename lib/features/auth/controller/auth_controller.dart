@@ -29,6 +29,7 @@ class AuthController {
   Future<UserDataModel?> getUserData() async {
     UserDataModel? user = await authRepository.getCurrentUserData();
     if (user != null) ref.read(userDataProvider.notifier).updateUser(user);
+    print("user = $user");
     return user;
   }
   //

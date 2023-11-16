@@ -49,7 +49,7 @@ class _PostState extends State<Post> with AutomaticKeepAliveClientMixin {
                     context,
                     DetailPage.routeName,
                     arguments: {
-                      'post': widget.post,
+                      'postId': widget.post.postId,
                     },
                   );
                 },

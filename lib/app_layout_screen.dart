@@ -18,8 +18,7 @@ import 'main.dart';
 
 class AppLayoutScreen extends ConsumerStatefulWidget {
   static const String routeName = '/my-home';
-
-  const AppLayoutScreen({Key? key}) : super(key: key);
+  const AppLayoutScreen({Key? key,}) : super(key: key);
 
   @override
   MyHomeState createState() => MyHomeState();

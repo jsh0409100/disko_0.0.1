@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disko_001/features/home/controller/post_controller.dart';
 import 'package:disko_001/features/report/report_screen.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import '../../../src/providers.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../profile/screens/other_user_profile_page.dart';
 import '../../write_post/screens/edit_post_page.dart';
+import 'custom_image_provider.dart';
 
 class PostCard extends ConsumerStatefulWidget {
   final PostCardModel post;
@@ -322,14 +325,31 @@ class _PostCardState extends ConsumerState<PostCard> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: ListView.builder(
+                                cacheExtent: 10000,
                                 scrollDirection: Axis.horizontal,
                                 itemCount: widget.post.imagesUrl.length,
                                 dragStartBehavior: DragStartBehavior.start,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Padding(
                                     padding: const EdgeInsets.all(2),
-                                    child: Image.network(widget.post.imagesUrl[index],
-                                        fit: BoxFit.cover),
+                                      child: GestureDetector(
+                                        onTap: () async{
+                                          CustomImageProvider customImageProvider =
+                                          CustomImageProvider(
+                                            imageUrls: widget.post.imagesUrl.toList(),
+                                          );
+                                          showImageViewerPager(
+                                            context,
+                                            customImageProvider,
+                                            swipeDismissible: true,
+                                            doubleTapZoomable: true,
+                                          );
+                                        },
+                                        child: CachedNetworkImage(
+                                          imageUrl: widget.post.imagesUrl[index],
+                                          placeholder: (context, url) => Container(color: Colors.black12),
+                                        ),
+                                      ),
                                   );
                                 },
                               ),

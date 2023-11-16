@@ -5,7 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   agora_rtc_engine
   desktop_webview_auth
-  emoji_picker_flutter
   file_selector_windows
   firebase_core
   geolocator_windows

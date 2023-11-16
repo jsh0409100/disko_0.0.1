@@ -21,8 +21,8 @@ class _CategoryCardsState extends State<CategoryCards> {
     required int index,
   }) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.25,
-      height: MediaQuery.of(context).size.width * 0.25,
+      width: MediaQuery.of(context).size.width * 0.24,
+      height: MediaQuery.of(context).size.width * 0.24,
       child: GestureDetector(
         onTap: () {
           setState(() {

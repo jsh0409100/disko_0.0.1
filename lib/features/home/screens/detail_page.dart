@@ -337,280 +337,290 @@ class _DetailPageState extends ConsumerState<DetailPage> {
               appBar: AppBar(),
               showActions: false,
             ),
-            body: FutureBuilder(
-                future: getUserDataByUid(post.uid),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData == false) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  return Container(
-                    height: MediaQuery.of(context).size.height / 1.125,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            body: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    child: FutureBuilder(
+                        future: getUserDataByUid(post.uid),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData == false) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                          return Container(
+                            height: MediaQuery.of(context).size.height / 1.125,
+                            child: Column(
                               children: [
-                                Row(
-                                  children: [
-                                    post.isQuestion
-                                        ? const Text(
-                                            "Q",
-                                            style: TextStyle(
+                                Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            post.isQuestion
+                                                ? const Text(
+                                              "Q",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                                color: Color(0xff7150FF),
+                                              ),
+                                            )
+                                                : SizedBox(),
+
+                                            GestureDetector(
+                                              child: Row(
+                                                children: [
+                                                  ClipRRect(
+                                                      borderRadius: BorderRadius.circular(100),
+                                                      child: Image(
+                                                        image: NetworkImage(snapshot.data!.profilePic),
+                                                        height: 43,
+                                                        width: 43,
+                                                        fit: BoxFit.scaleDown,
+                                                      )),
+                                                  const SizedBox(
+                                                    width: 12,
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        snapshot.data!.displayName,
+                                                        style: const TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight: FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  OtherUserProfilePage.routeName,
+                                                  arguments: {
+                                                    'uid': post.uid,
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        PopupMenuButton<String>(
+                                          onSelected: showMenu,
+                                          itemBuilder: (BuildContext context) {
+                                            return (post.uid != currUid)
+                                                ? {'메세지 보내기', '신고하기'}
+                                                .map((String choice) {
+                                              return PopupMenuItem<String>(
+                                                value: choice,
+                                                child: choice == '신고하기'
+                                                    ? Text(
+                                                  choice,
+                                                  style: TextStyle(
+                                                      color:
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .error),
+                                                )
+                                                    : Text(choice),
+                                              );
+                                            }).toList()
+                                                : {'글 수정', '글 삭제', '앱 내 공유'}
+                                                .map((String choice) {
+                                              return PopupMenuItem<String>(
+                                                value: choice,
+                                                child: choice == '글 삭제'
+                                                    ? Text(
+                                                  choice,
+                                                  style: TextStyle(
+                                                      color:
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .error),
+                                                )
+                                                    : Text(choice),
+                                              );
+                                            }).toList();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                        height:
+                                        MediaQuery.of(context).size.height / 50),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        FittedBox(
+                                          fit: BoxFit.contain,
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            post.postTitle,
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
-                                              color: Color(0xff7150FF),
                                             ),
-                                          )
-                                        : SizedBox(),
-
-                                    GestureDetector(
-                                      child: Row(
-                                        children: [
-                                          ClipRRect(
-                                              borderRadius: BorderRadius.circular(100),
-                                              child: Image(
-                                                image: NetworkImage(snapshot.data!.profilePic),
-                                                height: 43,
-                                                width: 43,
-                                                fit: BoxFit.scaleDown,
-                                              )),
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                snapshot.data!.displayName,
-                                                style: const TextStyle(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                          context,
-                                          OtherUserProfilePage.routeName,
-                                          arguments: {
-                                            'uid': post.uid,
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                const Spacer(),
-                                PopupMenuButton<String>(
-                                  onSelected: showMenu,
-                                  itemBuilder: (BuildContext context) {
-                                    return (post.uid != currUid)
-                                        ? {'메세지 보내기', '신고하기'}
-                                            .map((String choice) {
-                                            return PopupMenuItem<String>(
-                                              value: choice,
-                                              child: choice == '신고하기'
-                                                  ? Text(
-                                                      choice,
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .error),
-                                                    )
-                                                  : Text(choice),
-                                            );
-                                          }).toList()
-                                        : {'글 수정', '글 삭제', '앱 내 공유'}
-                                            .map((String choice) {
-                                            return PopupMenuItem<String>(
-                                              value: choice,
-                                              child: choice == '글 삭제'
-                                                  ? Text(
-                                                      choice,
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .error),
-                                                    )
-                                                  : Text(choice),
-                                            );
-                                          }).toList();
-                                  },
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height / 50),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FittedBox(
-                                  fit: BoxFit.contain,
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    post.postTitle,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                    height: MediaQuery.of(context).size.height /
-                                        100),
-                                SizedBox(
-                                  child: Text(
-                                    post.postText,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                post.imagesUrl.isEmpty
-                                    ? Container()
-                                    : Padding(
-                                        padding: const EdgeInsets.all(3),
-                                        child: SizedBox(
-                                          height: MediaQuery.of(context).size.height / 3,
-                                          width: MediaQuery.of(context).size.width * 9,
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: post.imagesUrl.length,
-                                            dragStartBehavior: DragStartBehavior.start,
-                                            itemBuilder: (BuildContext context, int index) {
-                                              return GestureDetector(
-                                                onTap: () async {
-                                                  CustomImageProvider customImageProvider =
-                                                      CustomImageProvider(
-                                                    imageUrls: post.imagesUrl.toList(),
-                                                  );
-                                                  showImageViewerPager(
-                                                    context,
-                                                    customImageProvider,
-                                                    swipeDismissible: true,
-                                                    doubleTapZoomable: true,
-                                                  );
-                                                },
-                                                child: SizedBox(
-                                                    height: 150,
-                                                    child: CachedNetworkImage(
-                                                      imageUrl: post.imagesUrl[index],
-                                                    )),
-                                              );
-                                            },
                                           ),
                                         ),
+                                        SizedBox(
+                                            height: MediaQuery.of(context).size.height /
+                                                100),
+                                        SizedBox(
+                                          child: Text(
+                                            post.postText,
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        post.imagesUrl.isEmpty
+                                            ? Container()
+                                            : Padding(
+                                          padding: const EdgeInsets.all(3),
+                                          child: SizedBox(
+                                            height: MediaQuery.of(context).size.height / 3,
+                                            width: MediaQuery.of(context).size.width * 9,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: post.imagesUrl.length,
+                                              dragStartBehavior: DragStartBehavior.start,
+                                              itemBuilder: (BuildContext context, int index) {
+                                                return GestureDetector(
+                                                  onTap: () async {
+                                                    CustomImageProvider customImageProvider =
+                                                    CustomImageProvider(
+                                                      imageUrls: post.imagesUrl.toList(),
+                                                    );
+                                                    showImageViewerPager(
+                                                      context,
+                                                      customImageProvider,
+                                                      swipeDismissible: true,
+                                                      doubleTapZoomable: true,
+                                                    );
+                                                  },
+                                                  child: SizedBox(
+                                                      height: 150,
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: post.imagesUrl[index],
+                                                      )),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                        height:
+                                        MediaQuery.of(context).size.height / 50),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          showTime,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xff767676),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ]),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () async {
+                                          FirebaseFirestore.instance
+                                              .collection('posts')
+                                              .doc(post.postId)
+                                              .get();
+                                          if (post.likes.contains(currUid)) {
+                                            post.likes.remove(currUid);
+                                            setState(() {
+                                              _isLiked = false;
+                                            });
+                                          } else {
+                                            post.likes.add(currUid);
+                                            setState(() {
+                                              _isLiked = true;
+                                            });
+                                          }
+                                          await postsCollection
+                                              .doc(post.postId)
+                                              .update({
+                                            'likes': post.likes,
+                                          });
+                                          if (post.uid != currUid) {
+                                            saveNotification(
+                                              peerUid: post.uid,
+                                              postId: post.postId,
+                                              postTitle: post.postTitle,
+                                              time: Timestamp.now(),
+                                              notificationType: NotificationEnum.like,
+                                            );
+                                          }
+                                        },
+                                        icon: likeIcon,
+                                        color: likeColor,
                                       ),
-                              ],
-                            ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height / 50),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  showTime,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xff767676),
-                                    fontWeight: FontWeight.w500,
+                                      Text(
+                                        post.likes.length.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: const Icon(
+                                          Icons.chat_outlined,
+                                          color: Colors.black,
+                                          size: 24,
+                                        ),
+                                      ),
+                                      Text(
+                                        post.commentCount.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                Expanded(
+                                  child: CommentList(
+                                    postId: post.postId,
+                                  ),
+                                ),
+
                               ],
                             ),
-                          ]),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                onPressed: () async {
-                                  FirebaseFirestore.instance
-                                      .collection('posts')
-                                      .doc(post.postId)
-                                      .get();
-                                  if (post.likes.contains(currUid)) {
-                                    post.likes.remove(currUid);
-                                    setState(() {
-                                      _isLiked = false;
-                                    });
-                                  } else {
-                                    post.likes.add(currUid);
-                                    setState(() {
-                                      _isLiked = true;
-                                    });
-                                  }
-                                  await postsCollection
-                                      .doc(post.postId)
-                                      .update({
-                                    'likes': post.likes,
-                                  });
-                                  if (post.uid != currUid) {
-                                    saveNotification(
-                                      peerUid: post.uid,
-                                      postId: post.postId,
-                                      postTitle: post.postTitle,
-                                      time: Timestamp.now(),
-                                      notificationType: NotificationEnum.like,
-                                    );
-                                  }
-                                },
-                                icon: likeIcon,
-                                color: likeColor,
-                              ),
-                              Text(
-                                post.likes.length.toString(),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.chat_outlined,
-                                  color: Colors.black,
-                                  size: 24,
-                                ),
-                              ),
-                              Text(
-                                post.commentCount.toString(),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: CommentList(
-                            postId: post.postId,
-                          ),
-                        ),
-                        BottomCommentField(
-                          post: post,
-                        ),
-                      ],
-                    ),
-                  );
-                }),
+                          );
+                        }),
+                  ),
+
+                ),
+                BottomCommentField(
+                  post: post,
+                ),
+              ],
+            )
           );
         });
   }

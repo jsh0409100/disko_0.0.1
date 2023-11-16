@@ -280,37 +280,40 @@ class _ConsumerEditPostPageState extends ConsumerState<EditPostScreen> {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return Center(
-          child: Container(
-            child: AlertDialog(
-              contentPadding: const EdgeInsets.all(0.0),
-              title: const Text('카테고리 선택'),
-              content: _CategoryCards,
-              actions: <Widget>[
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  child: const Text('취소'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  child: const Text('게시'),
-                  onPressed: () async {
-                    postId = const Uuid().v1();
-                    Navigator.of(context).pop();
-                    await uploadFunction(_imageFileList!);
-                    _uploadPost(CategoryList.categories[_CategoryCards.selected]);
-                  },
-                ),
+        return AlertDialog(
+          title: const Text('카테고리 선택'),
+          content: Container(
+            width: 200.0,
+            height: 150.0,
+            child: Column(
+              children: <Widget>[
+                _CategoryCards
               ],
             ),
           ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('게시'),
+              onPressed: () async {
+                postId = const Uuid().v1();
+                Navigator.of(context).pop();
+                await uploadFunction(_imageFileList!);
+                _uploadPost(CategoryList.categories[_CategoryCards.selected]);
+              },
+            ),
+          ],
         );
       },
     );

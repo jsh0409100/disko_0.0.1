@@ -297,7 +297,13 @@ class _ConsumerWritePostPageState extends ConsumerState<WritePostPage> {
             child: AlertDialog(
               contentPadding: const EdgeInsets.all(0.0),
               title: const Text('카테고리 선택'),
-              content: _CategoryCards,
+              content: Row(
+                children: [
+                  Container(
+                    child: _CategoryCards,
+                  ),
+                ],
+              ),
               actions: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(

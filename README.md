@@ -15,4 +15,6 @@ Examples of usage of the app:
 Users can communicate freely and safely through our app with our very own trust system.
 
 This app is planned and developed by a Student Startup team **Echad**
-For more information visit our website: https://www.letsdisko.co.kr/
+
+
+### The app is currently removed from Playstore.
